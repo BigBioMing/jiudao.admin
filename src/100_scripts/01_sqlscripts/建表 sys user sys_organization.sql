@@ -6,7 +6,7 @@ CREATE TABLE `sys_organization`(
 	`Path` varchar(100) NOT NULL COMMENT 'Path',
 	`Type` bigint NOT NULL DEFAULT 0 COMMENT '类型',
 	`Status` int(1) NOT NULL DEFAULT 0 COMMENT '状态',
-	`Enabled` int(1) NOT NULL DEFAULT 0 COMMENT '是否启用 0-禁用 1-启用',
+	`Enabled` bigint NOT NULL DEFAULT 0 COMMENT '是否启用（关联字段表）',
 	`Description` varchar(200) NULL DEFAULT NULL COMMENT '描述',
 	`IsDeleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除 0-正常 1-已删除',
 	`CreateId` bigint NOT NULL COMMENT '创建人Id',

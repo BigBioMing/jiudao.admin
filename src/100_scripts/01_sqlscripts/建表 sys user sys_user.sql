@@ -3,11 +3,11 @@ CREATE TABLE `sys_user`(
 	`Account` varchar(30) NOT NULL COMMENT '账号',
 	`Name` varchar(30) NOT NULL COMMENT '名称',
 	`Mobile` varchar(30) NULL DEFAULT NULL COMMENT '手机号码',
-	`Gender` int(1) NOT NULL DEFAULT 0 COMMENT '性别 1-男 2-女',
+	`Gender` bigint NOT NULL DEFAULT 0 COMMENT '性别（关联字段表）',
 	`Email` varchar(30) NULL DEFAULT NULL COMMENT '邮箱',
 	`Password` varchar(20) NOT NULL COMMENT '密码',
 	`PasswordSalt` varchar(20) NOT NULL COMMENT '密码盐',
-	`Enabled` int(1) NOT NULL DEFAULT 0 COMMENT '是否启用 0-禁用 1-启用',
+	`Enabled` bigint NOT NULL DEFAULT 0 COMMENT '是否启用（关联字段表）',
 	`IsDeleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除 0-正常 1-已删除',
 	`CreateId` bigint NOT NULL COMMENT '创建人Id',
 	`CreateSource` varchar(30) NOT NULL COMMENT '创建人',
@@ -15,6 +15,6 @@ CREATE TABLE `sys_user`(
 	`UpdateId` bigint NOT NULL COMMENT '修改人Id',
 	`UpdateSource` varchar(30) NOT NULL COMMENT '修改人',
 	`UpdateDate` varchar(30) NOT NULL COMMENT '修改时间',
-	PRIMARY KEY (`idx_Id`) USING BTREE,
-	INDEX KEY (`idx_Account`) USING BTREE
+	PRIMARY KEY (`Id`) USING BTREE,
+	KEY `idx_Account`(`Account`) USING BTREE
 ) COMMENT '系统用户表';
