@@ -27,23 +27,6 @@ namespace JDA.Core.Persistence.Contexts
         }
 
         public int TenantId { get; set; }
-    }
-
-    /// <summary>
-    /// 数据库上下文基类
-    /// </summary>
-    /// <typeparam name="TDbContext"></typeparam>
-    public abstract class JDABaseDbContext<TDbContext> : JDABaseDbContext where TDbContext : JDABaseDbContext
-    {
-        public JDABaseDbContext()
-        {
-
-        }
-
-        public JDABaseDbContext(DbContextOptions<TDbContext> dbContextOptions) : base(dbContextOptions)
-        {
-
-        }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace JDA.Entity.Contexts
 {
-    public partial class JDADbContext : JDABaseDbContext<JDADbContext>
+    public partial class JDADbContext : JDABaseDbContext
     {
         public JDADbContext(DbContextOptions<JDADbContext> dbContextOptions) : base(dbContextOptions)
         {
