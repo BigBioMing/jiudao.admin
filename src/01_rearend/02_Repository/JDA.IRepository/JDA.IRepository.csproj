@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\00_Core\JDA.Core\JDA.Core.csproj" />
+  </ItemGroup>
+
 </Project>

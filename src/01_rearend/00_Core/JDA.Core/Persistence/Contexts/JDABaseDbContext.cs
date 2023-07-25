@@ -19,6 +19,7 @@ namespace JDA.Core.Persistence.Contexts
     {
         public JDABaseDbContext()
         {
+
         }
 
         public JDABaseDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
