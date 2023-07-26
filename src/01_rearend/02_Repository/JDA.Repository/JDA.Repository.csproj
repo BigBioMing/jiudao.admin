@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\00_Core\JDA.Core\JDA.Core.csproj" />
+    <ProjectReference Include="..\JDA.IRepository\JDA.IRepository.csproj" />
   </ItemGroup>
 
 </Project>
