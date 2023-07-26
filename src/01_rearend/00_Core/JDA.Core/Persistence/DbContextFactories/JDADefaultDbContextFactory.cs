@@ -11,7 +11,7 @@ namespace JDA.Core.Persistence.DbContextFactories
 {
     /// <summary>
     /// 数据库上下文工厂
-    /// 由于在上下文池中的上下文对象只会初始化一次，由此导致随着请求改变的状态无法更新，可以在工厂里重新赋值
+    /// 由于在上下文池中的上下文对象只会初始化一次，由此会导致随着请求改变的状态（如TenantId）无法更新的问题，可以在工厂里获取上下文对象后重新赋值
     /// </summary>
     public class JDADefaultDbContextFactory<TDbContext> : IDbContextFactory<TDbContext> where TDbContext : JDABaseDbContext
     {

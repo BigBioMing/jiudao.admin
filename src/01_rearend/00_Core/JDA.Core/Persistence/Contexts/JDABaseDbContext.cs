@@ -32,7 +32,7 @@ namespace JDA.Core.Persistence.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            #region 通过反射获取所有继承了SuperMapping<>的类，并将其注册到EF中
+            #region 通过反射获取所有继承了 SuperMapping<> 的类，并将其注册到EF中
             //mapping超类
             Type superMapping = typeof(SuperMapping<>);
             //var assembly = Assembly.GetEntryAssembly();
@@ -68,7 +68,7 @@ namespace JDA.Core.Persistence.Contexts
                 MethodInfo modelBuilderApplyConfigurationMethodInfo = modelBuilderType.GetMethod("ApplyConfiguration");
                 // 由于 modelBuilder.ApplyConfiguration 是泛型方法，需要执行 MakeGenericMethod 方法
                 modelBuilderApplyConfigurationMethodInfo = modelBuilderApplyConfigurationMethodInfo.MakeGenericMethod(genericArguments);
-                //执行 modelBuilder.ApplyConfiguration 方法，将mapping注册到EF中
+                //执行 modelBuilder.ApplyConfiguration 方法，将 mappingInstance 注册到EF中
                 modelBuilderApplyConfigurationMethodInfo.Invoke(modelBuilder, new object[] { mappingInstance });
             }
             #endregion
