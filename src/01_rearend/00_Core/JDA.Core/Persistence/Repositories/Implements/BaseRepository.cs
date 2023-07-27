@@ -7,7 +7,7 @@ using JDA.Core.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace JDA.Repository.Base
+namespace JDA.Core.Persistence.Repositories.Implements
 {
     /// <summary>
     /// 仓储基类

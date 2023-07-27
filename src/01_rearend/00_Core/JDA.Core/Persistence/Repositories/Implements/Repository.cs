@@ -1,14 +1,8 @@
 ﻿using JDA.Core.Persistence.Contexts;
 using JDA.Core.Persistence.Entities;
-using JDA.IRepository.Base;
-using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using JDA.Core.Persistence.Repositories.Abstractions;
 
-namespace JDA.Repository.Base
+namespace JDA.Core.Persistence.Repositories.Implements
 {
     /// <summary>
     /// 仓储类

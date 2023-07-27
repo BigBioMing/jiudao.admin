@@ -10,7 +10,7 @@ namespace JDA.Entity.Entities.Sys
     /// <summary>
     /// 系统用户表
     /// </summary>
-    public partial class SysUser : SuperEntity
+    public partial class SysUser : EnableSuperEntity
     {
         /// <summary>
         /// 账号
@@ -40,9 +40,5 @@ namespace JDA.Entity.Entities.Sys
         /// 密码盐
         /// </summary>
         public string PasswordSalt { get; set; }
-        /// <summary>
-        /// 是否启用（关联字段表）
-        /// </summary>
-        public long Enabled { get; set; }
     }
 }

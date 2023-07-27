@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JDA.IRepository.Base
+namespace JDA.Core.Persistence.Repositories.Abstractions
 {
     /// <summary>
     /// 仓储接口
