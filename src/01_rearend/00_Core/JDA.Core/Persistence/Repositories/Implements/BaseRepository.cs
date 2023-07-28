@@ -4,6 +4,7 @@ using JDA.Core.Models.OrderBys;
 using JDA.Core.Models.Tables;
 using JDA.Core.Persistence.Contexts;
 using JDA.Core.Persistence.Entities;
+using JDA.Core.Users.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -17,12 +18,14 @@ namespace JDA.Core.Persistence.Repositories.Implements
     {
         private readonly JDABaseDbContext _dbContext;
         private readonly DbSet<TEntity> _dbSetEntity;
+        protected readonly ICurrentRunningContext _currentRunningContext;
         public JDABaseDbContext DbContext { get => _dbContext; }
 
-        public BaseRepository(JDABaseDbContext dbContext)
+        public BaseRepository(JDABaseDbContext dbContext, ICurrentRunningContext currentRunningContext)
         {
             this._dbContext = dbContext;
             this._dbSetEntity = this._dbContext.Set<TEntity>();
+            this._currentRunningContext = currentRunningContext;
         }
 
         #region Queryable
@@ -173,11 +176,11 @@ namespace JDA.Core.Persistence.Repositories.Implements
         {
             entity.Id = 0;
             entity.IsDeleted = 0;
-            entity.CreateId = 0;
-            entity.CreateSource = string.Empty;
+            entity.CreateId = _currentRunningContext.UserId;
+            entity.CreateSource = _currentRunningContext.UserName;
             entity.CreateDate = DateTime.Now;
-            entity.UpdateId = 0;
-            entity.UpdateSource = string.Empty;
+            entity.UpdateId = _currentRunningContext.UserId;
+            entity.UpdateSource = _currentRunningContext.UserName;
             entity.UpdateDate = DateTime.Now;
 
             this._dbContext.Add(entity);
@@ -198,11 +201,11 @@ namespace JDA.Core.Persistence.Repositories.Implements
             {
                 entity.Id = 0;
                 entity.IsDeleted = 0;
-                entity.CreateId = 0;
-                entity.CreateSource = string.Empty;
+                entity.CreateId = _currentRunningContext.UserId;
+                entity.CreateSource = _currentRunningContext.UserName;
                 entity.CreateDate = now;
-                entity.UpdateId = 0;
-                entity.UpdateSource = string.Empty;
+                entity.UpdateId = _currentRunningContext.UserId;
+                entity.UpdateSource = _currentRunningContext.UserName;
                 entity.UpdateDate = now;
             }
 
@@ -221,8 +224,8 @@ namespace JDA.Core.Persistence.Repositories.Implements
         /// <returns>返回操作结果</returns>
         public virtual OperationResult<TEntity> Update(TEntity entity)
         {
-            entity.UpdateId = 0;
-            entity.UpdateSource = string.Empty;
+            entity.UpdateId = _currentRunningContext.UserId;
+            entity.UpdateSource = _currentRunningContext.UserName;
             entity.UpdateDate = DateTime.Now;
 
             this._dbContext.Update(entity);
@@ -241,8 +244,8 @@ namespace JDA.Core.Persistence.Repositories.Implements
             DateTime now = DateTime.Now;
             foreach (TEntity entity in entities)
             {
-                entity.UpdateId = 0;
-                entity.UpdateSource = string.Empty;
+                entity.UpdateId = _currentRunningContext.UserId;
+                entity.UpdateSource = _currentRunningContext.UserName;
                 entity.UpdateDate = DateTime.Now;
             }
 
@@ -271,8 +274,8 @@ namespace JDA.Core.Persistence.Repositories.Implements
             else
             {
                 entity.IsDeleted = 1;
-                entity.UpdateId = 0;
-                entity.UpdateSource = string.Empty;
+                entity.UpdateId = _currentRunningContext.UserId;
+                entity.UpdateSource = _currentRunningContext.UserName;
                 entity.UpdateDate = DateTime.Now;
 
                 this._dbContext.Update(entity);
@@ -300,8 +303,8 @@ namespace JDA.Core.Persistence.Repositories.Implements
                 foreach (TEntity entity in entities)
                 {
                     entity.IsDeleted = 1;
-                    entity.UpdateId = 0;
-                    entity.UpdateSource = string.Empty;
+                    entity.UpdateId = _currentRunningContext.UserId;
+                    entity.UpdateSource = _currentRunningContext.UserName;
                     entity.UpdateDate = DateTime.Now;
                 }
 
@@ -428,11 +431,11 @@ namespace JDA.Core.Persistence.Repositories.Implements
         {
             entity.Id = 0;
             entity.IsDeleted = 0;
-            entity.CreateId = 0;
-            entity.CreateSource = string.Empty;
+            entity.CreateId = _currentRunningContext.UserId;
+            entity.CreateSource = _currentRunningContext.UserName;
             entity.CreateDate = DateTime.Now;
-            entity.UpdateId = 0;
-            entity.UpdateSource = string.Empty;
+            entity.UpdateId = _currentRunningContext.UserId;
+            entity.UpdateSource = _currentRunningContext.UserName;
             entity.UpdateDate = DateTime.Now;
 
             await this._dbContext.AddAsync(entity);
@@ -453,11 +456,11 @@ namespace JDA.Core.Persistence.Repositories.Implements
             {
                 entity.Id = 0;
                 entity.IsDeleted = 0;
-                entity.CreateId = 0;
-                entity.CreateSource = string.Empty;
+                entity.CreateId = _currentRunningContext.UserId;
+                entity.CreateSource = _currentRunningContext.UserName;
                 entity.CreateDate = now;
-                entity.UpdateId = 0;
-                entity.UpdateSource = string.Empty;
+                entity.UpdateId = _currentRunningContext.UserId;
+                entity.UpdateSource = _currentRunningContext.UserName;
                 entity.UpdateDate = now;
             }
 
@@ -476,8 +479,8 @@ namespace JDA.Core.Persistence.Repositories.Implements
         /// <returns>返回操作结果</returns>
         public virtual async Task<OperationResult<TEntity>> UpdateAsync(TEntity entity)
         {
-            entity.UpdateId = 0;
-            entity.UpdateSource = string.Empty;
+            entity.UpdateId = _currentRunningContext.UserId;
+            entity.UpdateSource = _currentRunningContext.UserName;
             entity.UpdateDate = DateTime.Now;
 
             this._dbContext.Update(entity);
@@ -496,8 +499,8 @@ namespace JDA.Core.Persistence.Repositories.Implements
             DateTime now = DateTime.Now;
             foreach (TEntity entity in entities)
             {
-                entity.UpdateId = 0;
-                entity.UpdateSource = string.Empty;
+                entity.UpdateId = _currentRunningContext.UserId;
+                entity.UpdateSource = _currentRunningContext.UserName;
                 entity.UpdateDate = DateTime.Now;
             }
 
@@ -526,8 +529,8 @@ namespace JDA.Core.Persistence.Repositories.Implements
             else
             {
                 entity.IsDeleted = 1;
-                entity.UpdateId = 0;
-                entity.UpdateSource = string.Empty;
+                entity.UpdateId = _currentRunningContext.UserId;
+                entity.UpdateSource = _currentRunningContext.UserName;
                 entity.UpdateDate = DateTime.Now;
 
                 this._dbContext.Update(entity);
@@ -555,8 +558,8 @@ namespace JDA.Core.Persistence.Repositories.Implements
                 foreach (TEntity entity in entities)
                 {
                     entity.IsDeleted = 1;
-                    entity.UpdateId = 0;
-                    entity.UpdateSource = string.Empty;
+                    entity.UpdateId = _currentRunningContext.UserId;
+                    entity.UpdateSource = _currentRunningContext.UserName;
                     entity.UpdateDate = DateTime.Now;
                 }
 

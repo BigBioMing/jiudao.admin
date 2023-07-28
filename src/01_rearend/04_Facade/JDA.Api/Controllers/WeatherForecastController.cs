@@ -1,3 +1,5 @@
+using JDA.Core.Runtime;
+using JDA.Core.Users.Abstractions;
 using JDA.Entity.Contexts;
 using JDA.Entity.Entities.Sys;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +11,7 @@ namespace JDA.Api.Controllers
     public class WeatherForecastController : ControllerBase
     {
         protected readonly JDADbContext _dbContext;
+        protected readonly ICurrentRunningContext _currentRunningContext;
         private static readonly string[] Summaries = new[]
         {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -16,15 +19,20 @@ namespace JDA.Api.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, JDADbContext dbContext)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, JDADbContext dbContext, ICurrentRunningContext currentRunningContext)
         {
             _logger = logger;
             _dbContext = dbContext;
+            _currentRunningContext = currentRunningContext;
         }
 
         [HttpPost(Name = "GetWeatherForecast")]
         public IActionResult Post()
         {
+            var systemRunEvnInfo = EnvironmentInfo.GetSystemRunEvnInfo();
+            var systemPlatformInfo = EnvironmentInfo.GetSystemPlatformInfo();
+            var applicationRunInfo = EnvironmentInfo.GetApplicationRunInfo();
+            var environmentVariables = EnvironmentInfo.GetEnvironmentVariables();
             _dbContext.Set<SysUser>().Add(new SysUser()
             {
                 Id = 2,

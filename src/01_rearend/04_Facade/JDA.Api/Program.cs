@@ -1,8 +1,10 @@
 using JDA.Entity.Contexts;
+using JDA.Core.DI;
 using JDA.Core.Persistence.Extensions;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,8 +23,10 @@ builder.Services.AddScoped<ITenant>(sp =>
 
     return tenantIdString != StringValues.Empty && int.TryParse(tenantIdString, out var tenantId)
         ? new Tenant(tenantId)
-        : null;
+    : null;
 });
+
+builder.Services.AddDependencyInjectionService();
 
 var app = builder.Build();
 

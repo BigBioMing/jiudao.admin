@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JDA.Core.Users.Distinguish
+namespace JDA.Core.Users.Abstractions
 {
     /// <summary>
-    /// 操作系统类型
+    /// 程序当前运行上下文
     /// </summary>
-    public enum OSType
+    public interface ICurrentRunningContext
     {
         /// <summary>
-        /// Windows
+        /// 当前操作人ID
         /// </summary>
-        [Description("Windows")]
-        Windows = 0,
+        public long UserId { get; }
         /// <summary>
-        /// Linux
+        /// 当前操作人名称
         /// </summary>
-        [Description("Linux")]
-        Linux = 1
+        public string UserName { get; }
     }
 }
