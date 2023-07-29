@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\01_Entity\JDA.Entity\JDA.Entity.csproj" />
+    <ProjectReference Include="..\..\02_Repository\JDA.IRepository\JDA.IRepository.csproj" />
   </ItemGroup>
 
 </Project>

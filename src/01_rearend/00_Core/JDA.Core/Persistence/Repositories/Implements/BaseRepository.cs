@@ -14,14 +14,14 @@ namespace JDA.Core.Persistence.Repositories.Implements
     /// 仓储基类
     /// </summary>
     /// <typeparam name="TEntity">实体</typeparam>
-    public class BaseRepository<TEntity> where TEntity : SuperEntity
+    public class BaseRepository<TEntity, TDbContext> where TEntity : SuperEntity where TDbContext : JDABaseDbContext
     {
-        private readonly JDABaseDbContext _dbContext;
+        private readonly TDbContext _dbContext;
         private readonly DbSet<TEntity> _dbSetEntity;
         protected readonly ICurrentRunningContext _currentRunningContext;
-        public JDABaseDbContext DbContext { get => _dbContext; }
+        public TDbContext DbContext { get => _dbContext; }
 
-        public BaseRepository(JDABaseDbContext dbContext, ICurrentRunningContext currentRunningContext)
+        public BaseRepository(TDbContext dbContext, ICurrentRunningContext currentRunningContext)
         {
             this._dbContext = dbContext;
             this._dbSetEntity = this._dbContext.Set<TEntity>();

@@ -2,6 +2,7 @@
 using JDA.Core.Models.Operations;
 using JDA.Core.Models.OrderBys;
 using JDA.Core.Models.Tables;
+using JDA.Core.Persistence.Contexts;
 using JDA.Core.Persistence.Entities;
 using JDA.Core.Persistence.Repositories.Abstractions;
 using System;
@@ -16,10 +17,10 @@ namespace JDA.Core.Persistence.Services.Implements
     /// <summary>
     /// Service基类
     /// </summary>
-    public class BaseService<TEntity> where TEntity : SuperEntity
+    public class BaseService<TEntity, TDbContext> where TEntity : SuperEntity where TDbContext : JDABaseDbContext
     {
-        private readonly IRepository<TEntity> _currentRepository;
-        public BaseService(IRepository<TEntity> currentRepository)
+        private readonly IBaseRepository<TEntity, TDbContext> _currentRepository;
+        public BaseService(IBaseRepository<TEntity, TDbContext> currentRepository)
         {
             this._currentRepository = currentRepository;
         }

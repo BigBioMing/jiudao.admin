@@ -2,7 +2,9 @@
 using JDA.Core.Persistence.Repositories.Abstractions;
 using JDA.Core.Persistence.Repositories.Implements;
 using JDA.Core.Persistence.Services.Abstractions;
+using JDA.Core.Persistence.Services.Abstractions.Default;
 using JDA.Core.Persistence.Services.Implements;
+using JDA.Core.Persistence.Services.Implements.Default;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

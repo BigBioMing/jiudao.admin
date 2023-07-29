@@ -1,11 +1,10 @@
-using JDA.Entity.Contexts;
 using JDA.Core.DI;
 using JDA.Core.Persistence.Extensions;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using Microsoft.EntityFrameworkCore;
-
+using JDA.Core.Persistence.Contexts.Default;
 
 var builder = WebApplication.CreateBuilder(args);
 

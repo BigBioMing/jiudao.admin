@@ -12,9 +12,9 @@ namespace JDA.Core.Persistence.Repositories.Abstractions
     /// 仓储基接口
     /// </summary>
     /// <typeparam name="TEntity">实体</typeparam>
-    public interface IBaseRepository<TEntity> where TEntity : SuperEntity
+    public interface IBaseRepository<TEntity, TDbContext> where TEntity : SuperEntity where TDbContext : JDABaseDbContext
     {
-        public JDABaseDbContext DbContext { get; }
+        public TDbContext DbContext { get; }
 
         #region Queryable
         /// <summary>
