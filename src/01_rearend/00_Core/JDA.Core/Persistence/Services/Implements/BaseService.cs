@@ -5,6 +5,7 @@ using JDA.Core.Models.Tables;
 using JDA.Core.Persistence.Contexts;
 using JDA.Core.Persistence.Entities;
 using JDA.Core.Persistence.Repositories.Abstractions;
+using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,9 +109,16 @@ namespace JDA.Core.Persistence.Services.Implements
         /// 分页查询（根据ID倒序）
         /// </summary>
         /// <param name="pageInParams">分页参数</param>
+        /// <returns>返回查询到的数据</returns>
+        public virtual PageResult<List<TEntity>> GetPageEntities(PageInParams pageInParams) => this._currentRepository.GetPageEntities(pageInParams);
+
+        /// <summary>
+        /// 分页查询（根据ID倒序）
+        /// </summary>
+        /// <param name="pageInParams">分页参数</param>
         /// <param name="wherePredicate">查询条件</param>
         /// <returns>返回查询到的数据</returns>
-        public virtual PageResult<List<TEntity>> GetPageEntities(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate) => this._currentRepository.GetPageEntities(pageInParams, wherePredicate);
+        public virtual PageResult<List<TEntity>> GetPageEntities(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate) => this._currentRepository.GetPageEntities(pageInParams, wherePredicate);
 
         /// <summary>
         /// 分页查询
@@ -120,7 +128,7 @@ namespace JDA.Core.Persistence.Services.Implements
         /// <param name="orderByType">排序方式</param>
         /// <param name="orderByKeySelector">排序字段</param>
         /// <returns>返回查询到的数据</returns>
-        public virtual PageResult<List<TEntity>> GetPageEntities<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector) => this._currentRepository.GetPageEntities(pageInParams, wherePredicate, orderByType, orderByKeySelector);
+        public virtual PageResult<List<TEntity>> GetPageEntities<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector) => this._currentRepository.GetPageEntities(pageInParams, wherePredicate, orderByType, orderByKeySelector);
         #endregion
 
         #region 添加
@@ -153,7 +161,44 @@ namespace JDA.Core.Persistence.Services.Implements
         public virtual OperationResult<List<TEntity>> Update(List<TEntity> entities) => this._currentRepository.Update(entities);
         #endregion
 
+        #region 启用/禁用
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entity">待启用/禁用的实体</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        public virtual OperationResult Enable<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        {
+            return this._currentRepository.Enable(entity, setEnableValue);
+        }
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entities">待启用/禁用的实体集合</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        public virtual OperationResult Enable<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        {
+            return this._currentRepository.Enable(entities, setEnableValue);
+        }
+        #endregion
+
         #region 删除
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="id">待删除的实体的ID</param>
+        /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
+        /// <returns>返回操作结果</returns>
+        public virtual OperationResult Delete(long id, DeleteType deleteType = DeleteType.Logical)
+        {
+            TEntity? entity = this._currentRepository.FirstOrDefault(n => n.Id == id);
+            if (entity is null)
+                return OperationResult.Success();
+
+            return this.Delete(entity, deleteType);
+        }
         /// <summary>
         /// 添加
         /// </summary>
@@ -161,6 +206,20 @@ namespace JDA.Core.Persistence.Services.Implements
         /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
         /// <returns>返回操作结果</returns>
         public virtual OperationResult Delete(TEntity entity, DeleteType deleteType = DeleteType.Logical) => this._currentRepository.Delete(entity, deleteType);
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ids">待删除的实体的ID集合</param>
+        /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
+        /// <returns>返回操作结果</returns>
+        public virtual OperationResult Delete(List<long> ids, DeleteType deleteType = DeleteType.Logical)
+        {
+            List<TEntity> entities = this._currentRepository.GetEntities(n => ids.Contains(n.Id)).ToList();
+            if (entities.Count == 0)
+                return OperationResult.Success();
+
+            return this.Delete(entities, deleteType);
+        }
         /// <summary>
         /// 删除
         /// </summary>
@@ -240,9 +299,16 @@ namespace JDA.Core.Persistence.Services.Implements
         /// 分页查询（根据ID倒序）
         /// </summary>
         /// <param name="pageInParams">分页参数</param>
+        /// <returns>返回查询到的数据</returns>
+        public virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(PageInParams pageInParams) => await this._currentRepository.GetPageEntitiesAsync(pageInParams);
+
+        /// <summary>
+        /// 分页查询（根据ID倒序）
+        /// </summary>
+        /// <param name="pageInParams">分页参数</param>
         /// <param name="wherePredicate">查询条件</param>
         /// <returns>返回查询到的数据</returns>
-        public virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate) => await this._currentRepository.GetPageEntitiesAsync(pageInParams, wherePredicate);
+        public virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate) => await this._currentRepository.GetPageEntitiesAsync(pageInParams, wherePredicate);
 
         /// <summary>
         /// 分页查询
@@ -252,7 +318,7 @@ namespace JDA.Core.Persistence.Services.Implements
         /// <param name="orderByType">排序方式</param>
         /// <param name="orderByKeySelector">排序字段</param>
         /// <returns>返回查询到的数据</returns>
-        public virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector) => await this._currentRepository.GetPageEntitiesAsync(pageInParams, wherePredicate, orderByType, orderByKeySelector);
+        public virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector) => await this._currentRepository.GetPageEntitiesAsync(pageInParams, wherePredicate, orderByType, orderByKeySelector);
         #endregion
 
         #region 添加
@@ -285,14 +351,65 @@ namespace JDA.Core.Persistence.Services.Implements
         public virtual async Task<OperationResult<List<TEntity>>> UpdateAsync(List<TEntity> entities) => await this._currentRepository.UpdateAsync(entities);
         #endregion
 
+        #region 启用/禁用
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entity">待启用/禁用的实体</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        public virtual async Task<OperationResult> EnableAsync<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        {
+            return await this._currentRepository.EnableAsync(entity, setEnableValue);
+        }
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entities">待启用/禁用的实体集合</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        public virtual async Task<OperationResult> EnableAsync<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        {
+            return await this._currentRepository.EnableAsync(entities, setEnableValue);
+        }
+        #endregion
+
         #region 删除
         /// <summary>
-        /// 添加
+        /// 删除
+        /// </summary>
+        /// <param name="id">待删除的实体的ID</param>
+        /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
+        /// <returns>返回操作结果</returns>
+        public virtual async Task<OperationResult> DeleteAsync(long id, DeleteType deleteType = DeleteType.Logical)
+        {
+            TEntity? entity = await this._currentRepository.FirstOrDefaultAsync(n => n.Id == id);
+            if (entity is null)
+                return OperationResult.Success();
+
+            return await this.DeleteAsync(entity, deleteType);
+        }
+        /// <summary>
+        /// 删除
         /// </summary>
         /// <param name="entity">待删除的实体</param>
         /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
         /// <returns>返回操作结果</returns>
         public virtual async Task<OperationResult> DeleteAsync(TEntity entity, DeleteType deleteType = DeleteType.Logical) => await this._currentRepository.DeleteAsync(entity, deleteType);
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ids">待删除的实体的ID集合</param>
+        /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
+        /// <returns>返回操作结果</returns>
+        public virtual async Task<OperationResult> DeleteAsync(List<long> ids, DeleteType deleteType = DeleteType.Logical)
+        {
+            List<TEntity> entities = this._currentRepository.GetEntities(n => ids.Contains(n.Id)).ToList();
+            if (entities.Count == 0)
+                return OperationResult.Success();
+
+            return await this.DeleteAsync(entities, deleteType);
+        }
         /// <summary>
         /// 删除
         /// </summary>

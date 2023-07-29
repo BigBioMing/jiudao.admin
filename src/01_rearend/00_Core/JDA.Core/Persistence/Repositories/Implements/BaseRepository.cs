@@ -130,9 +130,19 @@ namespace JDA.Core.Persistence.Repositories.Implements
         /// 分页查询（根据ID倒序）
         /// </summary>
         /// <param name="pageInParams">分页参数</param>
+        /// <returns>返回查询到的数据</returns>
+        public virtual PageResult<List<TEntity>> GetPageEntities(PageInParams pageInParams)
+        {
+            return GetPageEntities(pageInParams, null, OrderByType.Desc, n => n.Id);
+        }
+
+        /// <summary>
+        /// 分页查询（根据ID倒序）
+        /// </summary>
+        /// <param name="pageInParams">分页参数</param>
         /// <param name="wherePredicate">查询条件</param>
         /// <returns>返回查询到的数据</returns>
-        public virtual PageResult<List<TEntity>> GetPageEntities(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate)
+        public virtual PageResult<List<TEntity>> GetPageEntities(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate)
         {
             return GetPageEntities(pageInParams, wherePredicate, OrderByType.Desc, n => n.Id);
         }
@@ -145,10 +155,13 @@ namespace JDA.Core.Persistence.Repositories.Implements
         /// <param name="orderByType">排序方式</param>
         /// <param name="orderByKeySelector">排序字段</param>
         /// <returns>返回查询到的数据</returns>
-        public virtual PageResult<List<TEntity>> GetPageEntities<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector)
+        public virtual PageResult<List<TEntity>> GetPageEntities<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector)
         {
             List<TEntity> list = new List<TEntity>();
-            IQueryable<TEntity> query = this.Queryable.Where(wherePredicate);
+            IQueryable<TEntity> query = this.Queryable;
+            if (wherePredicate is null) query = this.Queryable;
+            else query = query.Where(wherePredicate);
+
             int totalCount = query.Count();
             if (totalCount > 0)
             {
@@ -253,6 +266,38 @@ namespace JDA.Core.Persistence.Repositories.Implements
             this._dbContext.SaveChanges();
 
             return OperationResult<List<TEntity>>.Success(entities);
+        }
+        #endregion
+
+        #region 启用/禁用
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entity">待启用/禁用的实体</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        public virtual OperationResult Enable<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        {
+            entity.Enabled = setEnableValue;
+            this.Update(entity);
+
+            return OperationResult.Success();
+        }
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entities">待启用/禁用的实体集合</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        public virtual OperationResult Enable<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        {
+            foreach (TEnableEntity entity in entities)
+            {
+                entity.Enabled = setEnableValue;
+            }
+
+            this.Update(entities as List<TEntity>);
+            return OperationResult.Success();
         }
         #endregion
 
@@ -385,9 +430,19 @@ namespace JDA.Core.Persistence.Repositories.Implements
         /// 分页查询（根据ID倒序）
         /// </summary>
         /// <param name="pageInParams">分页参数</param>
+        /// <returns>返回查询到的数据</returns>
+        public virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(PageInParams pageInParams)
+        {
+            return await GetPageEntitiesAsync(pageInParams, null, OrderByType.Desc, n => n.Id);
+        }
+
+        /// <summary>
+        /// 分页查询（根据ID倒序）
+        /// </summary>
+        /// <param name="pageInParams">分页参数</param>
         /// <param name="wherePredicate">查询条件</param>
         /// <returns>返回查询到的数据</returns>
-        public virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate)
+        public virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate)
         {
             return await GetPageEntitiesAsync(pageInParams, wherePredicate, OrderByType.Desc, n => n.Id);
         }
@@ -400,10 +455,13 @@ namespace JDA.Core.Persistence.Repositories.Implements
         /// <param name="orderByType">排序方式</param>
         /// <param name="orderByKeySelector">排序字段</param>
         /// <returns>返回查询到的数据</returns>
-        public virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector)
+        public virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector)
         {
             List<TEntity> list = new List<TEntity>();
-            IQueryable<TEntity> query = this.Queryable.Where(wherePredicate);
+            IQueryable<TEntity> query = this.Queryable;
+            if (wherePredicate is null) query = this.Queryable;
+            else query = query.Where(wherePredicate);
+
             int totalCount = query.Count();
             if (totalCount > 0)
             {
@@ -508,6 +566,37 @@ namespace JDA.Core.Persistence.Repositories.Implements
             await this._dbContext.SaveChangesAsync();
 
             return OperationResult<List<TEntity>>.Success(entities);
+        }
+        #endregion
+
+        #region 启用/禁用
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entity">待启用/禁用的实体</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        public virtual async Task<OperationResult> EnableAsync<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        {
+            entity.Enabled = setEnableValue;
+            await this.UpdateAsync(entity);
+            return OperationResult.Success();
+        }
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entities">待启用/禁用的实体集合</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        public virtual async Task<OperationResult> EnableAsync<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        {
+            foreach (TEnableEntity entity in entities)
+            {
+                entity.Enabled = setEnableValue;
+            }
+
+            await this.UpdateAsync(entities as List<TEntity>);
+            return OperationResult.Success();
         }
         #endregion
 

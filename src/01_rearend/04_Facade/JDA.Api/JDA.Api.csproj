@@ -16,8 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\00_Core\JDA.Core\JDA.Core.csproj" />
     <ProjectReference Include="..\..\01_Entity\JDA.Entity\JDA.Entity.csproj" />
     <ProjectReference Include="..\..\02_Repository\JDA.IRepository\JDA.IRepository.csproj" />
+    <ProjectReference Include="..\..\02_Repository\JDA.Repository\JDA.Repository.csproj" />
+    <ProjectReference Include="..\..\03_Service\JDA.IService\JDA.IService.csproj" />
+    <ProjectReference Include="..\..\03_Service\JDA.Service\JDA.Service.csproj" />
   </ItemGroup>
 
 </Project>

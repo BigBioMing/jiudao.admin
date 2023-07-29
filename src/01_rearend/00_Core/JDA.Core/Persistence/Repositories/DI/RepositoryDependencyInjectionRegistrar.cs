@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JDA.Repository.DI
+namespace JDA.Core.Persistence.DI
 {
     /// <summary>
     /// 注册仓储服务

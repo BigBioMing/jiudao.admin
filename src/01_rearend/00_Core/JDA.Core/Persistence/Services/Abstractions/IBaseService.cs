@@ -100,9 +100,15 @@ namespace JDA.Core.Persistence.Services.Abstractions
         /// 分页查询（根据ID倒序）
         /// </summary>
         /// <param name="pageInParams">分页参数</param>
+        /// <returns>返回查询到的数据</returns>
+        PageResult<List<TEntity>> GetPageEntities(PageInParams pageInParams);
+        /// <summary>
+        /// 分页查询（根据ID倒序）
+        /// </summary>
+        /// <param name="pageInParams">分页参数</param>
         /// <param name="wherePredicate">查询条件</param>
         /// <returns>返回查询到的数据</returns>
-        PageResult<List<TEntity>> GetPageEntities(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate);
+        PageResult<List<TEntity>> GetPageEntities(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate);
 
         /// <summary>
         /// 分页查询
@@ -112,7 +118,7 @@ namespace JDA.Core.Persistence.Services.Abstractions
         /// <param name="orderByType">排序方式</param>
         /// <param name="orderByKeySelector">排序字段</param>
         /// <returns>返回查询到的数据</returns>
-        PageResult<List<TEntity>> GetPageEntities<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector);
+        PageResult<List<TEntity>> GetPageEntities<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector);
         #endregion
 
         #region 添加
@@ -145,14 +151,45 @@ namespace JDA.Core.Persistence.Services.Abstractions
         OperationResult<List<TEntity>> Update(List<TEntity> entities);
         #endregion
 
+        #region 启用/禁用
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entity">待启用/禁用的实体</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        OperationResult Enable<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity;
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entities">待启用/禁用的实体集合</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        OperationResult Enable<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity;
+        #endregion
+
         #region 删除
         /// <summary>
-        /// 添加
+        /// 删除
+        /// </summary>
+        /// <param name="id">待删除的实体的ID</param>
+        /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
+        /// <returns>返回操作结果</returns>
+        OperationResult Delete(long id, DeleteType deleteType = DeleteType.Logical);
+        /// <summary>
+        /// 删除
         /// </summary>
         /// <param name="entity">待删除的实体</param>
         /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
         /// <returns>返回操作结果</returns>
         OperationResult Delete(TEntity entity, DeleteType deleteType = DeleteType.Logical);
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ids">待删除的实体的ID集合</param>
+        /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
+        /// <returns>返回操作结果</returns>
+        OperationResult Delete(List<long> ids, DeleteType deleteType = DeleteType.Logical);
         /// <summary>
         /// 删除
         /// </summary>
@@ -232,9 +269,16 @@ namespace JDA.Core.Persistence.Services.Abstractions
         /// 分页查询（根据ID倒序）
         /// </summary>
         /// <param name="pageInParams">分页参数</param>
+        /// <returns>返回查询到的数据</returns>
+        Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(PageInParams pageInParams);
+
+        /// <summary>
+        /// 分页查询（根据ID倒序）
+        /// </summary>
+        /// <param name="pageInParams">分页参数</param>
         /// <param name="wherePredicate">查询条件</param>
         /// <returns>返回查询到的数据</returns>
-        Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate);
+        Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate);
 
         /// <summary>
         /// 分页查询
@@ -244,7 +288,7 @@ namespace JDA.Core.Persistence.Services.Abstractions
         /// <param name="orderByType">排序方式</param>
         /// <param name="orderByKeySelector">排序字段</param>
         /// <returns>返回查询到的数据</returns>
-        Task<PageResult<List<TEntity>>> GetPageEntitiesAsync<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>> wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector);
+        Task<PageResult<List<TEntity>>> GetPageEntitiesAsync<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector);
         #endregion
 
         #region 添加
@@ -277,14 +321,45 @@ namespace JDA.Core.Persistence.Services.Abstractions
         Task<OperationResult<List<TEntity>>> UpdateAsync(List<TEntity> entities);
         #endregion
 
+        #region 启用/禁用
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entity">待启用/禁用的实体</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        Task<OperationResult> EnableAsync<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity;
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="entities">待启用/禁用的实体集合</param>
+        /// <param name="setEnableValue">要设置的值</param>
+        /// <returns>返回操作结果</returns>
+        Task<OperationResult> EnableAsync<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity;
+        #endregion
+
         #region 删除
         /// <summary>
-        /// 添加
+        /// 删除
+        /// </summary>
+        /// <param name="id">待删除的实体的ID</param>
+        /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
+        /// <returns>返回操作结果</returns>
+        Task<OperationResult> DeleteAsync(long id, DeleteType deleteType = DeleteType.Logical);
+        /// <summary>
+        /// 删除
         /// </summary>
         /// <param name="entity">待删除的实体</param>
         /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
         /// <returns>返回操作结果</returns>
         Task<OperationResult> DeleteAsync(TEntity entity, DeleteType deleteType = DeleteType.Logical);
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ids">待删除的实体的ID集合</param>
+        /// <param name="deleteType">删除方式 逻辑删除/物理删除</param>
+        /// <returns>返回操作结果</returns>
+        Task<OperationResult> DeleteAsync(List<long> ids, DeleteType deleteType = DeleteType.Logical);
         /// <summary>
         /// 删除
         /// </summary>
