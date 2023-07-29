@@ -36,8 +36,7 @@ namespace JDA.Core.Persistence.Contexts
             //mapping超类
             Type superMapping = typeof(SuperMapping<>);
             //var assembly = Assembly.GetEntryAssembly();
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            assemblies = assemblies.Where(n => n.FullName.StartsWith("JDA.")).ToArray();
+            List<Assembly> assemblies = AssemblyHelper.GetAssemblies();
 
             var mappingTypes = assemblies.SelectMany(assembly => assembly.GetTypes().Where(type => TypeHelper.HasImplementedRawGeneric(type, superMapping) && !type.IsAbstract && !type.IsInterface)).ToList();
 
