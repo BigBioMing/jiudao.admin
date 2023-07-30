@@ -1,26 +1,32 @@
-﻿using JDA.Core.Formats.WebApi;
+﻿using JDA.Core.Attributes;
+using JDA.Core.Formats.WebApi;
 using JDA.Core.Models.FilterParamses;
 using JDA.Core.Models.Operations;
 using JDA.Core.Models.Tables;
 using JDA.Core.Persistence.Repositories.Abstractions.Default;
 using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.Core.Utilities;
 using JDA.Core.Views.ViewModels;
+using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json.Linq;
+using System.Data;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace JDA.Api.Controllers.Sys
 {
     [Area("Sys")]
-    [Route("api/[controller]")]
-    [ApiController]
-    public partial class SysUserController : ControllerBase
+    public partial class SysUserController : BaseApiController<SysUser>
     {
         protected readonly ISysUserService _sysUserService;
-        public SysUserController(ISysUserService sysUserService)
+        public SysUserController(ISysUserService sysUserService) : base(sysUserService)
         {
             this._sysUserService = sysUserService;
         }
@@ -42,7 +48,7 @@ namespace JDA.Api.Controllers.Sys
             if (!string.IsNullOrWhiteSpace(account))
                 predicate = n => n.Account == account;
 
-            var pageResult = await this._sysUserService.GetPageEntitiesAsync(filterParams.Page, predicate);
+            var pageResult = await base.GetPageEntitiesAsync(filterParams, predicate);
 
             return new JsonResult(pageResult);
         }
@@ -56,21 +62,7 @@ namespace JDA.Api.Controllers.Sys
         [Route("Save")]
         public virtual async Task<UnifyResponse<object>> Save([FromBody] SysUser model)
         {
-            OperationResult<SysUser> operationResult;
-            //Id>0即为修改，Id<0即为添加
-            if (model.Id > 0)
-            {
-                operationResult = await this._sysUserService.UpdateAsync(model);
-            }
-            else
-            {
-                operationResult = await this._sysUserService.InsertAsync(model);
-            }
-
-            if (operationResult.Status != JDA.Core.Models.Operations.OperationResultStatus.Success)
-                return UnifyResponse<object>.Error(operationResult.Message);
-
-            return UnifyResponse<object>.Success();
+            return await base.SaveAsync(model);
         }
 
         /// <summary>
@@ -82,14 +74,7 @@ namespace JDA.Api.Controllers.Sys
         [Route("Enable")]
         public virtual async Task<UnifyResponse<object>> Enable([FromBody] EnableListViewModel model)
         {
-            List<SysUser> entities = this._sysUserService.GetEntities(n => model.Ids.Contains(n.Id)).ToList();
-            if (entities.Count == 0) return UnifyResponse<object>.Error("数据不存在，无法启用/禁用");
-            OperationResult operationResult = await this._sysUserService.EnableAsync(entities, model.SetEnableValue);
-
-            if (operationResult.Status != JDA.Core.Models.Operations.OperationResultStatus.Success)
-                return UnifyResponse<object>.Error(operationResult.Message);
-
-            return UnifyResponse<object>.Success();
+            return await base.EnableAsync<SysUser>(model);
         }
 
         /// <summary>
@@ -101,12 +86,29 @@ namespace JDA.Api.Controllers.Sys
         [Route("Delete")]
         public virtual async Task<UnifyResponse<object>> Delete([FromBody] DeleteViewModel model)
         {
-            OperationResult operationResult = await this._sysUserService.DeleteAsync(model.Id);
+            return await base.DeleteAsync(model);
+        }
 
-            if (operationResult.Status != JDA.Core.Models.Operations.OperationResultStatus.Success)
-                return UnifyResponse<object>.Error(operationResult.Message);
+        /// <summary>
+        /// 导出
+        /// </summary>
+        /// <param name="filterParams">查询条件</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Export")]
+        public virtual async Task<IActionResult> Export([FromQuery] FilterParams filterParams)
+        {
+            Expression<Func<SysUser, bool>>? predicate = null;
+            string? name = filterParams?.Params?.Name;
+            if (!string.IsNullOrWhiteSpace(name))
+                predicate = n => n.Name.Contains(name);
+            string? account = filterParams?.Params?.Account;
+            if (!string.IsNullOrWhiteSpace(account))
+                predicate = n => n.Account == account;
 
-            return UnifyResponse<object>.Success();
+            var list = this._sysUserService.GetEntities(predicate).ToList();
+            string fileName = $"{DateTime.Now.ToString("user_yyyy_MM_dd_HH_mm_ss")}.xlsx";
+            return await base.ExportAsync(fileName, list);
         }
     }
 }

@@ -11,6 +11,9 @@ namespace JDA.Core.Models.Tables
     /// </summary>
     public class PageInParams
     {
+        public PageInParams()
+        {
+        }
         public PageInParams(int pageIndex = 1, int pageSize = 10)
         {
             this.PageIndex = pageIndex;

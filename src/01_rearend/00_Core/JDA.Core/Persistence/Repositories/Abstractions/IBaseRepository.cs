@@ -110,7 +110,7 @@ namespace JDA.Core.Persistence.Repositories.Abstractions
         /// </summary>
         /// <param name="predicate">查询条件</param>
         /// <returns></returns>
-        IQueryable<TEntity> GetEntities(Expression<Func<TEntity, bool>> predicate);
+        IQueryable<TEntity> GetEntities(Expression<Func<TEntity, bool>>? predicate);
         #endregion
 
         #region 查询分页数据

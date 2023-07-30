@@ -101,7 +101,7 @@ namespace JDA.Core.Persistence.Services.Implements
         /// </summary>
         /// <param name="predicate">查询条件</param>
         /// <returns></returns>
-        public virtual IQueryable<TEntity> GetEntities(Expression<Func<TEntity, bool>> predicate) => this._currentRepository.GetEntities(predicate);
+        public virtual IQueryable<TEntity> GetEntities(Expression<Func<TEntity, bool>>? predicate) => this._currentRepository.GetEntities(predicate);
         #endregion
 
         #region 查询分页数据
