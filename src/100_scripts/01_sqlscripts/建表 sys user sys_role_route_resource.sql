@@ -9,7 +9,7 @@ CREATE TABLE `sys_role_route_resource`(
 	`UpdateId` bigint NOT NULL COMMENT '修改人Id',
 	`UpdateSource` varchar(30) NOT NULL COMMENT '修改人',
 	`UpdateDate` varchar(30) NOT NULL COMMENT '修改时间',
-	PRIMARY KEY (`idx_Id`) USING BTREE,
-	INDEX KEY (`idx_RoleId`) USING BTREE,
-	INDEX KEY (`idx_RouteResourceId`) USING BTREE
+	PRIMARY KEY (`Id`) USING BTREE,
+	KEY `idx_RoleId`(`RoleId`) USING BTREE,
+	KEY `idx_RouteResourceId`(`RouteResourceId`) USING BTREE
 ) COMMENT '角色表与路由资源表的关系表';

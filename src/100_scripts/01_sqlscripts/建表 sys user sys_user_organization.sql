@@ -9,7 +9,7 @@ CREATE TABLE `sys_user_organization`(
 	`UpdateId` bigint NOT NULL COMMENT '修改人Id',
 	`UpdateSource` varchar(30) NOT NULL COMMENT '修改人',
 	`UpdateDate` varchar(30) NOT NULL COMMENT '修改时间',
-	PRIMARY KEY (`idx_Id`) USING BTREE,
-	INDEX KEY (`idx_UserId`) USING BTREE,
-	INDEX KEY (`idx_OrgId`) USING BTREE
+	PRIMARY KEY (`Id`) USING BTREE,
+	KEY `idx_UserId`(`UserId`) USING BTREE,
+	KEY `idx_OrgId`(`OrgId`) USING BTREE
 ) COMMENT '用户表与组织机构表的关系表';

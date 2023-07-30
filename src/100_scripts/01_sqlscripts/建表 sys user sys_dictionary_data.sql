@@ -14,6 +14,6 @@ CREATE TABLE `sys_dictionary_data`(
 	`UpdateId` bigint NOT NULL COMMENT '修改人Id',
 	`UpdateSource` varchar(30) NOT NULL COMMENT '修改人',
 	`UpdateDate` varchar(30) NOT NULL COMMENT '修改时间',
-	PRIMARY KEY (`idx_Id`) USING BTREE,
-	INDEX KEY (`idx_Account`) USING BTREE
+	PRIMARY KEY (`Id`) USING BTREE,
+	KEY `idx_Code`(`Code`)  USING BTREE
 ) COMMENT '字典定义表';

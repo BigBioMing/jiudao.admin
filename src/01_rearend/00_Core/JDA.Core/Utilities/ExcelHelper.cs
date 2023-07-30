@@ -15,7 +15,7 @@ namespace JDA.Core.Utilities
 {
     public class ExcelHelper
     {
-        public static string Export(DataTable dataTable, Dictionary<string, ColumnMetadataAttribute> columnMetadatas,string filePath)
+        public static string Export(DataTable dataTable, Dictionary<string, ColumnMetadataAttribute> columnMetadatas, string filePath)
         {
             ExportCore(dataTable, columnMetadatas, filePath, (package, filePath) =>
             {

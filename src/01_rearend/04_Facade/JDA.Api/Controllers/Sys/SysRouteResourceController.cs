@@ -1,31 +1,23 @@
-﻿using JDA.Core.Attributes;
-using JDA.Core.Formats.WebApi;
+﻿using JDA.Core.Formats.WebApi;
 using JDA.Core.Models.FilterParamses;
-using JDA.Core.Models.Operations;
-using JDA.Core.Models.Tables;
-using JDA.Core.Persistence.Repositories.Abstractions.Default;
 using JDA.Core.Persistence.Services.Abstractions.Default;
-using JDA.Core.Utilities;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
-using JDA.IService.Sys;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Newtonsoft.Json.Linq;
-using System.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace JDA.Api.Controllers.Sys
 {
     [Area("Sys")]
-    public partial class SysUserController : BaseApiController<SysUser>
+    public partial class SysRouteResourceController : BaseApiController<SysRouteResource>
     {
-        public SysUserController(ISysUserService sysUserService) : base(sysUserService)
+        public SysRouteResourceController(IService<SysRouteResource> currentService) : base(currentService)
         {
         }
 
@@ -38,13 +30,13 @@ namespace JDA.Api.Controllers.Sys
         [Route("GetPageEntities")]
         public virtual async Task<IActionResult> GetPageEntities([FromQuery] FilterParams filterParams)
         {
-            Expression<Func<SysUser, bool>>? predicate = null;
+            Expression<Func<SysRouteResource, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
-            string? account = filterParams?.Params?.Account;
-            if (!string.IsNullOrWhiteSpace(account))
-                predicate = n => n.Account == account;
+            string? code = filterParams?.Params?.Code;
+            if (!string.IsNullOrWhiteSpace(code))
+                predicate = n => n.Code == code;
 
             var pageResult = await base.GetPageEntitiesAsync(filterParams, predicate);
 
@@ -58,7 +50,7 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpPost]
         [Route("Save")]
-        public virtual async Task<UnifyResponse<object>> Save([FromBody] SysUser model)
+        public virtual async Task<UnifyResponse<object>> Save([FromBody] SysRouteResource model)
         {
             return await base.SaveAsync(model);
         }
@@ -72,7 +64,7 @@ namespace JDA.Api.Controllers.Sys
         [Route("Enable")]
         public virtual async Task<UnifyResponse<object>> Enable([FromBody] EnableListViewModel model)
         {
-            return await base.EnableAsync<SysUser>(model);
+            return await base.EnableAsync<SysRouteResource>(model);
         }
 
         /// <summary>
@@ -96,13 +88,13 @@ namespace JDA.Api.Controllers.Sys
         [Route("Export")]
         public virtual async Task<IActionResult> Export([FromQuery] FilterParams filterParams)
         {
-            Expression<Func<SysUser, bool>>? predicate = null;
+            Expression<Func<SysRouteResource, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
-            string? account = filterParams?.Params?.Account;
-            if (!string.IsNullOrWhiteSpace(account))
-                predicate = n => n.Account == account;
+            string? code = filterParams?.Params?.Code;
+            if (!string.IsNullOrWhiteSpace(code))
+                predicate = n => n.Code == code;
 
             var list = this._currentService.GetEntities(predicate).ToList();
             string fileName = $"{DateTime.Now.ToString("user_yyyy_MM_dd_HH_mm_ss")}.xlsx";

@@ -17,4 +17,60 @@ namespace JDA.Entity.Maps
             builder.ToTable("sys_user");
         }
     }
+    public partial class SysRoleEntityTypeConfiguration : SuperMapping<SysRole>
+    {
+        public override void Configure(EntityTypeBuilder<SysRole> builder)
+        {
+            builder.ToTable("sys_role");
+        }
+    }
+    public partial class SysRouteResourceEntityTypeConfiguration : SuperMapping<SysRouteResource>
+    {
+        public override void Configure(EntityTypeBuilder<SysRouteResource> builder)
+        {
+            builder.ToTable("sys_route_resource");
+        }
+    }
+    public partial class SysOrganizationEntityTypeConfiguration : SuperMapping<SysOrganization>
+    {
+        public override void Configure(EntityTypeBuilder<SysOrganization> builder)
+        {
+            builder.ToTable("sys_organization");
+        }
+    }
+    public partial class SysRoleRouteResourceEntityTypeConfiguration : SuperMapping<SysRoleRouteResource>
+    {
+        public override void Configure(EntityTypeBuilder<SysRoleRouteResource> builder)
+        {
+            builder.ToTable("sys_role_route_resource");
+        }
+    }
+    public partial class SysUserRoleEntityTypeConfiguration : SuperMapping<SysUserRole>
+    {
+        public override void Configure(EntityTypeBuilder<SysUserRole> builder)
+        {
+            builder.ToTable("sys_user_role");
+        }
+    }
+    public partial class SysUserOrganizationEntityTypeConfiguration : SuperMapping<SysUserOrganization>
+    {
+        public override void Configure(EntityTypeBuilder<SysUserOrganization> builder)
+        {
+            builder.ToTable("sys_user_organization");
+        }
+    }
+    public partial class SysDictionaryDefineEntityTypeConfiguration : SuperMapping<SysDictionaryDefine>
+    {
+        public override void Configure(EntityTypeBuilder<SysDictionaryDefine> builder)
+        {
+            builder.ToTable("sys_dictionary_define");
+        }
+    }
+    public partial class SysDictionaryDataEntityTypeConfiguration : SuperMapping<SysDictionaryData>
+    {
+        public override void Configure(EntityTypeBuilder<SysDictionaryData> builder)
+        {
+            builder.ToTable("sys_dictionary_data");
+        }
+    }
 }

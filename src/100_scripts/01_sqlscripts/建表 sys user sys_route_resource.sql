@@ -10,6 +10,6 @@ CREATE TABLE `sys_route_resource`(
 	`UpdateId` bigint NOT NULL COMMENT '修改人Id',
 	`UpdateSource` varchar(30) NOT NULL COMMENT '修改人',
 	`UpdateDate` varchar(30) NOT NULL COMMENT '修改时间',
-	PRIMARY KEY (`idx_Id`) USING BTREE,
-	INDEX KEY (`idx_Account`) USING BTREE
+	PRIMARY KEY (`Id`) USING BTREE,
+	KEY `idx_Code`(`Code`)  USING BTREE
 ) COMMENT '路由资源表';

@@ -9,7 +9,7 @@ CREATE TABLE `sys_user_role`(
 	`UpdateId` bigint NOT NULL COMMENT '修改人Id',
 	`UpdateSource` varchar(30) NOT NULL COMMENT '修改人',
 	`UpdateDate` varchar(30) NOT NULL COMMENT '修改时间',
-	PRIMARY KEY (`idx_Id`) USING BTREE,
-	INDEX KEY (`idx_UserId`) USING BTREE,
-	INDEX KEY (`idx_RoleId`) USING BTREE
+	PRIMARY KEY (`Id`) USING BTREE,
+	KEY `idx_UserId`(`UserId`) USING BTREE,
+	KEY `idx_RoleId`(`RoleId`) USING BTREE
 ) COMMENT '用户表与角色表的关系表';
