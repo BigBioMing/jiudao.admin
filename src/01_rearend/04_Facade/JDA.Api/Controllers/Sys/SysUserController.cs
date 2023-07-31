@@ -1,6 +1,6 @@
-﻿using JDA.Core.Attributes;
+﻿using AutoMapper;
+using JDA.Core.Attributes;
 using JDA.Core.Formats.WebApi;
-using JDA.Core.Models.FilterParamses;
 using JDA.Core.Models.Operations;
 using JDA.Core.Models.Tables;
 using JDA.Core.Persistence.Repositories.Abstractions.Default;
@@ -10,6 +10,7 @@ using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
+using JDA.Model.Sys.SysUsers;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +26,10 @@ namespace JDA.Api.Controllers.Sys
     [Area("Sys")]
     public partial class SysUserController : BaseApiController<SysUser>
     {
-        public SysUserController(ISysUserService sysUserService) : base(sysUserService)
+        protected readonly IMapper _mapper;
+        public SysUserController(ISysUserService sysUserService, IMapper mapper) : base(sysUserService)
         {
+            this._mapper = mapper;
         }
 
         /// <summary>
@@ -36,7 +39,7 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("GetPageEntities")]
-        public virtual async Task<IActionResult> GetPageEntities([FromQuery] FilterParams filterParams)
+        public virtual async Task<IActionResult> GetPageEntities([FromQuery] PageViewModel filterParams)
         {
             Expression<Func<SysUser, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;
@@ -58,9 +61,10 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpPost]
         [Route("Save")]
-        public virtual async Task<UnifyResponse<object>> Save([FromBody] SysUser model)
+        public virtual async Task<UnifyResponse<object>> Save([FromBody] SysUserSaveViewModel model)
         {
-            return await base.SaveAsync(model);
+            SysUser user = _mapper.Map<SysUser>(model);
+            return await base.SaveAsync(user);
         }
 
         /// <summary>
@@ -94,7 +98,7 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("Export")]
-        public virtual async Task<IActionResult> Export([FromQuery] FilterParams filterParams)
+        public virtual async Task<IActionResult> Export([FromQuery] NoPageViewModel filterParams)
         {
             Expression<Func<SysUser, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;
@@ -105,7 +109,7 @@ namespace JDA.Api.Controllers.Sys
                 predicate = n => n.Account == account;
 
             var list = this._currentService.GetEntities(predicate).ToList();
-            string fileName = $"{DateTime.Now.ToString("user_yyyy_MM_dd_HH_mm_ss")}.xlsx";
+            string fileName = $"用户_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
             return await base.ExportAsync(fileName, list);
         }
     }

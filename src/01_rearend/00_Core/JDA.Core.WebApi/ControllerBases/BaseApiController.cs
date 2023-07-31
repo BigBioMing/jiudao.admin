@@ -1,6 +1,5 @@
 ﻿using JDA.Core.Attributes;
 using JDA.Core.Formats.WebApi;
-using JDA.Core.Models.FilterParamses;
 using JDA.Core.Models.Operations;
 using JDA.Core.Models.Tables;
 using JDA.Core.Persistence.Entities;
@@ -35,7 +34,7 @@ namespace JDA.Core.WebApi.ControllerBases
         /// </summary>
         /// <param name="filterParams">查询条件</param>
         /// <returns></returns>
-        protected virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(FilterParams filterParams, Expression<Func<TEntity, bool>>? predicate)
+        protected virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(PageViewModel filterParams, Expression<Func<TEntity, bool>>? predicate)
         {
             var pageResult = await this._currentService.GetPageEntitiesAsync(filterParams.Page, predicate);
             return pageResult;

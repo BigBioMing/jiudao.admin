@@ -1,5 +1,4 @@
 ﻿using JDA.Core.Formats.WebApi;
-using JDA.Core.Models.FilterParamses;
 using JDA.Core.Persistence.Services.Abstractions.Default;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
@@ -28,7 +27,7 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("GetPageEntities")]
-        public virtual async Task<IActionResult> GetPageEntities([FromQuery] FilterParams filterParams)
+        public virtual async Task<IActionResult> GetPageEntities([FromQuery] PageViewModel filterParams)
         {
             Expression<Func<SysRouteResource, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;
@@ -86,7 +85,7 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("Export")]
-        public virtual async Task<IActionResult> Export([FromQuery] FilterParams filterParams)
+        public virtual async Task<IActionResult> Export([FromQuery] NoPageViewModel filterParams)
         {
             Expression<Func<SysRouteResource, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;
@@ -97,7 +96,7 @@ namespace JDA.Api.Controllers.Sys
                 predicate = n => n.Code == code;
 
             var list = this._currentService.GetEntities(predicate).ToList();
-            string fileName = $"{DateTime.Now.ToString("user_yyyy_MM_dd_HH_mm_ss")}.xlsx";
+            string fileName = $"路由资源_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
             return await base.ExportAsync(fileName, list);
         }
     }

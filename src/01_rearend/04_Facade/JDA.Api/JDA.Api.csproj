@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
@@ -23,6 +24,7 @@
     <ProjectReference Include="..\..\02_Repository\JDA.Repository\JDA.Repository.csproj" />
     <ProjectReference Include="..\..\03_Service\JDA.IService\JDA.IService.csproj" />
     <ProjectReference Include="..\..\03_Service\JDA.Service\JDA.Service.csproj" />
+    <ProjectReference Include="..\..\05_Model\JDA.Model\JDA.Model.csproj" />
   </ItemGroup>
 
 </Project>

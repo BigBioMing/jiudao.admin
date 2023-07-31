@@ -5,6 +5,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using Microsoft.EntityFrameworkCore;
 using JDA.Core.Persistence.Contexts.Default;
+using JDA.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ builder.Services.AddScoped<ITenant>(sp =>
 });
 
 builder.Services.AddDependencyInjectionService();
+builder.Services.AddAutoMapper(typeof(ViewModelProfile));
 
 var app = builder.Build();
 
