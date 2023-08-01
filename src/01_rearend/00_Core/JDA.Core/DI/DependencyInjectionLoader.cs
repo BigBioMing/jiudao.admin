@@ -22,14 +22,12 @@ namespace JDA.Core.DI
     {
         public static IServiceCollection AddDependencyInjectionService(this IServiceCollection services)
         {
-
             #region 通过反射获取所有实现了 IDependencyInjectionRegistrar 接口的类，并注入DI服务
             //超类
             Type superClass = typeof(IDependencyInjectionRegistrar);
             List<Assembly> assemblies = AssemblyHelper.GetAssemblies();
             var registerTypes = assemblies.SelectMany(assembly => assembly.GetTypes().Where(type => superClass.IsAssignableFrom(type) && !type.IsAbstract && !type.IsInterface)).ToList();
 
-            DependencyContext dependencyContext = DependencyContext.Default;
             List<IDependencyInjectionRegistrar> registerInstances = new List<IDependencyInjectionRegistrar>();
             foreach (var registerType in registerTypes)
             {

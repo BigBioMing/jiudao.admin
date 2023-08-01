@@ -27,7 +27,7 @@ builder.Services.AddScoped<ITenant>(sp =>
 });
 
 builder.Services.AddDependencyInjectionService();
-builder.Services.AddAutoMapper(typeof(ViewModelProfile));
+//builder.Services.AddAutoMapper(typeof(ViewModelProfile));
 
 var app = builder.Build();
 
