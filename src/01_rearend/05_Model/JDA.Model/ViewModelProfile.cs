@@ -16,7 +16,7 @@ namespace JDA.Model
     {
         public ViewModelProfile()
         {
-            CreateMap<SysUser, SysUserSaveViewModel>().ReverseMap();
+            CreateMap<SysUser, SysUserSaveVO>().ReverseMap();
         }
     }
 }

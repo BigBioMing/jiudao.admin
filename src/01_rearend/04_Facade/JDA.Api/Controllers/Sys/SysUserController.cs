@@ -26,10 +26,8 @@ namespace JDA.Api.Controllers.Sys
     [Area("Sys")]
     public partial class SysUserController : BaseApiController<SysUser>
     {
-        protected readonly IMapper _mapper;
-        public SysUserController(ISysUserService sysUserService, IMapper mapper) : base(sysUserService)
+        public SysUserController(ISysUserService sysUserService) : base(sysUserService)
         {
-            this._mapper = mapper;
         }
 
         /// <summary>
@@ -61,10 +59,9 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpPost]
         [Route("Save")]
-        public virtual async Task<UnifyResponse<object>> Save([FromBody] SysUserSaveViewModel model)
+        public virtual async Task<UnifyResponse<object>> Save([FromBody] SysUserSaveVO model)
         {
-            SysUser user = _mapper.Map<SysUser>(model);
-            return await base.SaveAsync(user);
+            return await base.SaveAsync(model);
         }
 
         /// <summary>

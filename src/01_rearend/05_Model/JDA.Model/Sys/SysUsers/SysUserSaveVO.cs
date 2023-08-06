@@ -12,7 +12,7 @@ namespace JDA.Model.Sys.SysUsers
     /// <summary>
     /// 保存用户信息模型
     /// </summary>
-    public class SysUserSaveViewModel : BaseSugerEntityViewModel
+    public class SysUserSaveVO : BaseSugerEntityViewModel
     {
         /// <summary>
         /// 主键
