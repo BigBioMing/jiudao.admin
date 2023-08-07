@@ -39,6 +39,11 @@ namespace JDA.Service.Sys
             this._sysUserOrganizationRepository = sysUserOrganizationRepository;
         }
 
+        /// <summary>
+        /// 保存用户信息
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public virtual async Task<OperationResult<SysUser>> SaveAsync(SysUserSaveVO model)
         {
             SysUser user = _mapper.Map<SysUser>(model);

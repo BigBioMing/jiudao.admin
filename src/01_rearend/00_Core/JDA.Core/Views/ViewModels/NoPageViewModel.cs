@@ -10,6 +10,9 @@ namespace JDA.Core.Views.ViewModels
 {
     public class NoPageViewModel : BaseViewModel
     {
+        /// <summary>
+        /// 分页参数
+        /// </summary>
         public dynamic? Params { get; set; }
     }
 }

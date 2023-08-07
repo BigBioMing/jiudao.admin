@@ -23,11 +23,16 @@ using System.Reflection;
 
 namespace JDA.Api.Controllers.Sys
 {
+    /// <summary>
+    /// 系统用户
+    /// </summary>
     [Area("Sys")]
     public partial class SysUserController : BaseApiController<SysUser>
     {
+        protected readonly ISysUserService _sysUserService;
         public SysUserController(ISysUserService sysUserService) : base(sysUserService)
         {
+            this._sysUserService = sysUserService;
         }
 
         /// <summary>
@@ -61,7 +66,11 @@ namespace JDA.Api.Controllers.Sys
         [Route("Save")]
         public virtual async Task<UnifyResponse<object>> Save([FromBody] SysUserSaveVO model)
         {
-            return await base.SaveAsync(model);
+            var operationResult = await _sysUserService.SaveAsync(model);
+            if (operationResult.Status != JDA.Core.Models.Operations.OperationResultStatus.Success)
+                return UnifyResponse<object>.Error(operationResult.Message);
+
+            return UnifyResponse<object>.Success();
         }
 
         /// <summary>

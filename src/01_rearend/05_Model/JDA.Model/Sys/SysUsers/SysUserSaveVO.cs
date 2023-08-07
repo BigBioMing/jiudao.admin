@@ -39,7 +39,7 @@ namespace JDA.Model.Sys.SysUsers
         [ColumnMetadata(Name = "手机号码", Order = 3, IsEncry = true, EncryType = "AES")]
         public string Mobile { get; set; }
         /// <summary>
-        /// 性别（关联字段表）
+        /// 性别（关联字典表）
         /// </summary>
         [Display(Name = "性别", Order = 4)]
         [ColumnMetadata(Name = "性别", Order = 4, IsDic = true, DicKey = "Gender")]

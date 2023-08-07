@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace JDA.Api.Controllers.Sys
 {
+    /// <summary>
+    /// 组织机构
+    /// </summary>
     [Area("Sys")]
     public partial class SysOrganizationController : BaseApiController<SysOrganization>
     {

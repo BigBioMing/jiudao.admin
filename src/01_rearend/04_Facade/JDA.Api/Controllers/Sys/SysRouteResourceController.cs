@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace JDA.Api.Controllers.Sys
 {
+    /// <summary>
+    /// 路由资源
+    /// </summary>
     [Area("Sys")]
     public partial class SysRouteResourceController : BaseApiController<SysRouteResource>
     {

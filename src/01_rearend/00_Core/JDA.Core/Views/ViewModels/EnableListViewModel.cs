@@ -12,7 +12,13 @@ namespace JDA.Core.Views.ViewModels
     /// </summary>
     public class EnableListViewModel : BaseViewModel
     {
+        /// <summary>
+        /// 要启用/禁用的数据的ID的集合
+        /// </summary>
         public List<long> Ids { get; set; }
+        /// <summary>
+        /// 要设置的值（启用或禁用）
+        /// </summary>
         public long SetEnableValue { get; set; }
     }
 }

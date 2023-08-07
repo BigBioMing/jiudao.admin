@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 
 namespace JDA.Api.Controllers.Sys
 {
+    /// <summary>
+    /// 字典值数据
+    /// </summary>
     [Area("Sys")]
     public partial class SysDictionaryDataController : BaseApiController<SysDictionaryData>
     {

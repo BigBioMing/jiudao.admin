@@ -10,6 +10,9 @@ namespace JDA.Core.Views.ViewModels
 {
     public class PageViewModel : NoPageViewModel
     {
+        /// <summary>
+        /// 分页大小
+        /// </summary>
         public PageInParams Page { get; set; }
     }
 }

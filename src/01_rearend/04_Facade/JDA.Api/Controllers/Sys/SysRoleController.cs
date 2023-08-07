@@ -3,6 +3,10 @@ using JDA.Core.Persistence.Services.Abstractions.Default;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
+using JDA.IService.Sys;
+using JDA.Model.Sys.SysRoles;
+using JDA.Model.Sys.SysUsers;
+using JDA.Service.Sys;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,11 +17,16 @@ using System.Threading.Tasks;
 
 namespace JDA.Api.Controllers.Sys
 {
+    /// <summary>
+    /// 角色
+    /// </summary>
     [Area("Sys")]
     public partial class SysRoleController : BaseApiController<SysRole>
     {
-        public SysRoleController(IService<SysRole> currentService) : base(currentService)
+        protected readonly ISysRoleService _sysRoleService;
+        public SysRoleController(ISysRoleService sysRoleService) : base(sysRoleService)
         {
+            this._sysRoleService = sysRoleService;
         }
 
         /// <summary>
@@ -64,6 +73,22 @@ namespace JDA.Api.Controllers.Sys
         public virtual async Task<UnifyResponse<object>> Enable([FromBody] EnableListViewModel model)
         {
             return await base.EnableAsync<SysRole>(model);
+        }
+
+        /// <summary>
+        /// 给角色授权
+        /// </summary>
+        /// <param name="model">授权信息</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("Empower")]
+        public virtual async Task<UnifyResponse<object>> Empower([FromBody] SysRoleEmpowerVO model)
+        {
+            var operationResult = await _sysRoleService.Empower( model);
+            if (operationResult.Status != JDA.Core.Models.Operations.OperationResultStatus.Success)
+                return UnifyResponse<object>.Error(operationResult.Message);
+
+            return UnifyResponse<object>.Success();
         }
 
         /// <summary>

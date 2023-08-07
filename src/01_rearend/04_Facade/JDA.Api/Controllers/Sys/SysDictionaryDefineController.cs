@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 
 namespace JDA.Api.Controllers.Sys
 {
+    /// <summary>
+    /// 字典定义
+    /// </summary>
     [Area("Sys")]
     public partial class SysDictionaryDefineController : BaseApiController<SysDictionaryDefine>
     {
