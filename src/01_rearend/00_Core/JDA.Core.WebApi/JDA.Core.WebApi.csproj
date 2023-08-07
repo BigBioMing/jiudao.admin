@@ -14,4 +14,8 @@
     <ProjectReference Include="..\JDA.Core\JDA.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ApiDocs\" />
+  </ItemGroup>
+
 </Project>
