@@ -7,6 +7,7 @@ using JDA.Core.Persistence.Repositories.Abstractions.Default;
 using JDA.Core.Persistence.Services.Abstractions.Default;
 using JDA.Core.Utilities;
 using JDA.Core.Views.ViewModels;
+using JDA.Core.WebApi.ApiDocs;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
@@ -27,6 +28,7 @@ namespace JDA.Api.Controllers.Sys
     /// 系统用户
     /// </summary>
     [Area("Sys")]
+    [ApiVersion(Version = ApiVersionzDefine.V1)]
     public partial class SysUserController : BaseApiController<SysUser>
     {
         protected readonly ISysUserService _sysUserService;

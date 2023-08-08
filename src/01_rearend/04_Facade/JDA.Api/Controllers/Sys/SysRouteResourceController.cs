@@ -1,6 +1,7 @@
 ﻿using JDA.Core.Formats.WebApi;
 using JDA.Core.Persistence.Services.Abstractions.Default;
 using JDA.Core.Views.ViewModels;
+using JDA.Core.WebApi.ApiDocs;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ namespace JDA.Api.Controllers.Sys
     /// 路由资源
     /// </summary>
     [Area("Sys")]
+    [ApiVersion(Version = ApiVersionzDefine.V2)]
     public partial class SysRouteResourceController : BaseApiController<SysRouteResource>
     {
         public SysRouteResourceController(IService<SysRouteResource> currentService) : base(currentService)
