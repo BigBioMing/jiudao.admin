@@ -4,6 +4,10 @@ using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using JDA.Core.Persistence.Contexts.Default;
+using System.Reflection;
+using JDA.Core.WebApi.ApiDocs;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +16,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddDatabase<JDADbContext>(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITenant>(sp =>
@@ -29,11 +32,34 @@ builder.Services.AddDependencyInjectionService();
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
+    var fields = typeof(ApiVersionDefine).GetFields();
+    fields = fields.Skip(1).ToArray();
+    foreach (FieldInfo field in fields)
     {
-        Title = "这是文档标题",
-        Version = "这是文档版本编号",
-        Description = "这是文档描述"
+        ApiVersionDescribeAttribute describe = field.GetCustomAttribute<ApiVersionDescribeAttribute>();
+        options.SwaggerDoc(describe.Version, new Microsoft.OpenApi.Models.OpenApiInfo()
+        {
+            Title = $"{describe.Version}：{describe.Name}",
+            Version = describe.Version,
+            Description = describe.Name
+        });
+    }
+    //没有特性的分到NoGroup分组
+    options.SwaggerDoc("NoGroup", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "无分组"
+    });
+    //判断接口在哪一个分组
+    options.DocInclusionPredicate((docName, apiDescription) =>
+    {
+        if (docName == "NoGroup")
+        {
+            return string.IsNullOrEmpty(apiDescription.GroupName);
+        }
+        else
+        {
+            return apiDescription.GroupName == docName;
+        }
     });
 
     {
@@ -61,7 +87,17 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+ {
+     var fields = typeof(ApiVersionDefine).GetFields();
+     fields = fields.Skip(1).ToArray();
+     foreach (FieldInfo field in fields)
+     {
+         ApiVersionDescribeAttribute describe = field.GetCustomAttribute<ApiVersionDescribeAttribute>();
+         options.SwaggerEndpoint($"/swagger/{field.Name}/swagger.json", $"{describe.Name}");
+     }
+     options.SwaggerEndpoint("/swagger/NoGroup/swagger.json", "无分组");
+ });
 }
 
 app.UseStaticFiles();

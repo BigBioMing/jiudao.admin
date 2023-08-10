@@ -18,7 +18,7 @@ namespace JDA.Api.Controllers.Sys
     /// 路由资源
     /// </summary>
     [Area("Sys")]
-    [ApiVersion(Version = ApiVersionzDefine.V2)]
+    [ApiVersion(Version = ApiVersionDefine.V2)]
     public partial class SysRouteResourceController : BaseApiController<SysRouteResource>
     {
         public SysRouteResourceController(IService<SysRouteResource> currentService) : base(currentService)

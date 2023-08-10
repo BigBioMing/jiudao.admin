@@ -10,7 +10,7 @@ namespace JDA.Core.WebApi.ApiDocs
     /// <summary>
     /// API版本定义
     /// </summary>
-    public enum ApiVersionzDefine
+    public enum ApiVersionDefine
     {
         [Description("V1")]
         [ApiVersionDescribe(Name = "V1", Version = "V1")]

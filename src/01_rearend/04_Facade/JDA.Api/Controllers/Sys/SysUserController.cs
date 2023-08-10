@@ -28,7 +28,8 @@ namespace JDA.Api.Controllers.Sys
     /// 系统用户
     /// </summary>
     [Area("Sys")]
-    [ApiVersion(Version = ApiVersionzDefine.V1)]
+    //[ApiExplorerSettings(GroupName = "V1")]
+    [ApiVersion(Version = ApiVersionDefine.V1, GroupName = "V1")]
     public partial class SysUserController : BaseApiController<SysUser>
     {
         protected readonly ISysUserService _sysUserService;
@@ -44,6 +45,7 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("GetPageEntities")]
+        //[ApiExplorerSettings(GroupName = "V2")]
         public virtual async Task<IActionResult> GetPageEntities([FromQuery] PageViewModel filterParams)
         {
             Expression<Func<SysUser, bool>>? predicate = null;
@@ -66,6 +68,7 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpPost]
         [Route("Save")]
+        [ApiVersion(Version = ApiVersionDefine.V1, GroupName = "V2")]
         public virtual async Task<UnifyResponse<object>> Save([FromBody] SysUserSaveVO model)
         {
             var operationResult = await _sysUserService.SaveAsync(model);
