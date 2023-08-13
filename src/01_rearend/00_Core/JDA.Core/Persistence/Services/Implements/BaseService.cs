@@ -1,4 +1,5 @@
-﻿using JDA.Core.Models.Deletes;
+﻿using JDA.Core.Mappers.Abstractions;
+using JDA.Core.Models.Deletes;
 using JDA.Core.Models.Operations;
 using JDA.Core.Models.OrderBys;
 using JDA.Core.Models.Tables;
@@ -20,9 +21,17 @@ namespace JDA.Core.Persistence.Services.Implements
     /// </summary>
     public class BaseService<TEntity, TDbContext> where TEntity : SuperEntity where TDbContext : JDABaseDbContext
     {
-        private readonly IBaseRepository<TEntity, TDbContext> _currentRepository;
-        public BaseService(IBaseRepository<TEntity, TDbContext> currentRepository)
+        /// <summary>
+        /// 仓储
+        /// </summary>
+        protected readonly IBaseRepository<TEntity, TDbContext> _currentRepository;
+        /// <summary>
+        /// 对象映射转换
+        /// </summary>
+        protected readonly IShapeMapper _mapper;
+        public BaseService(IShapeMapper mapper, IBaseRepository<TEntity, TDbContext> currentRepository)
         {
+            this._mapper = mapper;
             this._currentRepository = currentRepository;
         }
 

@@ -1,6 +1,9 @@
 ﻿using JDA.Core.DI.Abstractions;
 using JDA.Core.Mappers.Abstractions;
+using JDA.Core.Mappers.Implements;
 using JDA.Core.Persistence.Maps;
+using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.Core.Persistence.Services.Implements.Default;
 using JDA.Core.Users.Abstractions;
 using JDA.Core.Users.Implements;
 using JDA.Core.Utilities;
@@ -33,6 +36,7 @@ namespace JDA.Core.Mappers.DI
             var registerTypes = assemblies.SelectMany(assembly => assembly.GetTypes().Where(type => TypeHelper.HasImplementedRawGeneric(type, superClass) && !type.IsAbstract && !type.IsInterface)).ToList();
 
             serviceCollection.AddAutoMapper(registerTypes.ToArray());
+            serviceCollection.AddTransient<IShapeMapper, ShapeMapper>();
             #endregion
         }
     }

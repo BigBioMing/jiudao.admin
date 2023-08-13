@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JDA.Core.Formats.WebApi;
+using JDA.Core.Mappers.Abstractions;
 using JDA.Core.Models.Operations;
 using JDA.Core.Persistence.Repositories.Abstractions.Default;
 using JDA.Core.Persistence.Services.Abstractions.Default;
@@ -24,17 +25,15 @@ namespace JDA.Service.Sys
     /// </summary>
     public partial class SysUserService : Service<SysUser>, ISysUserService
     {
-        protected readonly IMapper _mapper;
         protected readonly IRepository<SysUserRole> _sysUserRoleRepository;
         protected readonly IRepository<SysUserOrganization> _sysUserOrganizationRepository;
         public SysUserService(
-            IRepository<SysUser> currentRepository
-            , IMapper mapper
+            IShapeMapper mapper
+            , IRepository<SysUser> currentRepository
             , IRepository<SysUserRole> sysUserRoleRepository
             , IRepository<SysUserOrganization> sysUserOrganizationRepository
-            ) : base(currentRepository)
+            ) : base(mapper, currentRepository)
         {
-            this._mapper = mapper;
             this._sysUserRoleRepository = sysUserRoleRepository;
             this._sysUserOrganizationRepository = sysUserOrganizationRepository;
         }

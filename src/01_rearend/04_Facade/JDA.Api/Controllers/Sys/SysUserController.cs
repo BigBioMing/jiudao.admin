@@ -29,7 +29,7 @@ namespace JDA.Api.Controllers.Sys
     /// </summary>
     [Area("Sys")]
     //[ApiExplorerSettings(GroupName = "V1")]
-    [ApiVersion(Version = ApiVersionDefine.V1, GroupName = "V1")]
+    //[ApiVersion(Version = ApiVersionDefine.V1, GroupName = "V1")]
     public partial class SysUserController : BaseApiController<SysUser>
     {
         protected readonly ISysUserService _sysUserService;
@@ -68,7 +68,7 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpPost]
         [Route("Save")]
-        [ApiVersion(Version = ApiVersionDefine.V1, GroupName = "V2")]
+        //[ApiVersion(Version = ApiVersionDefine.V1, GroupName = "V2")]
         public virtual async Task<UnifyResponse<object>> Save([FromBody] SysUserSaveVO model)
         {
             var operationResult = await _sysUserService.SaveAsync(model);

@@ -1,4 +1,5 @@
-﻿using JDA.Core.Persistence.Contexts.Default;
+﻿using JDA.Core.Mappers.Abstractions;
+using JDA.Core.Persistence.Contexts.Default;
 using JDA.Core.Persistence.Entities;
 using JDA.Core.Persistence.Repositories.Abstractions.Default;
 using JDA.Core.Persistence.Services.Abstractions.Default;
@@ -15,7 +16,7 @@ namespace JDA.Core.Persistence.Services.Implements.Default
     /// </summary>
     public class Service<TEntity> : BaseService<TEntity, JDADbContext>, IService<TEntity> where TEntity : SuperEntity
     {
-        public Service(IRepository<TEntity> currentRepository) : base(currentRepository)
+        public Service(IShapeMapper mapper, IRepository<TEntity> currentRepository) : base(mapper, currentRepository)
         {
         }
     }

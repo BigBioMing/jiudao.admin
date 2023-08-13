@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using JDA.Core.Mappers.Abstractions;
 using JDA.Core.Models.Operations;
 using JDA.Core.Persistence.Repositories.Abstractions.Default;
 using JDA.Core.Persistence.Services.Implements.Default;
@@ -19,15 +20,13 @@ namespace JDA.Service.Sys
     /// </summary>
     public class SysRoleService : Service<SysRole>, ISysRoleService
     {
-        protected readonly IMapper _mapper;
         protected readonly IRepository<SysRoleRouteResource> _sysRoleRouteResourceRepository;
         public SysRoleService(
             IRepository<SysRole> currentRepository
-            , IMapper mapper
+            , IShapeMapper mapper
             , IRepository<SysRoleRouteResource> sysRoleRouteResourceRepository
-            ) : base(currentRepository)
+            ) : base(mapper,currentRepository)
         {
-            this._mapper = mapper;
             this._sysRoleRouteResourceRepository = sysRoleRouteResourceRepository;
         }
 
