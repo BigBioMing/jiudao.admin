@@ -16,9 +16,6 @@ namespace JDA.IService.Sys
     /// </summary>
     public interface ISysOrganizationService : IService<SysOrganization>
     {
-        List<TreeNode> GetOrgTree(List<ITreeNodeSuperEntity> models)
-        {
-            var tops = models.Where(n=>n.ParentId == 0).ToList();
-        }
+        List<TreeNode> GetOrgTree(List<SysOrganization> models, long parentId = 0);
     }
 }

@@ -9,7 +9,7 @@ namespace JDA.Core.Persistence.Entities
     /// <summary>
     /// 树形表超类
     /// </summary>
-    public class TreeNodeSuperEntity : SuperEntity, ITreeNodeSuperEntity
+    public class TreeNodeSuperEntity : EnableSuperEntity, ITreeNodeSuperEntity
     {
         public string Name { get; set; }
         public long ParentId { get; set; }

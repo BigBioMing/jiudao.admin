@@ -12,7 +12,7 @@ namespace JDA.Entity.Entities.Sys
     /// <summary>
     /// 组织机构表
     /// </summary>
-    public partial class SysOrganization : EnableSuperEntity
+    public partial class SysOrganization : TreeNodeSuperEntity
     {
         /// <summary>
         /// 编码

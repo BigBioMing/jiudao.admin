@@ -3,6 +3,7 @@ using JDA.Core.Persistence.Services.Abstractions.Default;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
+using JDA.IService.Sys;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,10 @@ namespace JDA.Api.Controllers.Sys
     [Area("Sys")]
     public partial class SysOrganizationController : BaseApiController<SysOrganization>
     {
-        public SysOrganizationController(IService<SysOrganization> currentService) : base(currentService)
+        protected readonly ISysOrganizationService _sysOrganizationService;
+        public SysOrganizationController(ISysOrganizationService sysOrganizationService) : base(sysOrganizationService)
         {
+            this._sysOrganizationService = sysOrganizationService;
         }
 
         /// <summary>
@@ -43,6 +46,39 @@ namespace JDA.Api.Controllers.Sys
             var pageResult = await base.GetPageEntitiesAsync(filterParams, predicate);
 
             return new JsonResult(pageResult);
+        }
+
+        /// <summary>
+        /// 获取树状数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetTree")]
+        public virtual async Task<IActionResult> GetTree()
+        {
+            List<SysOrganization> list = new List<SysOrganization>();
+
+            for (int i = 1; i <= 10; i++)
+            {
+                var org = new SysOrganization() { Id = i, Name = i.ToString(), ParentId = 0 };
+                list.Add(org);
+
+                for (int j = 11; j <= 30; j++)
+                {
+                    var org2 = new SysOrganization() { Id = (i * j), Name = (i * j).ToString(), ParentId = i };
+                    list.Add(org2);
+
+                    for (int k = 31; k <= 80; k++)
+                    {
+                        var org3 = new SysOrganization() { Id = (i * j * k), Name = (i * j * k).ToString(), ParentId = (i * j) };
+                        list.Add(org3);
+                    }
+                }
+            }
+
+            var treeNodes = _sysOrganizationService.GetOrgTree(list);
+
+            return new JsonResult(new { });
         }
 
         /// <summary>
