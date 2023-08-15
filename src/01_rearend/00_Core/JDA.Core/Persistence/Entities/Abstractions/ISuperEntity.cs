@@ -6,13 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JDA.Core.Persistence.Entities
+namespace JDA.Core.Persistence.Entities.Abstractions
 {
-    /// <summary>
-    /// 实体基类
-    /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    public partial class SuperEntity<TKey>
+    public partial interface ISuperEntity<TKey>
     {
         /// <summary>
         /// 主键
@@ -67,7 +63,7 @@ namespace JDA.Core.Persistence.Entities
     /// <summary>
     /// 实体基类
     /// </summary>
-    public partial class SuperEntity : SuperEntity<long>
+    public partial interface ISuperEntity : ISuperEntity<long>
     {
 
     }

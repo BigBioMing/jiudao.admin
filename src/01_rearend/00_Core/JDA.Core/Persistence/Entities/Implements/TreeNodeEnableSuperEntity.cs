@@ -1,4 +1,5 @@
 ﻿using JDA.Core.Attributes;
+using JDA.Core.Persistence.Entities.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,10 +9,7 @@ using System.Threading.Tasks;
 
 namespace JDA.Core.Persistence.Entities
 {
-    /// <summary>
-    /// 含有启用禁用属性的实体
-    /// </summary>
-    public partial class EnableSuperEntity : SuperEntity
+    public class TreeNodeEnableSuperEntity : TreeNodeSuperEntity, ITreeNodeSuperEntity, IEnableSuperEntity
     {
         /// <summary>
         /// 是否启用（关联字段表）

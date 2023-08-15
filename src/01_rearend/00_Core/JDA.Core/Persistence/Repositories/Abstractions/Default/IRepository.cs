@@ -1,5 +1,5 @@
 ﻿using JDA.Core.Persistence.Contexts.Default;
-using JDA.Core.Persistence.Entities;
+using JDA.Core.Persistence.Entities.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace JDA.Core.Persistence.Repositories.Abstractions.Default
     /// <summary>
     /// 仓储接口
     /// </summary>
-    public interface IRepository<TEntity> : IBaseRepository<TEntity, JDADbContext> where TEntity : SuperEntity
+    public interface IRepository<TEntity> : IBaseRepository<TEntity, JDADbContext> where TEntity : class, ISuperEntity
     {
     }
 }

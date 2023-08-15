@@ -1,5 +1,6 @@
 ﻿using JDA.Core.Attributes;
 using JDA.Core.Persistence.Entities;
+using JDA.Core.Persistence.Entities.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

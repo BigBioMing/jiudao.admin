@@ -3,7 +3,7 @@ using JDA.Core.Models.Operations;
 using JDA.Core.Models.OrderBys;
 using JDA.Core.Models.Tables;
 using JDA.Core.Persistence.Contexts;
-using JDA.Core.Persistence.Entities;
+using JDA.Core.Persistence.Entities.Abstractions;
 using System.Linq.Expressions;
 
 namespace JDA.Core.Persistence.Repositories.Abstractions
@@ -12,7 +12,7 @@ namespace JDA.Core.Persistence.Repositories.Abstractions
     /// 仓储基接口
     /// </summary>
     /// <typeparam name="TEntity">实体</typeparam>
-    public interface IBaseRepository<TEntity, TDbContext> where TEntity : SuperEntity where TDbContext : JDABaseDbContext
+    public interface IBaseRepository<TEntity, TDbContext> where TEntity : class, ISuperEntity where TDbContext : JDABaseDbContext
     {
         public TDbContext DbContext { get; }
 
@@ -177,14 +177,14 @@ namespace JDA.Core.Persistence.Repositories.Abstractions
         /// <param name="entity">待启用/禁用的实体</param>
         /// <param name="setEnableValue">要设置的值</param>
         /// <returns>返回操作结果</returns>
-        OperationResult Enable<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity;
+        OperationResult Enable<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : IEnableSuperEntity, TEntity;
         /// <summary>
         /// 启用/禁用
         /// </summary>
         /// <param name="entities">待启用/禁用的实体集合</param>
         /// <param name="setEnableValue">要设置的值</param>
         /// <returns>返回操作结果</returns>
-        OperationResult Enable<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity;
+        OperationResult Enable<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : IEnableSuperEntity, TEntity;
         #endregion
 
         #region 删除
@@ -333,14 +333,14 @@ namespace JDA.Core.Persistence.Repositories.Abstractions
         /// <param name="entity">待启用/禁用的实体</param>
         /// <param name="setEnableValue">要设置的值</param>
         /// <returns>返回操作结果</returns>
-        Task<OperationResult> EnableAsync<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity;
+        Task<OperationResult> EnableAsync<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : IEnableSuperEntity, TEntity;
         /// <summary>
         /// 启用/禁用
         /// </summary>
         /// <param name="entities">待启用/禁用的实体集合</param>
         /// <param name="setEnableValue">要设置的值</param>
         /// <returns>返回操作结果</returns>
-        Task<OperationResult> EnableAsync<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity;
+        Task<OperationResult> EnableAsync<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : IEnableSuperEntity, TEntity;
         #endregion
 
         #region 删除

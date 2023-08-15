@@ -1,4 +1,4 @@
-﻿using JDA.Core.Persistence.Entities;
+﻿using JDA.Core.Persistence.Entities.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace JDA.Core.Persistence.Services.Abstractions.Default
     /// <summary>
     /// Service接口
     /// </summary>
-    public interface IService<TEntity> : IBaseService<TEntity> where TEntity : SuperEntity
+    public interface IService<TEntity> : IBaseService<TEntity> where TEntity : class, ISuperEntity
     {
     }
 }

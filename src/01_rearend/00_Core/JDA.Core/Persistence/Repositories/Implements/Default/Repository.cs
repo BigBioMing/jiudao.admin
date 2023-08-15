@@ -1,5 +1,5 @@
 ﻿using JDA.Core.Persistence.Contexts.Default;
-using JDA.Core.Persistence.Entities;
+using JDA.Core.Persistence.Entities.Abstractions;
 using JDA.Core.Persistence.Repositories.Abstractions.Default;
 using JDA.Core.Users.Abstractions;
 using System;
@@ -13,7 +13,7 @@ namespace JDA.Core.Persistence.Repositories.Implements.Default
     /// <summary>
     /// 仓储类
     /// </summary>
-    public class Repository<TEntity> : BaseRepository<TEntity, JDADbContext>, IRepository<TEntity> where TEntity : SuperEntity
+    public class Repository<TEntity> : BaseRepository<TEntity, JDADbContext>, IRepository<TEntity> where TEntity : class, ISuperEntity
     {
         public Repository(JDADbContext dbContext, ICurrentRunningContext currentRunningContext) : base(dbContext, currentRunningContext)
         {

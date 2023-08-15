@@ -4,7 +4,7 @@ using JDA.Core.Models.Operations;
 using JDA.Core.Models.OrderBys;
 using JDA.Core.Models.Tables;
 using JDA.Core.Persistence.Contexts;
-using JDA.Core.Persistence.Entities;
+using JDA.Core.Persistence.Entities.Abstractions;
 using JDA.Core.Persistence.Repositories.Abstractions;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using System;
@@ -19,7 +19,7 @@ namespace JDA.Core.Persistence.Services.Implements
     /// <summary>
     /// Service基类
     /// </summary>
-    public class BaseService<TEntity, TDbContext> where TEntity : SuperEntity where TDbContext : JDABaseDbContext
+    public class BaseService<TEntity, TDbContext> where TEntity : class, ISuperEntity where TDbContext : JDABaseDbContext
     {
         /// <summary>
         /// 仓储
@@ -177,7 +177,7 @@ namespace JDA.Core.Persistence.Services.Implements
         /// <param name="entity">待启用/禁用的实体</param>
         /// <param name="setEnableValue">要设置的值</param>
         /// <returns>返回操作结果</returns>
-        public virtual OperationResult Enable<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        public virtual OperationResult Enable<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : IEnableSuperEntity, TEntity
         {
             return this._currentRepository.Enable(entity, setEnableValue);
         }
@@ -187,7 +187,7 @@ namespace JDA.Core.Persistence.Services.Implements
         /// <param name="entities">待启用/禁用的实体集合</param>
         /// <param name="setEnableValue">要设置的值</param>
         /// <returns>返回操作结果</returns>
-        public virtual OperationResult Enable<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        public virtual OperationResult Enable<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : IEnableSuperEntity, TEntity
         {
             return this._currentRepository.Enable(entities, setEnableValue);
         }
@@ -367,7 +367,7 @@ namespace JDA.Core.Persistence.Services.Implements
         /// <param name="entity">待启用/禁用的实体</param>
         /// <param name="setEnableValue">要设置的值</param>
         /// <returns>返回操作结果</returns>
-        public virtual async Task<OperationResult> EnableAsync<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        public virtual async Task<OperationResult> EnableAsync<TEnableEntity>(TEnableEntity entity, long setEnableValue) where TEnableEntity : IEnableSuperEntity, TEntity
         {
             return await this._currentRepository.EnableAsync(entity, setEnableValue);
         }
@@ -377,7 +377,7 @@ namespace JDA.Core.Persistence.Services.Implements
         /// <param name="entities">待启用/禁用的实体集合</param>
         /// <param name="setEnableValue">要设置的值</param>
         /// <returns>返回操作结果</returns>
-        public virtual async Task<OperationResult> EnableAsync<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : EnableSuperEntity, TEntity
+        public virtual async Task<OperationResult> EnableAsync<TEnableEntity>(List<TEnableEntity> entities, long setEnableValue) where TEnableEntity : IEnableSuperEntity, TEntity
         {
             return await this._currentRepository.EnableAsync(entities, setEnableValue);
         }

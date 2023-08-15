@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JDA.Core.Persistence.Entities
+namespace JDA.Core.Trees.Abstractions
 {
-    internal class TreeNodeEnableSuperEntity : TreeNodeSuperEntity, EnableSuperEntity
+    public interface ITreeNodeSource
     {
     }
 }

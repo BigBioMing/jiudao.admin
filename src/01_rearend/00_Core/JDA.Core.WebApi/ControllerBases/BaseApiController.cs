@@ -3,6 +3,7 @@ using JDA.Core.Formats.WebApi;
 using JDA.Core.Models.Operations;
 using JDA.Core.Models.Tables;
 using JDA.Core.Persistence.Entities;
+using JDA.Core.Persistence.Entities.Abstractions;
 using JDA.Core.Persistence.Services.Abstractions.Default;
 using JDA.Core.Utilities;
 using JDA.Core.Views.ViewModels;
@@ -20,7 +21,7 @@ namespace JDA.Core.WebApi.ControllerBases
 {
     [Route("api/[area]/[controller]")]
     [ApiController]
-    public abstract class BaseApiController<TEntity> : ControllerBase where TEntity : SuperEntity
+    public abstract class BaseApiController<TEntity> : ControllerBase where TEntity : class, ISuperEntity
     {
         protected readonly IService<TEntity> _currentService;
         public BaseApiController(IService<TEntity> currentService)
@@ -73,7 +74,7 @@ namespace JDA.Core.WebApi.ControllerBases
         /// </summary>
         /// <param name="model">待启用/禁用的数据的标识</param>
         /// <returns></returns>
-        protected virtual async Task<UnifyResponse<object>> EnableAsync<TEnableEntity>(EnableListViewModel model) where TEnableEntity : EnableSuperEntity, TEntity
+        protected virtual async Task<UnifyResponse<object>> EnableAsync<TEnableEntity>(EnableListViewModel model) where TEnableEntity : IEnableSuperEntity, TEntity
         {
             List<TEntity> entities = this._currentService.GetEntities(n => model.Ids.Contains(n.Id)).ToList();
             List<TEnableEntity> enableEntities = entities as List<TEnableEntity>;
