@@ -1,6 +1,6 @@
-﻿using JDA.Core.Models.Trees;
-using JDA.Core.Persistence.Entities;
+﻿using JDA.Core.Persistence.Entities;
 using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.Core.Trees.Implements;
 using JDA.Entity.Entities.Sys;
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,6 @@ namespace JDA.IService.Sys
     /// </summary>
     public interface ISysOrganizationService : IService<SysOrganization>
     {
-        List<TreeNode> GetOrgTree(List<SysOrganization> models, long parentId = 0);
+
     }
 }

@@ -104,13 +104,13 @@ namespace JDA.Core.Persistence.Repositories.Abstractions
         /// 查询所有数据
         /// </summary>
         /// <returns></returns>
-        IQueryable<TEntity> GetEntities();
+        List<TEntity> GetEntities();
         /// <summary>
         /// 根据条件查询数据
         /// </summary>
         /// <param name="predicate">查询条件</param>
         /// <returns></returns>
-        IQueryable<TEntity> GetEntities(Expression<Func<TEntity, bool>>? predicate);
+        List<TEntity> GetEntities(Expression<Func<TEntity, bool>>? predicate);
         #endregion
 
         #region 查询分页数据
@@ -267,6 +267,20 @@ namespace JDA.Core.Persistence.Repositories.Abstractions
         /// <param name="keySelector">排序字段</param>
         /// <returns>返回序列的第一个元素，如果序列不包含元素，则返回默认值</returns>
         Task<TEntity> FirstOrDefaultOrderByDescAsync<TKey>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TKey>> keySelector);
+        #endregion
+
+        #region 查询集合数据
+        /// <summary>
+        /// 查询所有数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<TEntity>> GetEntitiesAsync();
+        /// <summary>
+        /// 根据条件查询数据
+        /// </summary>
+        /// <param name="predicate">查询条件</param>
+        /// <returns></returns>
+        Task<List<TEntity>> GetEntitiesAsync(Expression<Func<TEntity, bool>>? predicate);
         #endregion
 
         #region 查询分页数据

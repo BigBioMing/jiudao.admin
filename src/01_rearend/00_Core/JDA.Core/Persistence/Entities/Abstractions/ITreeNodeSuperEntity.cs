@@ -1,4 +1,4 @@
-﻿using JDA.Core.Models.Trees;
+﻿using JDA.Core.Trees.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +10,7 @@ namespace JDA.Core.Persistence.Entities
     /// <summary>
     /// 树形表接口
     /// </summary>
-    public interface ITreeNodeSuperEntity
+    public interface ITreeNodeSuperEntity : ITreeNodeSource
     {
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public long ParentId { get; set; }
-        public int Sort { get; set; }
     }
 }

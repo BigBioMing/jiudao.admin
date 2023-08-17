@@ -1,21 +1,24 @@
-﻿using System;
+﻿using JDA.Core.Attributes;
+using JDA.Core.Trees.Abstractions;
+using OfficeOpenXml.Style;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JDA.Core.Attributes;
 using System.Xml.Linq;
-using JDA.Core.Persistence.Entities.Abstractions;
-using OfficeOpenXml.Style;
 
-namespace JDA.Core.Persistence.Entities
+namespace JDA.Core.Trees.Implements
 {
-    /// <summary>
-    /// 树形表超类
-    /// </summary>
-    public class TreeNodeSuperEntity : SuperEntity, ITreeNodeSuperEntity
+    public class TreeNodeSource : ITreeNodeSource
     {
+        /// <summary>
+        /// 主键
+        /// </summary>
+        [Display(Name = "主键", Order = 1000)]
+        [ColumnMetadata(Name = "主键", Order = 1000, Hidden = true)]
+        public long Id { get; set; }
         /// <summary>
         /// 名称
         /// </summary>

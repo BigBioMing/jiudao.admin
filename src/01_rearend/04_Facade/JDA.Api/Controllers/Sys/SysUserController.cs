@@ -119,7 +119,7 @@ namespace JDA.Api.Controllers.Sys
             if (!string.IsNullOrWhiteSpace(account))
                 predicate = n => n.Account == account;
 
-            var list = this._currentService.GetEntities(predicate).ToList();
+            var list = await this._currentService.GetEntitiesAsync(predicate);
             string fileName = $"用户_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
             return await base.ExportAsync(fileName, list);
         }

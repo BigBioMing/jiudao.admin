@@ -116,13 +116,13 @@ namespace JDA.Core.Persistence.Repositories.Implements
         /// 查询所有数据
         /// </summary>
         /// <returns></returns>
-        public virtual IQueryable<TEntity> GetEntities() => this.Queryable;
+        public virtual List<TEntity> GetEntities() => this.Queryable.ToList();
         /// <summary>
         /// 根据条件查询数据
         /// </summary>
         /// <param name="predicate">查询条件</param>
         /// <returns></returns>
-        public virtual IQueryable<TEntity> GetEntities(Expression<Func<TEntity, bool>>? predicate) => predicate is null ? this.Queryable : this.Queryable.Where(predicate);
+        public virtual List<TEntity> GetEntities(Expression<Func<TEntity, bool>>? predicate) => predicate is null ? this.Queryable.ToList() : this.Queryable.Where(predicate).ToList();
         #endregion
 
         #region 查询分页数据
@@ -423,6 +423,20 @@ namespace JDA.Core.Persistence.Repositories.Implements
         /// <param name="keySelector">排序字段</param>
         /// <returns>返回序列的第一个元素，如果序列不包含元素，则返回默认值</returns>
         public virtual async Task<TEntity> FirstOrDefaultOrderByDescAsync<TKey>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TKey>> keySelector) => await this.Queryable.Where(predicate).OrderByDescending(keySelector).FirstOrDefaultAsync();
+        #endregion
+
+        #region 查询集合数据
+        /// <summary>
+        /// 查询所有数据
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<List<TEntity>> GetEntitiesAsync() => await this.Queryable.ToListAsync();
+        /// <summary>
+        /// 根据条件查询数据
+        /// </summary>
+        /// <param name="predicate">查询条件</param>
+        /// <returns></returns>
+        public virtual async Task<List<TEntity>> GetEntitiesAsync(Expression<Func<TEntity, bool>>? predicate) => predicate is null ? await this.Queryable.ToListAsync() : await this.Queryable.Where(predicate).ToListAsync();
         #endregion
 
         #region 查询分页数据

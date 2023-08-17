@@ -43,7 +43,7 @@ namespace JDA.Service.Sys
             #region 保存角色与路由资源的中间表
             {
                 //保存角色的路由资源
-                var middles = await this._sysRoleRouteResourceRepository.GetEntities(n => n.RoleId == role.Id).ToListAsync();
+                var middles = await this._sysRoleRouteResourceRepository.GetEntitiesAsync(n => n.RoleId == role.Id);
                 var middleIds = middles.Select(n => n.RoleId).ToList();
                 //需要删除的中间表
                 var delMiddles = middles.Where(n => model.RoleRouteResourceIds?.Contains(n.RoleId) != true).ToList();

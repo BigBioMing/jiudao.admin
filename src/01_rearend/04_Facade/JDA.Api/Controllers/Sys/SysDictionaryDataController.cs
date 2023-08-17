@@ -74,7 +74,7 @@ namespace JDA.Api.Controllers.Sys
         [Route("Enable")]
         public virtual async Task<UnifyResponse<object>> Enable([FromBody] DicEnableListViewModel model)
         {
-            List<SysDictionaryData> entities = this._currentService.GetEntities(n => model.Ids.Contains(n.Id)).ToList();
+            List<SysDictionaryData> entities = await this._currentService.GetEntitiesAsync(n => model.Ids.Contains(n.Id));
             if (entities.Count == 0) return UnifyResponse<object>.Error("数据不存在，无法启用/禁用");
             entities.ForEach(item => item.Enabled = model.SetEnableValue);
             OperationResult operationResult = await this._currentService.UpdateAsync(entities);
@@ -120,7 +120,7 @@ namespace JDA.Api.Controllers.Sys
             if (parentId > 0)
                 predicate = n => n.ParentId == parentId;
 
-            var list = this._currentService.GetEntities(predicate).ToList();
+            var list = await this._currentService.GetEntitiesAsync(predicate);
             string fileName = $"字典选项_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
             return await base.ExportAsync(fileName, list);
         }

@@ -76,7 +76,7 @@ namespace JDA.Core.WebApi.ControllerBases
         /// <returns></returns>
         protected virtual async Task<UnifyResponse<object>> EnableAsync<TEnableEntity>(EnableListViewModel model) where TEnableEntity : IEnableSuperEntity, TEntity
         {
-            List<TEntity> entities = this._currentService.GetEntities(n => model.Ids.Contains(n.Id)).ToList();
+            List<TEntity> entities = await this._currentService.GetEntitiesAsync(n => model.Ids.Contains(n.Id));
             List<TEnableEntity> enableEntities = entities as List<TEnableEntity>;
             if (entities.Count == 0) return UnifyResponse<object>.Error("数据不存在，无法启用/禁用");
             OperationResult operationResult = await this._currentService.EnableAsync(enableEntities, model.SetEnableValue);

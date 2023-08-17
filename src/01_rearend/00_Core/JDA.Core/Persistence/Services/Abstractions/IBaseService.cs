@@ -2,7 +2,10 @@
 using JDA.Core.Models.Operations;
 using JDA.Core.Models.OrderBys;
 using JDA.Core.Models.Tables;
+using JDA.Core.Persistence.Entities;
 using JDA.Core.Persistence.Entities.Abstractions;
+using JDA.Core.Trees.Implements;
+using JDA.Core.Trees.Loader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,13 +89,13 @@ namespace JDA.Core.Persistence.Services.Abstractions
         /// 查询所有数据
         /// </summary>
         /// <returns></returns>
-        IQueryable<TEntity> GetEntities();
+        List<TEntity> GetEntities();
         /// <summary>
         /// 根据条件查询数据
         /// </summary>
         /// <param name="predicate">查询条件</param>
         /// <returns></returns>
-        IQueryable<TEntity> GetEntities(Expression<Func<TEntity, bool>>? predicate);
+        List<TEntity> GetEntities(Expression<Func<TEntity, bool>>? predicate);
         #endregion
 
         #region 查询分页数据
@@ -119,6 +122,17 @@ namespace JDA.Core.Persistence.Services.Abstractions
         /// <param name="orderByKeySelector">排序字段</param>
         /// <returns>返回查询到的数据</returns>
         PageResult<List<TEntity>> GetPageEntities<TKey>(PageInParams pageInParams, Expression<Func<TEntity, bool>>? wherePredicate, OrderByType orderByType, Expression<Func<TEntity, TKey>> orderByKeySelector);
+        #endregion
+
+        #region 获取树状结构的数据
+        /// <summary>
+        /// 获取树状结构的数据
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <param name="sources">数据源</param>
+        /// <param name="parentId">指定从哪一级开始获取</param>
+        /// <returns></returns>
+        List<TreeNode> GetTrees<TSource>(List<TSource> sources, long parentId = 0) where TSource : ITreeNodeSuperEntity;
         #endregion
 
         #region 添加
@@ -262,6 +276,20 @@ namespace JDA.Core.Persistence.Services.Abstractions
         /// <param name="keySelector">排序字段</param>
         /// <returns>返回序列的第一个元素，如果序列不包含元素，则返回默认值</returns>
         Task<TEntity> FirstOrDefaultOrderByDescAsync<TKey>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, TKey>> keySelector);
+        #endregion
+
+        #region 查询集合数据
+        /// <summary>
+        /// 查询所有数据
+        /// </summary>
+        /// <returns></returns>
+        Task<List<TEntity>> GetEntitiesAsync();
+        /// <summary>
+        /// 根据条件查询数据
+        /// </summary>
+        /// <param name="predicate">查询条件</param>
+        /// <returns></returns>
+        Task<List<TEntity>> GetEntitiesAsync(Expression<Func<TEntity, bool>>? predicate);
         #endregion
 
         #region 查询分页数据

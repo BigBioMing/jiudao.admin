@@ -63,7 +63,7 @@ namespace JDA.Service.Sys
             #region 保存用户与角色的中间表
             {
                 //保存用户的角色
-                var middles = await this._sysUserRoleRepository.GetEntities(n => n.UserId == user.Id).ToListAsync();
+                var middles = await this._sysUserRoleRepository.GetEntitiesAsync(n => n.UserId == user.Id);
                 var middleIds = middles.Select(n => n.RoleId).ToList();
                 //需要删除的中间表
                 var delMiddles = middles.Where(n => model.RoleIds?.Contains(n.RoleId) != true).ToList();
@@ -91,7 +91,7 @@ namespace JDA.Service.Sys
             #region 保存用户与所属机构的中间表
             {
                 //保存用户的所属机构
-                var middles = await this._sysUserOrganizationRepository.GetEntities(n => n.UserId == user.Id).ToListAsync();
+                var middles = await this._sysUserOrganizationRepository.GetEntitiesAsync(n => n.UserId == user.Id);
                 var middleIds = middles.Select(n => n.OrgId).ToList();
                 //需要删除的中间表
                 var delMiddles = middles.Where(n => model.RoleIds?.Contains(n.OrgId) != true).ToList();

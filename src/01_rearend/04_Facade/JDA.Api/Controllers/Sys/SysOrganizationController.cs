@@ -54,31 +54,20 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("GetTree")]
-        public virtual async Task<IActionResult> GetTree()
+        public virtual async Task<IActionResult> GetTree([FromQuery] NoPageViewModel filterParams)
         {
-            List<SysOrganization> list = new List<SysOrganization>();
+            Expression<Func<SysOrganization, bool>>? predicate = null;
+            string? name = filterParams?.Params?.Name;
+            if (!string.IsNullOrWhiteSpace(name))
+                predicate = n => n.Name.Contains(name);
+            string? code = filterParams?.Params?.Code;
+            if (!string.IsNullOrWhiteSpace(code))
+                predicate = n => n.Code == code;
 
-            for (int i = 1; i <= 10; i++)
-            {
-                var org = new SysOrganization() { Id = i, Name = i.ToString(), ParentId = 0 };
-                list.Add(org);
+            var list = await this._sysOrganizationService.GetEntitiesAsync(predicate);
+            var treeNodes = _sysOrganizationService.GetTrees(list);
 
-                for (int j = 11; j <= 30; j++)
-                {
-                    var org2 = new SysOrganization() { Id = (i * j), Name = (i * j).ToString(), ParentId = i };
-                    list.Add(org2);
-
-                    for (int k = 31; k <= 80; k++)
-                    {
-                        var org3 = new SysOrganization() { Id = (i * j * k), Name = (i * j * k).ToString(), ParentId = (i * j) };
-                        list.Add(org3);
-                    }
-                }
-            }
-
-            var treeNodes = _sysOrganizationService.GetOrgTree(list);
-
-            return new JsonResult(new { });
+            return new JsonResult(new { treeNodes });
         }
 
         /// <summary>
@@ -134,7 +123,7 @@ namespace JDA.Api.Controllers.Sys
             if (!string.IsNullOrWhiteSpace(code))
                 predicate = n => n.Code == code;
 
-            var list = this._currentService.GetEntities(predicate).ToList();
+            var list = await this._currentService.GetEntitiesAsync(predicate);
             string fileName = $"组织机构_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
             return await base.ExportAsync(fileName, list);
         }
