@@ -25,8 +25,9 @@ namespace JDA.Service.DI
         public void Register(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IService<SysUser>, SysUserService>();
-            serviceCollection.AddScoped<ISysUserService, SysUserService>(); 
-            serviceCollection.AddScoped<ISysOrganizationService, SysOrganizationService>(); 
+            serviceCollection.AddScoped<ISysUserService, SysUserService>();
+            serviceCollection.AddScoped<ISysOrganizationService, SysOrganizationService>();
+            serviceCollection.AddScoped<ISysDictionaryDefineService, SysDictionaryDefineService>();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using JDA.Core.Attributes;
-using JDA.Core.Trees.Abstractions;
+using JDA.Core.Views.ViewModels.Base;
+using JDA.Model.Sys.SysDictionaryDatas;
 using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace JDA.Core.Trees.Implements
+namespace JDA.Model.Sys.SysDictionaryDefines
 {
-    public class TreeNodeSource : ITreeNodeSource
+    /// <summary>
+    /// 字典定义信息
+    /// </summary>
+    public class SysDictionaryDefineTreeVO : BaseSugerEntityViewModel
     {
         /// <summary>
         /// 主键
@@ -32,22 +36,11 @@ namespace JDA.Core.Trees.Implements
         [ColumnMetadata(Name = "名称", Order = 2)]
         public string Name { get; set; }
         /// <summary>
-        /// 上级机构ID
+        /// 字典项数据集合
         /// </summary>
-        [Display(Name = "上级机构ID", Order = 3)]
-        [ColumnMetadata(Name = "上级机构ID", Order = 3)]
-        public long ParentId { get; set; }
-        /// <summary>
-        /// Path
         /// </summary>
-        [Display(Name = "Path", Order = 4)]
-        [ColumnMetadata(Name = "Path", Order = 4, Hidden = true)]
-        public string Path { get; set; }
-        /// <summary>
-        /// Path
-        /// </summary>
-        [Display(Name = "Sort", Order = 5)]
-        [ColumnMetadata(Name = "Sort", Order = 5, Hidden = true)]
-        public int Sort { get; set; }
+        [Display(Name = "字典项数据集合", Order = 100)]
+        [ColumnMetadata(Name = "字典项数据集合", Order = 100, Hidden = true)]
+        public List<SysDictionaryDataTreeNodeVO> Childrens { get; set; }
     }
 }

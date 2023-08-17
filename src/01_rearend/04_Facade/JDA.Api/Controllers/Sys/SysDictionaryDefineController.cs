@@ -4,6 +4,8 @@ using JDA.Core.Persistence.Services.Abstractions.Default;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
+using JDA.IService.Sys;
+using JDA.Service.Sys;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,8 +22,10 @@ namespace JDA.Api.Controllers.Sys
     [Area("Sys")]
     public partial class SysDictionaryDefineController : BaseApiController<SysDictionaryDefine>
     {
-        public SysDictionaryDefineController(IService<SysDictionaryDefine> currentService) : base(currentService)
+        protected readonly ISysDictionaryDefineService _sysDictionaryDefineService;
+        public SysDictionaryDefineController(ISysDictionaryDefineService sysDictionaryDefineService) : base(sysDictionaryDefineService)
         {
+            this._sysDictionaryDefineService = sysDictionaryDefineService;
         }
 
         /// <summary>
@@ -42,6 +46,28 @@ namespace JDA.Api.Controllers.Sys
                 predicate = n => n.Code == code;
 
             var pageResult = await base.GetPageEntitiesAsync(filterParams, predicate);
+
+            return new JsonResult(pageResult);
+        }
+
+        /// <summary>
+        /// 获取数据（包括字典项数据）
+        /// </summary>
+        /// <param name="filterParams">查询条件</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetDictionaryTree")]
+        public virtual async Task<IActionResult> GetDictionaryTree([FromQuery] NoPageViewModel filterParams)
+        {
+            Expression<Func<SysDictionaryDefine, bool>>? predicate = null;
+            string? name = filterParams?.Params?.Name;
+            if (!string.IsNullOrWhiteSpace(name))
+                predicate = n => n.Name.Contains(name);
+            string? code = filterParams?.Params?.Code;
+            if (!string.IsNullOrWhiteSpace(code))
+                predicate = n => n.Code == code;
+
+            var pageResult = await _sysDictionaryDefineService.GetDictionaryTree(predicate);
 
             return new JsonResult(pageResult);
         }

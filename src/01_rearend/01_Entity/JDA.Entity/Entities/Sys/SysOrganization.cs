@@ -15,12 +15,6 @@ namespace JDA.Entity.Entities.Sys
     public partial class SysOrganization : TreeNodeEnableSuperEntity
     {
         /// <summary>
-        /// 编码
-        /// </summary>
-        [Display(Name = "编码", Order = 1)]
-        [ColumnMetadata(Name = "编码", Order = 1)]
-        public string Code { get; set; }
-        /// <summary>
         /// 类型
         /// </summary>
         [Display(Name = "类型", Order = 6)]

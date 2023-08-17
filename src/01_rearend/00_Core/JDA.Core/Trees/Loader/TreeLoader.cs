@@ -1,6 +1,7 @@
 ﻿using JDA.Core.Trees.Abstractions;
 using JDA.Core.Trees.Implements;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
+using Microsoft.Azure.Management.ResourceManager.Fluent.Core.DAG;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace JDA.Core.Trees.Loader
                     Sort = item.Sort,
                     Id = item.Id,
                     ParentId = item.ParentId,
+                    Code = item.Code,
                     Name = item.Name
                 };
                 node.Childrens = TreeLoader.GetTrees<TTreeNodeSource, TTreeNode>(sources, item.Id);

@@ -17,6 +17,12 @@ namespace JDA.Core.Persistence.Entities
     public class TreeNodeSuperEntity : SuperEntity, ITreeNodeSuperEntity
     {
         /// <summary>
+        /// 编码
+        /// </summary>
+        [Display(Name = "编码", Order = 1)]
+        [ColumnMetadata(Name = "编码", Order = 1)]
+        public string Code { get; set; }
+        /// <summary>
         /// 名称
         /// </summary>
         [Display(Name = "名称", Order = 2)]

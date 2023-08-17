@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using JDA.Core.Mappers.Abstractions;
 using JDA.Entity.Entities.Sys;
+using JDA.Model.Sys.SysDictionaryDatas;
+using JDA.Model.Sys.SysDictionaryDefines;
+using JDA.Model.Sys.SysRoles;
 using JDA.Model.Sys.SysUsers;
 using OfficeOpenXml.Style;
 using System;
@@ -17,6 +20,8 @@ namespace JDA.Model
         public ViewModelProfile()
         {
             CreateMap<SysUser, SysUserSaveVO>().ReverseMap();
+            CreateMap<SysDictionaryDefine, SysDictionaryDefineTreeVO>().ReverseMap();
+            CreateMap<SysDictionaryData, SysDictionaryDataTreeNodeVO>().ReverseMap();
         }
     }
 }
