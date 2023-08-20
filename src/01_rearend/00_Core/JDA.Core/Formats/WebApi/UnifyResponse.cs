@@ -7,23 +7,37 @@ using System.Threading.Tasks;
 
 namespace JDA.Core.Formats.WebApi
 {
-    /// <summary>
-    /// 统一响应格式
-    /// </summary>
-    public class UnifyResponse<TData>
+    public partial class UnifyResponse
     {
         /// <summary>
-        /// 响应码
+        /// 成功码
+        /// </summary>
+        public const string SuccessCode = "0";
+    }
+    public partial class UnifyResponse
+    {
+        /// <summary>
+        /// 响应码 99999-通用错误码 50000-未知异常
         /// </summary>
         public string Code { get; set; }
         /// <summary>
         /// 提示信息
         /// </summary>
-        public string Message { get; set; }
+        public string? Message { get; set; }
         /// <summary>
         /// 返回值
         /// </summary>
-        public TData Data { get; set; }
+        public object? Data { get; set; }
+    }
+    /// <summary>
+    /// 统一响应格式
+    /// </summary>
+    public class UnifyResponse<TData> : UnifyResponse
+    {
+        /// <summary>
+        /// 返回值
+        /// </summary>
+        public new TData? Data { get; set; }
 
         public UnifyResponse()
         {
@@ -40,7 +54,7 @@ namespace JDA.Core.Formats.WebApi
         {
             return new UnifyResponse<TData>()
             {
-                Code = "200",
+                Code = UnifyResponse.SuccessCode,
                 Message = message,
                 Data = data
             };

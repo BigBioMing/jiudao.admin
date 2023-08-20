@@ -37,6 +37,32 @@ namespace JDA.Api.Controllers.Sys
         {
             this._sysUserService = sysUserService;
         }
+        /// <summary>
+        /// 获取分页数据
+        /// </summary>
+        /// <param name="filterParams">查询条件</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetPageEntities2")]
+        [ApiExplorerSettings(GroupName = "V1")]
+        public virtual IActionResult GetPageEntities2()
+        {
+            throw new Exception("同步异常");
+        }
+        /// <summary>
+        /// 获取分页数据
+        /// </summary>
+        /// <param name="filterParams">查询条件</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetPageEntities3")]
+        [ApiExplorerSettings(GroupName = "V1")]
+        public virtual async Task<IActionResult> GetPageEntities3()
+        {
+            throw new Exception("异步异常");
+            await _sysUserService.GetEntitiesAsync();
+            return new JsonResult(new { });
+        }
 
         /// <summary>
         /// 获取分页数据
