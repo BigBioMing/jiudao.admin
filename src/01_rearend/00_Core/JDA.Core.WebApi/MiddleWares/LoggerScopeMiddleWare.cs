@@ -1,4 +1,5 @@
-﻿using JDA.Core.Loggers;
+﻿using JDA.Core.Exceptions;
+using JDA.Core.Loggers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
@@ -23,6 +24,9 @@ namespace JDA.Core.WebApi.MiddleWares
             using (logger.BeginScope("ScopeId:{CurrentScopeId}", Guid.NewGuid()))
             //using (LogContext.PushProperty("CurrentScopeId", Guid.NewGuid()))
             {
+                //string path = context.Request.Path.ToString();
+                //if (path.Contains("/api"))
+                //    throw new BusinessException("scope错误");
                 await next(context);
             }
         }
