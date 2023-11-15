@@ -27,7 +27,7 @@ namespace JDA.Core.Formats.WebApi
         /// <summary>
         /// 返回值
         /// </summary>
-        public object? Data { get; set; }
+        public object? Data { get; set; } = null;
     }
     /// <summary>
     /// 统一响应格式
@@ -37,7 +37,7 @@ namespace JDA.Core.Formats.WebApi
         /// <summary>
         /// 返回值
         /// </summary>
-        public new TData? Data { get; set; }
+        public new TData? Data { get; set; } = default;
 
         public UnifyResponse()
         {

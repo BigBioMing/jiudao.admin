@@ -19,5 +19,10 @@ namespace JDA.Core.WebApi.MiddleWares
             app.UseMiddleware<ExceptionMiddleWare>();
             return app;
         }
+        public static WebApplication UseHappenException(this WebApplication app)
+        {
+            app.UseMiddleware<HappenExceptionMiddleWare>();
+            return app;
+        }
     }
 }

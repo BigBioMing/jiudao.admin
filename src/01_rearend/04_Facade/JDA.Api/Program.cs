@@ -11,6 +11,8 @@ using Microsoft.Extensions.Options;
 using JDA.Core.WebApi.Filters;
 using JDA.Core.WebApi.MiddleWares;
 using Serilog;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 try
 {
@@ -30,7 +32,20 @@ try
     {
         options.Filters.Add(typeof(ApiActionFilter));
         options.Filters.Add(typeof(ApiExceptionFilter));
-    });
+    })
+        .AddNewtonsoftJson(options =>
+        {
+        // 指定如何解决循环引用：
+        //1、Ignore将忽略循环引用
+        //2、Serialize将序列化循环引用
+        //3、Error将抛出异常
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        // 统一设置API的日期格式
+        options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+        //// 统一设置JSON内实体的格式（默认JSON里的首字母为小写，这里改为同后端Mode一致）
+        //options.SerializerSettings.ContractResolver = new DefaultContractResolver();//设置JSON返回格式同model一致
+        options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();//设置JSON返回格式同model一致
+        });
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddDatabase<JDADbContext>(builder.Configuration);
@@ -101,6 +116,7 @@ try
     var app = builder.Build();
     app.UseLoggerScope();
     app.UseException();
+    //app.UseHappenException();
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
