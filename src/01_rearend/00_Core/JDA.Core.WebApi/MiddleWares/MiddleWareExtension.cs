@@ -24,5 +24,10 @@ namespace JDA.Core.WebApi.MiddleWares
             app.UseMiddleware<HappenExceptionMiddleWare>();
             return app;
         }
+        public static WebApplication UseHttpLogging(this WebApplication app)
+        {
+            app.UseMiddleware<HttpLoggingMiddleWare>();
+            return app;
+        }
     }
 }

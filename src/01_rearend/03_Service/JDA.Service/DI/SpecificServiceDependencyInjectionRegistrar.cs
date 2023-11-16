@@ -1,6 +1,7 @@
 ﻿using JDA.Core.DI.Abstractions;
 using JDA.Core.Persistence.Services.Abstractions.Default;
 using JDA.Core.Persistence.Services.Implements.Default;
+using JDA.Core.WebApi.HttpLoggings;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
 using JDA.Service.Sys;
@@ -28,6 +29,8 @@ namespace JDA.Service.DI
             serviceCollection.AddScoped<ISysUserService, SysUserService>();
             serviceCollection.AddScoped<ISysOrganizationService, SysOrganizationService>();
             serviceCollection.AddScoped<ISysDictionaryDefineService, SysDictionaryDefineService>();
+            serviceCollection.AddScoped<ISysLogService, SysLogService>();
+            serviceCollection.AddScoped<IHttpLoggingStorage, SysLogService>();
         }
     }
 }

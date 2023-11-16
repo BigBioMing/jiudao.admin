@@ -73,4 +73,11 @@ namespace JDA.Entity.Maps
             builder.ToTable("sys_dictionary_data");
         }
     }
+    public partial class SysLogEntityTypeConfiguration : SuperMapping<SysLog>
+    {
+        public override void Configure(EntityTypeBuilder<SysLog> builder)
+        {
+            builder.ToTable("sys_log");
+        }
+    }
 }

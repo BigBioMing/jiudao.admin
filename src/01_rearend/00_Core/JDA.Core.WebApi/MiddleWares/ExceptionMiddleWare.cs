@@ -3,6 +3,7 @@ using JDA.Core.Formats.WebApi;
 using JDA.Core.Loggers;
 using JDA.Core.WebApi.Filters;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -38,11 +39,13 @@ namespace JDA.Core.WebApi.MiddleWares
                 {
                     try
                     {
+                        // Body赋值为新Body缓存
                         context.Response.Body = ms;
+                        // 向下执行（等待返回）
                         await next(context);
 
                         ms.Seek(0, SeekOrigin.Begin);
-                        var reader = new StreamReader(ms);
+                        using var reader = new StreamReader(ms);
                         var str = await reader.ReadToEndAsync();
                         var buffer = Encoding.UTF8.GetBytes(str);
 
@@ -57,7 +60,7 @@ namespace JDA.Core.WebApi.MiddleWares
                     {
                         LoggerHelper.Default.Error(ex, "[2]");
                         ms.Seek(0, SeekOrigin.Begin);
-                        //string responseBody = await new StreamReader(ms).ReadToEndAsync();
+                        //using string responseBody = await new StreamReader(ms).ReadToEndAsync();
                         //var a = JsonConvert.DeserializeObject<UnifyResponse>(responseBody,new JsonSerializerSettings()
                         //{
                         //    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,

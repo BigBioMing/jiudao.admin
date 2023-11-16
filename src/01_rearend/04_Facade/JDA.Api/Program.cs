@@ -114,6 +114,7 @@ try
     });
 
     var app = builder.Build();
+    app.UseHttpLogging();
     app.UseLoggerScope();
     app.UseException();
     //app.UseHappenException();
