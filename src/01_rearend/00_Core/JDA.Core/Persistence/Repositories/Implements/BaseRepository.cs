@@ -6,6 +6,7 @@ using JDA.Core.Persistence.Contexts;
 using JDA.Core.Persistence.Entities.Abstractions;
 using JDA.Core.Users.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Linq.Expressions;
 
 namespace JDA.Core.Persistence.Repositories.Implements
@@ -536,7 +537,7 @@ namespace JDA.Core.Persistence.Repositories.Implements
                 entity.UpdateDate = now;
             }
 
-            await this._dbContext.AddAsync(entities);
+            await this._dbContext.AddRangeAsync(entities);
             await this._dbContext.SaveChangesAsync();
 
             return OperationResult<List<TEntity>>.Success(entities);

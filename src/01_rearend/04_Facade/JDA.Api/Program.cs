@@ -13,6 +13,7 @@ using JDA.Core.WebApi.MiddleWares;
 using Serilog;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using JDA.Core.WebApi.HttpLoggings;
 
 try
 {
@@ -52,15 +53,17 @@ try
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddScoped<ITenant>(sp =>
     {
-        var tenantIdString = sp.GetRequiredService<IHttpContextAccessor>().HttpContext.Request.Query["TenantId"];
+        var tenantIdString = sp.GetRequiredService<IHttpContextAccessor>().HttpContext?.Request?.Query?["TenantId"];
+        if (tenantIdString is null) return null;
 
-        return tenantIdString != StringValues.Empty && int.TryParse(tenantIdString, out var tenantId)
+        return tenantIdString.Value != StringValues.Empty && int.TryParse(tenantIdString, out var tenantId)
             ? new Tenant(tenantId)
         : null;
     });
 
     builder.Services.AddDependencyInjectionService();
     //builder.Services.AddAutoMapper(typeof(ViewModelProfile));
+    builder.Services.AddHttpLoggingHandlerWorker();
 
     builder.Services.AddSwaggerGen(options =>
     {

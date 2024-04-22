@@ -18,5 +18,11 @@ namespace JDA.Core.WebApi.HttpLoggings
         /// <param name="logInfo">日志信息</param>
         /// <returns></returns>
         Task<OperationResult> SaveAsync(HttpLoggingInformation logInfo);
+        /// <summary>
+        /// 保存日志信息
+        /// </summary>
+        /// <param name="list">日志信息集合</param>
+        /// <returns></returns>
+        Task<OperationResult> SaveAsync(List<HttpLoggingInformation> list);
     }
 }

@@ -1,7 +1,9 @@
 ﻿using JDA.Core.WebApi.HttpLoggings;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -96,11 +98,13 @@ namespace JDA.Core.WebApi.MiddleWares
                     logInfo.Cost = Environment.TickCount - startTick;
                     try
                     {
-                        await httpLoggingStorage.SaveAsync(logInfo);
+                        //await httpLoggingStorage.SaveAsync(logInfo);
+                        HttpLoggingHandler.AddLog(logInfo);
                     }
                     catch (Exception e)
                     {
                         throw;
+                        //Log.Error(e, $"保存日志失败[1] {JsonConvert.SerializeObject(logInfo)}");
                     }
                 }
                 finally

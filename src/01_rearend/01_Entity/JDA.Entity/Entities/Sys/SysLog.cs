@@ -45,6 +45,18 @@ namespace JDA.Entity.Entities.Sys
         [ColumnMetadata(Name = "结束时间", Order = 4)]
         public DateTime EndTime { get; set; }
         /// <summary>
+        /// 开始时间戳
+        /// </summary>
+        [Display(Name = "开始时间戳", Order = 4)]
+        [ColumnMetadata(Name = "开始时间戳", Order = 4)]
+        public long StartTimestamp { get; set; }
+        /// <summary>
+        /// 结束时间戳
+        /// </summary>
+        [Display(Name = "结束时间戳", Order = 4)]
+        [ColumnMetadata(Name = "结束时间戳", Order = 4)]
+        public long EndTimestamp { get; set; }
+        /// <summary>
         /// 请求耗时
         /// </summary>
         [Display(Name = "请求耗时", Order = 5)]

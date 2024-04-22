@@ -18,6 +18,10 @@ namespace JDA.Core.WebApi.HttpLoggings
         /// </summary>
         public long Id { get; set; }
         /// <summary>
+        /// 请求ID
+        /// </summary>
+        public string RequestId { get; set; }
+        /// <summary>
         /// Host
         /// </summary>
         public string Host { get; set; }
@@ -38,20 +42,28 @@ namespace JDA.Core.WebApi.HttpLoggings
         /// </summary>
         public DateTime EndTime { get; set; }
         /// <summary>
+        /// 开始时间戳
+        /// </summary>
+        public long StartTimestamp { get; set; }
+        /// <summary>
+        /// 结束时间戳
+        /// </summary>
+        public long EndTimestamp { get; set; }
+        /// <summary>
         /// 请求耗时
         /// </summary>
         public decimal Cost { get; set; }
         /// <summary>
         /// Headers
         /// </summary>
-        public string Headers { get; set; }
+        public string? Headers { get; set; }
         /// <summary>
         /// 请求参数
         /// </summary>
-        public string RequestParams { get; set; }
+        public string? RequestParams { get; set; }
         /// <summary>
         /// 响应参数
         /// </summary>
-        public string ResponseParams { get; set; }
+        public string? ResponseParams { get; set; }
     }
 }

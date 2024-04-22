@@ -21,7 +21,7 @@ namespace JDA.Core.WebApi.MiddleWares
 
         public virtual async Task InvokeAsync(HttpContext context, IHttpContextAccessor httpContextAccessor, ILogger<LoggerScopeMiddleWare> logger)
         {
-            using (logger.BeginScope("ScopeId:{CurrentScopeId}", Guid.NewGuid()))
+            using (logger.BeginScope("ScopeId:{CurrentScopeId}", Guid.NewGuid().ToString("N")))
             //using (LogContext.PushProperty("CurrentScopeId", Guid.NewGuid()))
             {
                 //string path = context.Request.Path.ToString();

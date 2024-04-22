@@ -6,6 +6,8 @@ CREATE TABLE `sys_log`(
 	`Method` varchar(8) NOT NULL COMMENT '请求谓词',
 	`StartTime` datetime NOT NULL COMMENT '开始时间',
 	`EndTime` datetime NOT NULL COMMENT '结束时间',
+	`StartTimestamp` int(13) NOT NULL COMMENT '开始时间戳',
+	`EndTimestamp` int(13) NOT NULL COMMENT '结束时间戳',
 	`Cost` decimal(18,2) NOT NULL DEFAULT -1 COMMENT '请求耗时',
 	`Headers` varchar(1000) NOT NULL DEFAULT '' COMMENT 'Headers',
 	`RequestParams` varchar(500) NOT NULL DEFAULT '' COMMENT '请求参数',

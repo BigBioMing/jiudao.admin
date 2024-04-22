@@ -36,5 +36,16 @@ namespace JDA.Service.Sys
             SysLog log = _mapper.Map<SysLog>(logInfo);
             return await this._currentRepository.InsertAsync(log);
         }
+
+        public async Task<OperationResult> SaveAsync(List<HttpLoggingInformation> list)
+        {
+            List<SysLog> lst = new List<SysLog>();
+            foreach (var item in list)
+            {
+                SysLog log = _mapper.Map<SysLog>(item);
+                lst.Add(log);
+            }
+            return await this._currentRepository.InsertAsync(lst);
+        }
     }
 }
