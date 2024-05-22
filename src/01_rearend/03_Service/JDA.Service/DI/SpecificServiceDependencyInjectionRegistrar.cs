@@ -27,6 +27,7 @@ namespace JDA.Service.DI
         {
             serviceCollection.AddScoped<IService<SysUser>, SysUserService>();
             serviceCollection.AddScoped<ISysUserService, SysUserService>();
+            serviceCollection.AddScoped<ISysRoleService, SysRoleService>();
             serviceCollection.AddScoped<ISysOrganizationService, SysOrganizationService>();
             serviceCollection.AddScoped<ISysDictionaryDefineService, SysDictionaryDefineService>();
             serviceCollection.AddScoped<ISysLogService, SysLogService>();

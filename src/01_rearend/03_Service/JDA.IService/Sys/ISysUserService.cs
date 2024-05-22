@@ -16,6 +16,13 @@ namespace JDA.IService.Sys
     public partial interface ISysUserService : IService<SysUser>
     {
         /// <summary>
+        /// 查询用户角色
+        /// </summary>
+        /// <param name="user">要查询的用户</param>
+        /// <returns></returns>
+        Task<OperationResult<List<SysRole>>> GetRolesAsync(SysUser user);
+
+        /// <summary>
         /// 保存用户信息
         /// </summary>
         /// <param name="model"></param>

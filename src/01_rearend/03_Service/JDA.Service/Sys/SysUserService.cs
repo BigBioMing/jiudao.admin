@@ -27,15 +27,35 @@ namespace JDA.Service.Sys
     {
         protected readonly IRepository<SysUserRole> _sysUserRoleRepository;
         protected readonly IRepository<SysUserOrganization> _sysUserOrganizationRepository;
+        protected readonly ISysRoleService _sysRoleService;
         public SysUserService(
             IShapeMapper mapper
             , IRepository<SysUser> currentRepository
             , IRepository<SysUserRole> sysUserRoleRepository
             , IRepository<SysUserOrganization> sysUserOrganizationRepository
+            , ISysRoleService sysRoleService
+
             ) : base(mapper, currentRepository)
         {
             this._sysUserRoleRepository = sysUserRoleRepository;
             this._sysUserOrganizationRepository = sysUserOrganizationRepository;
+            this._sysRoleService = sysRoleService;
+        }
+
+        /// <summary>
+        /// 查询用户角色
+        /// </summary>
+        /// <param name="user">要查询的用户</param>
+        /// <returns></returns>
+        public virtual async Task<OperationResult<List<SysRole>>> GetRolesAsync(SysUser user)
+        {
+            //获取用户关联的角色Id
+            var roleIds = (await this._sysUserRoleRepository.QueryableNoTracking.Where(n => n.UserId == user.Id).Select(n => n.RoleId).ToArrayAsync()).Distinct().ToArray();
+            if (roleIds.Length == 0) return OperationResult<List<SysRole>>.Success();
+
+            //根据角色Id查询出关联的角色
+            var roles = await this._sysRoleService.GetEntitiesAsync(n => roleIds.Contains(n.Id));
+            return OperationResult<List<SysRole>>.Success(roles);
         }
 
         /// <summary>
