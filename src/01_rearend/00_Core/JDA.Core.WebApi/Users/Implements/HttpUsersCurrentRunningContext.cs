@@ -1,7 +1,8 @@
 ﻿using JDA.Core.Users.Abstractions;
+using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace JDA.Api.Core.Users.Implements
+namespace JDA.Core.WebApi.Users.Implements
 {
     public class HttpUsersCurrentRunningContext : ICurrentRunningContext
     {

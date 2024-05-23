@@ -1,6 +1,7 @@
 ﻿using JDA.Core.Exceptions;
 using JDA.Core.Formats.WebApi;
 using JDA.Entity.Entities.Sys;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -143,6 +144,7 @@ namespace JDA.Api.Controllers.Sys
         [HttpGet]
         [Route("hhh12")]
         [ApiExplorerSettings(GroupName = "V1")]
+        [Authorize]
         public virtual void hhh12()
         {
             return;
@@ -153,6 +155,8 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("hhh13")]
+        //[Authorize]
+        [Authorize(Policy = "Permission")]
         [ApiExplorerSettings(GroupName = "V1")]
         public virtual async Task hhh13()
         {

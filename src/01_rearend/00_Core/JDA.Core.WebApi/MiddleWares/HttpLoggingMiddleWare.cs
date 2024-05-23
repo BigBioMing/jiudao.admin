@@ -37,6 +37,7 @@ namespace JDA.Core.WebApi.MiddleWares
             }
             else
             {
+                path += context.Request.QueryString.ToString();
                 // 原Body缓存
                 Stream originalBody = context.Response.Body;
                 try
@@ -86,9 +87,10 @@ namespace JDA.Core.WebApi.MiddleWares
                     var headers = new JObject();
                     var h = context.Request.Headers;
                     var headerKeys = context.Request.Headers.Keys;
+                    var ignoreHeaderKeys = new string[2] { "Cookie", "Authorization" };
                     foreach (var key in headerKeys)
                     {
-                        if (key == "Cookie") continue;
+                        if (ignoreHeaderKeys.Contains(key)) continue;
                         var value = h[key].ToString();
                         headers.Add(key, value);
                     }

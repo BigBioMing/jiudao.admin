@@ -1,6 +1,7 @@
 ﻿using JDA.Core.Formats.WebApi;
 using JDA.Core.Models.Operations;
 using JDA.Core.Tokens;
+using JDA.Core.Users.Abstractions;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
 using JDA.Model.Login;
@@ -18,9 +19,11 @@ namespace JDA.Api.Controllers.Login
     public class LoginController : ControllerBase
     {
         private readonly ISysUserService _sysUserService;
-        public LoginController(ISysUserService sysUserService)
+        private readonly ICurrentRunningContext _currentRunningContext;
+        public LoginController(ISysUserService sysUserService, ICurrentRunningContext currentRunningContext)
         {
             this._sysUserService = sysUserService;
+            this._currentRunningContext = currentRunningContext;
         }
 
         /// <summary>
@@ -53,6 +56,10 @@ namespace JDA.Api.Controllers.Login
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role.Code));
                 }
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, $"role{i}"));
             }
             var token = TokenHelper.GetToken(claims);
 

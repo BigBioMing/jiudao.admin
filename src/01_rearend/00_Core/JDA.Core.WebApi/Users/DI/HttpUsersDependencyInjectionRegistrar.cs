@@ -1,10 +1,12 @@
-﻿using JDA.Api.Core.Users.Implements;
-using JDA.Core.DI.Abstractions;
+﻿using JDA.Core.DI.Abstractions;
 using JDA.Core.System.Abstractions;
 using JDA.Core.Users.Abstractions;
 using JDA.Core.Users.Implements;
+using JDA.Core.WebApi.Users.Implements;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace JDA.Api.Core.Users.DI
+namespace JDA.Core.WebApi.Users.DI
 {
     /// <summary>
     /// 注册当前执行人（HTTP）

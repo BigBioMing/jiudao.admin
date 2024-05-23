@@ -21,6 +21,8 @@ using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 using JDA.Core.Utilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
+using JDA.Core.WebApi.Authorizations;
+using Microsoft.AspNetCore.Authorization;
 
 try
 {
@@ -159,8 +161,16 @@ try
         #endregion
     });
 
+    // 注册自定义策略处理程序
+    builder.Services.AddSingleton<IAuthorizationHandler, CustomAuthorizationHandler>();
     #region JWT
-    builder.Services.AddAuthentication(x =>
+    builder.Services.AddAuthorization(options =>
+    {
+        // 自定义基于策略的授权权限
+        options.AddPolicy("Permission",
+                 policy => policy.Requirements.Add(new CustomRequirement()));
+    })
+    .AddAuthentication(x =>
     {
         x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
