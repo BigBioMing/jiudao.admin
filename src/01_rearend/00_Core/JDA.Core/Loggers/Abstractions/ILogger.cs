@@ -20,6 +20,7 @@ namespace JDA.Core.Loggers.Abstractions
         void Warn(string messageTemplate, params object?[]? propertyValues);
         void Warn(Exception? exception, string messageTemplate);
         void Warn(Exception? exception, string messageTemplate, params object?[]? propertyValues);
+        void Error(Exception? exception);
         void Error(string messageTemplate);
         void Error(Exception? exception, string messageTemplate);
         void Error(Exception? exception, string messageTemplate, params object?[]? propertyValues);

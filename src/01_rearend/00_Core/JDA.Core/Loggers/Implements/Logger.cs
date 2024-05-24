@@ -70,6 +70,10 @@ namespace JDA.Core.Loggers.Implements
             Serilog.Log.Warning(exception, messageTemplate, propertyValues);
         }
 
+        public void Error(Exception? exception)
+        {
+            Serilog.Log.Error(exception, null);
+        }
         public void Error(string messageTemplate)
         {
             Serilog.Log.Error(messageTemplate);
