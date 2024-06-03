@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref,watch,h,createVNode,render ,createCommentVNode, onMounted} from 'vue';
+import { reactive, ref, watch, h, createVNode, render, createCommentVNode, onMounted } from 'vue';
 // import {
 //   MenuUnfoldOutlined,
 //   MenuFoldOutlined,
@@ -25,15 +25,11 @@ const state = reactive({
   preOpenKeys: ['sub1'],
 });
 let vn1 = createVNode('PieChartOutlined');
-console.log(vn1)
-onMounted(()=>{
-  render(vn1,document.getElementById('xxx') as HTMLElement)
-})
 const items = reactive([
   {
     key: '1',
     // icon: () => h(PieChartOutlined),
-    icon:  () => import(`@ant-design/icons-vue/PieChartOutlined`),
+    icon: h(vn1),
     // icon:  (pa:any)=>{
     //   console.log(pa);
     //   return vn1
@@ -127,13 +123,18 @@ const toggleCollapsed = () => {
   state.collapsed = !state.collapsed;
   state.openKeys = state.collapsed ? [] : state.preOpenKeys;
 };
+
+//改变语言
+const languagesOptions = ['cn 简体中文', 'us English'];
+const onChangeLanguage = (item: 'cn 简体中文' | 'us English'): void => {
+
+}
+
+//昵称
+let nickName = ref<string>('张三')
 </script>
 
 <template>
-  <div>
-    hhh
-    <div id="xxx"></div>
-  </div>
   <a-layout>
     <a-layout-sider v-model:collapsed="state.collapsed" :trigger="null" collapsible>
       <div class="logo" />
@@ -144,6 +145,62 @@ const toggleCollapsed = () => {
       <a-layout-header style="background: #fff; padding: 0">
         <menu-unfold-outlined v-if="collapsed" class="trigger" @click="toggleCollapsed" />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" />
+        <div style="display: inline-block;" class="heaer-menu">
+          <a-tooltip title="刷新页面">
+            <ReloadOutlined />
+          </a-tooltip>
+        </div>
+        <div style="display: inline-block;float:right;margin-right: 20px;">
+
+          <!-- 头像昵称 -->
+          <a-dropdown :trigger="['click']" class="heaer-menu heaer-menu-right" placement="bottomRight">
+            <a @click.prevent>
+              <a-avatar v-if="true"
+                src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png" />
+              <a-avatar v-else>
+                <template #icon>
+                  <UserOutlined />
+                </template>
+              </a-avatar>
+              <span style="margin-left:5px;    position: relative; top: 2px;">{{ nickName }}</span>
+            </a>
+            <template #overlay>
+              <a-menu class="dropdown-menu" style="width:160px;">
+                <a-menu-item key="0">
+                  <div>
+                    <UserOutlined />
+                    <span style="margin-left: 15px;">个人中心</span>
+                  </div>
+                </a-menu-item>
+                <a-menu-item key="1">
+                  <div>
+                    <SettingOutlined />
+                    <span style="margin-left: 15px;">个人设置</span>
+                  </div>
+                </a-menu-item>
+                <a-menu-divider />
+                <a-menu-item key="3">
+                 <LogoutOutlined />
+                    <span style="margin-left: 15px;">退出登录</span>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+
+          <!-- 语言 -->
+          <a-dropdown :trigger="['click']" class="heaer-menu heaer-menu-right" placement="bottomRight">
+            <a @click.prevent>
+              <global-outlined style="position: relative; top: 4px;" />
+            </a>
+            <template #overlay>
+              <a-menu class="dropdown-menu" style="width:140px;">
+                <a-menu-item v-for="(item, index) in languagesOptions" :key="index">
+                  <span>{{ item }}</span>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </div>
       </a-layout-header>
       <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
         Content
@@ -152,7 +209,7 @@ const toggleCollapsed = () => {
   </a-layout>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .trigger {
   font-size: 18px;
   line-height: 64px;
@@ -173,5 +230,30 @@ const toggleCollapsed = () => {
 
 .site-layout .site-layout-background {
   background: #fff;
+}
+
+.heaer-menu {
+  cursor: pointer;
+  display: inline-block;
+  height: 100%;
+  color: rgba(0, 0, 0, 0.65);
+
+  .anticon {
+    font-size: 18px;
+  }
+}
+
+.heaer-menu-right {
+  padding: 0 10px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.025);
+  }
+}
+
+.dropdown-menu{
+  :deep(.ant-dropdown-menu-item){
+  color: rgba(0, 0, 0, 0.65);
+  }
 }
 </style>
