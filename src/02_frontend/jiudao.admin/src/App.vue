@@ -132,6 +132,19 @@ const onChangeLanguage = (item: 'cn 简体中文' | 'us English'): void => {
 
 //昵称
 let nickName = ref<string>('张三')
+
+
+//设置
+let isOpenSetting = ref<boolean>(false);
+const onOpenSetting = () => {
+  isOpenSetting.value = !isOpenSetting.value;
+}
+const onCloseSetting = () => {
+  isOpenSetting.value = false;
+}
+
+//整体风格设置
+let checked = ref<boolean>(false);
 </script>
 
 <template>
@@ -180,8 +193,8 @@ let nickName = ref<string>('张三')
                 </a-menu-item>
                 <a-menu-divider />
                 <a-menu-item key="3">
-                 <LogoutOutlined />
-                    <span style="margin-left: 15px;">退出登录</span>
+                  <LogoutOutlined />
+                  <span style="margin-left: 15px;">退出登录</span>
                 </a-menu-item>
               </a-menu>
             </template>
@@ -207,6 +220,44 @@ let nickName = ref<string>('张三')
       </a-layout-content>
     </a-layout>
   </a-layout>
+  <div class="settings" @click="onOpenSetting" :class="{ 'settings-open': isOpenSetting }">
+    <SettingOutlined />
+  </div>
+  <a-drawer title="" :open="isOpenSetting" @close="onCloseSetting" width="300">
+    <div class="settings-content">
+      <div class="settings-item">
+        <h3>整体风格设置</h3>
+        <div>
+          <div class="settings-global-block">
+            <div class="settings-global-item settings-global-item-light">
+              <div class="inner"></div>
+              <CheckOutlined class="settings-global-item-select-icon" />
+            </div>
+            <div class="settings-global-item settings-global-item-dark">
+              <div class="inner"></div>
+              <CheckOutlined class="settings-global-item-select-icon" />
+            </div>
+            <div class="settings-global-item settings-global-item-realDark">
+              <div class="inner"></div>
+              <CheckOutlined class="settings-global-item-select-icon" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-item">
+        <h3>主题色</h3>
+        <div></div>
+      </div>
+      <div class="settings-item">
+        <h3>导航模式</h3>
+        <div></div>
+      </div>
+      <div class="settings-item">
+        <h3>其他设置</h3>
+        <div></div>
+      </div>
+    </div>
+  </a-drawer>
 </template>
 
 <style lang="scss" scoped>
@@ -251,9 +302,159 @@ let nickName = ref<string>('张三')
   }
 }
 
-.dropdown-menu{
-  :deep(.ant-dropdown-menu-item){
-  color: rgba(0, 0, 0, 0.65);
+.dropdown-menu {
+  :deep(.ant-dropdown-menu-item) {
+    color: rgba(0, 0, 0, 0.65);
+  }
+}
+
+.settings {
+  position: absolute;
+  top: 240px;
+  right: 0;
+  z-index: 99999;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  font-size: 16px;
+  text-align: center;
+  background: #1890ff;
+  border-radius: 4px 0 0 4px;
+  cursor: pointer;
+  pointer-events: auto;
+  color: #fff;
+
+  transition: right 0.3s ease;
+  -ms-transition: right 0.3s ease;
+  -webkit-transition: right 0.3s ease;
+  -o-transition: right 0.3s ease;
+  -moz-transition: right 0.3s ease;
+}
+
+.settings-open {
+  right: 300px;
+}
+
+@keyframes settings-animation {
+  from {
+    right: 0;
+  }
+
+  to {
+    right: 300px;
+  }
+}
+
+@keyframes settings-animation2 {
+  from {
+    right: 300px;
+  }
+
+  to {
+    right: 0;
+  }
+}
+
+.settings-content {
+  width: 100%;
+  height: auto;
+
+  .settings-item {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+}
+
+.settings-global-block {
+  display: flex;
+
+  .settings-global-item {
+    position: relative;
+    width: 44px;
+    height: 36px;
+    margin-right: 16px;
+    overflow: hidden;
+    background-color: #f0f2f5;
+    border-radius: 4px;
+    box-shadow: 0 1px 2.5px rgba(0, 0, 0, .18);
+    cursor: pointer;
+
+
+
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 33%;
+      height: 100%;
+      background-color: #fff;
+      content: "";
+    }
+
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 25%;
+      background-color: #fff;
+      content: "";
+    }
+  }
+
+  .settings-global-item-select-icon {
+    position: absolute;
+    right: 6px;
+    bottom: 4px;
+    color: #1677ff;
+    font-weight: 700;
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  .settings-global-item-light {
+    &:before {
+      background-color: #fff;
+      content: "";
+    }
+
+    &:after {
+      background-color: #fff;
+    }
+  }
+
+  .settings-global-item-dark {
+    &:before {
+      z-index: 1;
+      background-color: #001529;
+      content: "";
+    }
+
+    &:after {
+      background-color: #fff;
+    }
+  }
+
+  .settings-global-item-realDark {
+    background-color: #001529d9;
+
+    &:before {
+      z-index: 1;
+      background-color: #001529a6;
+      content: "";
+    }
+
+    &:after {
+      background-color: #001529d9;
+    }
   }
 }
 </style>
