@@ -5,6 +5,10 @@ import { reactive, ref, watch, h, createVNode, render, createCommentVNode, onMou
 //   MenuFoldOutlined,
 // } from '@ant-design/icons-vue';
 
+defineOptions({
+  name: 'App'
+})
+
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -16,7 +20,6 @@ import {
 } from '@ant-design/icons-vue';
 console.log(import.meta.env)
 const selectedKeys = ref<string[]>(['1']);
-const collapsed = ref<boolean>(false);
 
 const state = reactive({
   collapsed: false,
@@ -24,6 +27,13 @@ const state = reactive({
   openKeys: ['sub1'],
   preOpenKeys: ['sub1'],
 });
+const onCollapse = (collapsed: boolean, type: string) => {
+  console.log(collapsed, type);
+};
+
+const onBreakpoint = (broken: boolean) => {
+  console.log(broken);
+};
 let vn1 = createVNode('PieChartOutlined');
 const items = reactive([
   {
@@ -112,6 +122,41 @@ const items = reactive([
       },
     ],
   },
+  {
+    key: 'sub21',
+    icon: () => h(AppstoreOutlined),
+    label: 'Navigation Two',
+    title: 'Navigation Two',
+    children: [
+      {
+        key: '91',
+        label: 'Option 9',
+        title: 'Option 9',
+      },
+      {
+        key: '101',
+        label: 'Option 10',
+        title: 'Option 10',
+      },
+      {
+        key: 'sub31',
+        label: 'Submenu',
+        title: 'Submenu',
+        children: [
+          {
+            key: '111',
+            label: 'Option 11',
+            title: 'Option 11',
+          },
+          {
+            key: '121',
+            label: 'Option 12',
+            title: 'Option 12',
+          },
+        ],
+      },
+    ],
+  }
 ]);
 watch(
   () => state.openKeys,
@@ -144,19 +189,80 @@ const onCloseSetting = () => {
 }
 
 //整体风格设置
-let checked = ref<boolean>(false);
+let themeNames: ('light' | 'dark' | 'realDark')[] = ['light', 'dark', 'realDark'];
+// let themeNames:Array<('light'|'dark'|'realDark')> = ['light','dark','realDark'];
+let currentTheme = ref<string>('dark');
+const onChangeTheme = (item: 'light' | 'dark' | 'realDark'): void => {
+  currentTheme.value = item;
+}
+
+//主题色
+type Color = { name: string, value: string };
+let basicColors: Color[] = [
+  { name: '拂晓蓝', value: 'rgb(22, 119, 255)' },
+  { name: '薄暮', value: 'rgb(245, 34, 45)' },
+  { name: '火山', value: 'rgb(250, 84, 28)' },
+  { name: '日暮', value: 'rgb(250, 173, 20)' },
+  { name: '明青', value: 'rgb(19, 194, 194)' },
+  { name: '极光绿', value: 'rgb(82, 196, 26)' },
+  { name: '极光蓝', value: 'rgb(47, 84, 235)' },
+  { name: '酱紫', value: 'rgb(114, 46, 209)' }
+];
+let currentColor = ref<Color>(basicColors[0]);
+const onChangeThemeColor = (item: Color): void => {
+  currentColor.value = item;
+}
+
+//导航模式
+type SwitchItem = {
+  /** 选项值 */
+  value: boolean,
+  /** 是否禁用 true-禁用 */
+  disabled: boolean
+}
+type NavigationMode = {
+  /** 名称 */
+  name: string,
+  /** 模式 */
+  mode: string,
+  /** 固定 Header */
+  isFixedHeader: SwitchItem,
+  /** 固定侧边菜单 */
+  isFixedSideMenu: SwitchItem,
+  /** 自动分割菜单 */
+  isAutoSplitMenu: SwitchItem
+}
+let navigationModes: NavigationMode[] = [
+  { name: '侧边菜单布局', mode: 'side-menu', isFixedHeader: { value: true, disabled: false }, isFixedSideMenu: { value: true, disabled: false }, isAutoSplitMenu: { value: false, disabled: true } },
+  { name: '顶部菜单布局', mode: 'top-menu', isFixedHeader: { value: true, disabled: false }, isFixedSideMenu: { value: false, disabled: true }, isAutoSplitMenu: { value: false, disabled: true } },
+  { name: '混合布局', mode: 'mixed', isFixedHeader: { value: true, disabled: true }, isFixedSideMenu: { value: true, disabled: false }, isAutoSplitMenu: { value: false, disabled: false } },
+  { name: '左侧混合布局', mode: 'left-mixed', isFixedHeader: { value: true, disabled: false }, isFixedSideMenu: { value: true, disabled: false }, isAutoSplitMenu: { value: false, disabled: true } }
+]
+let currentNavigationMode = ref<NavigationMode>(navigationModes[0])
+const onChangeNavigationMode = (item: NavigationMode) => {
+  currentNavigationMode.value = item;
+}
+
+//路由动画
+let routeAnimations = [{ value: 'Null', label: 'Null' }, { value: 'Slide Up', label: 'Slide Up' }, { value: 'Slide Right', label: 'Slide Right' }, { value: 'Fade In', label: 'Fade In' }, { value: 'Zoom', label: 'Zoom' }]
+let currentRouteAnimation = ref(routeAnimations[0])
+//多标签
+let isMultipleTags = ref<boolean>(false)
+//固定多标签
+let isFixedMultipleTags = ref<boolean>(false)
 </script>
 
 <template>
-  <a-layout>
-    <a-layout-sider v-model:collapsed="state.collapsed" :trigger="null" collapsible>
+  <a-layout style="height: 100%;">
+    <a-layout-sider @collapse="onCollapse" @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed"
+      :trigger="null" collapsible>
       <div class="logo" />
       <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
-        :inline-collapsed="state.collapsed" :items="items"></a-menu>
+        :items="items"></a-menu>
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
-        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="toggleCollapsed" />
+        <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" />
         <div style="display: inline-block;" class="heaer-menu">
           <a-tooltip title="刷新页面">
@@ -229,32 +335,89 @@ let checked = ref<boolean>(false);
         <h3>整体风格设置</h3>
         <div>
           <div class="settings-global-block">
-            <div class="settings-global-item settings-global-item-light">
+            <div v-for="(theme, index) in themeNames" :key="theme" @click="onChangeTheme(theme)"
+              :class="`settings-global-item settings-global-item-${theme}`">
               <div class="inner"></div>
-              <CheckOutlined class="settings-global-item-select-icon" />
-            </div>
-            <div class="settings-global-item settings-global-item-dark">
-              <div class="inner"></div>
-              <CheckOutlined class="settings-global-item-select-icon" />
-            </div>
-            <div class="settings-global-item settings-global-item-realDark">
-              <div class="inner"></div>
-              <CheckOutlined class="settings-global-item-select-icon" />
+              <CheckOutlined v-if="theme === currentTheme"
+                :class="{ 'settings-global-item-select-icon': theme === currentTheme }" />
             </div>
           </div>
         </div>
       </div>
       <div class="settings-item">
         <h3>主题色</h3>
-        <div></div>
+        <div>
+          <div class="settings-theme-color-block clearfix">
+            <div v-for="(color, index) in basicColors" :key="color.value" @click="onChangeThemeColor(color)"
+              class="clearfix settings-theme-color" :style="{ 'background-color': color.value }">
+              <CheckOutlined v-if="color.value === currentColor.value" />
+            </div>
+          </div>
+        </div>
       </div>
+      <a-divider />
       <div class="settings-item">
         <h3>导航模式</h3>
-        <div></div>
+        <div>
+          <div class="settings-global-block">
+            <div v-for="(mode, index) in navigationModes" :key="mode.mode" @click="onChangeNavigationMode(mode)"
+              :class="`settings-global-item settings-global-item-${mode.mode}`">
+              <div class="inner"></div>
+              <CheckOutlined v-if="mode.mode === currentNavigationMode.mode"
+                :class="{ 'settings-global-item-select-icon': mode.mode === currentNavigationMode.mode }" />
+            </div>
+          </div>
+        </div>
       </div>
       <div class="settings-item">
+        <div class="settings-form">
+          <div class="settings-form-item">
+            <span>固定 Header</span>
+            <div>
+              <a-switch v-model:checked="currentNavigationMode.isFixedHeader.value" size="small"
+                :disabled="currentNavigationMode.isFixedHeader.disabled" />
+            </div>
+          </div>
+          <div class="settings-form-item">
+            <span>固定侧边菜单</span>
+            <div>
+              <a-switch v-model:checked="currentNavigationMode.isFixedSideMenu.value" size="small"
+                :disabled="currentNavigationMode.isFixedSideMenu.disabled" />
+            </div>
+          </div>
+          <div class="settings-form-item">
+            <span>自动分割菜单</span>
+            <div>
+              <a-switch v-model:checked="currentNavigationMode.isAutoSplitMenu.value" size="small"
+                :disabled="currentNavigationMode.isAutoSplitMenu.disabled" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <a-divider />
+      <div class="settings-item">
         <h3>其他设置</h3>
-        <div></div>
+        <div class="settings-form">
+          <div class="settings-form-item">
+            <span>路由动画</span>
+            <div>
+              <a-select size="small" v-model:value="currentRouteAnimation" style="width: 100px"
+                :options="routeAnimations"></a-select>
+            </div>
+          </div>
+          <div class="settings-form-item">
+            <span>多标签</span>
+            <div>
+              <a-switch v-model:checked="isMultipleTags" size="small" />
+            </div>
+          </div>
+          <div class="settings-form-item">
+            <span>固定多标签</span>
+            <div>
+              <a-switch v-model:checked="isFixedMultipleTags" size="small" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </a-drawer>
@@ -387,6 +550,9 @@ let checked = ref<boolean>(false);
     box-shadow: 0 1px 2.5px rgba(0, 0, 0, .18);
     cursor: pointer;
 
+    .inner {
+      display: none;
+    }
 
 
     &:before {
@@ -420,6 +586,7 @@ let checked = ref<boolean>(false);
     pointer-events: none;
   }
 
+  /** 主题 */
   .settings-global-item-light {
     &:before {
       background-color: #fff;
@@ -455,6 +622,121 @@ let checked = ref<boolean>(false);
     &:after {
       background-color: #001529d9;
     }
+  }
+
+
+  /** 导航模式 */
+  .settings-global-item-side-menu {
+
+    &:before {
+      z-index: 1;
+      background-color: #001529;
+      content: "";
+    }
+
+    &:after {
+      background-color: #fff;
+    }
+  }
+
+  .settings-global-item-top-menu {
+
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      background-color: #fff;
+      content: "";
+    }
+
+    &:after {
+      background-color: #001529;
+    }
+  }
+
+  .settings-global-item-mixed {
+
+    &:before {
+      background-color: #fff;
+      content: " ";
+    }
+
+    &:after {
+      background-color: #001529;
+    }
+  }
+
+  .settings-global-item-left-mixed {
+    .inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 33%;
+      height: 100%;
+      background-color: #fff;
+      content: "";
+    }
+
+    &:before {
+      z-index: 1;
+      width: 16%;
+      background-color: #001529;
+      content: "";
+    }
+
+    &:after {}
+  }
+}
+
+.settings-theme-color-block {
+  margin-top: 16px;
+
+  .settings-theme-color {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-top: 8px;
+    margin-right: 8px;
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+}
+
+.settings-form {
+
+  .settings-form-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    color: rgba(0, 0, 0, 0.88);
+    box-sizing: border-box;
+  }
+}
+
+.clearfix {
+  zoom: 1;
+
+  &::before,
+  &::after {
+    display: table;
+    content: ' ';
+  }
+
+  &::after {
+    height: 0;
+    clear: both;
+    font-size: 0;
+    visibility: hidden;
   }
 }
 </style>
