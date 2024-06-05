@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, watch, h, createVNode, render, createCommentVNode, onMounted } from 'vue';
+import { computed, reactive, ref, watch, h, createVNode, render, createCommentVNode, onMounted } from 'vue';
 // import {
 //   MenuUnfoldOutlined,
 //   MenuFoldOutlined,
@@ -250,18 +250,56 @@ let currentRouteAnimation = ref(routeAnimations[0])
 let isMultipleTags = ref<boolean>(false)
 //固定多标签
 let isFixedMultipleTags = ref<boolean>(false)
+
+const onSwitch = (...options: any[]) => {
+  console.log('options:', options)
+  console.log('currentNavigationMode:', currentNavigationMode)
+}
+
+/** 固定左侧菜单栏 */
+const layoutFixedLeftMenuStyle = computed(() => {
+  if (currentNavigationMode.value.isFixedSideMenu.value) {
+    return {
+      overflow: 'auto',
+      height: '100vh',
+      position: 'fixed',
+      left: 0,
+      top: 0,
+      bottom: 0
+    };
+  } else {
+    return {};
+  }
+})
+const layoutFixedLeftMenuRightRegionStyle = computed(() => {
+  if (currentNavigationMode.value.isFixedSideMenu.value) {
+    if (!state.collapsed) {
+      return {
+        marginLeft: '200px',
+        transition: 'margin-left 0.2s'
+      };
+    } else {
+      return {
+        marginLeft: '80px',
+        transition: 'margin-left 0.2s'
+      };
+    }
+  } else {
+    return {};
+  }
+})
 </script>
 
 <template>
   <a-layout style="height: 100%;">
     <a-layout-sider @collapse="onCollapse" @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed"
-      :trigger="null" collapsible>
+      :trigger="null" collapsible :style="layoutFixedLeftMenuStyle">
       <div class="logo" />
       <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
         :items="items"></a-menu>
     </a-layout-sider>
-    <a-layout>
-      <a-layout-header style="background: #fff; padding: 0">
+    <a-layout :style="layoutFixedLeftMenuRightRegionStyle">
+      <a-layout-header :style="{ backgroundColor: '#fff', padding: 0 }">
         <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" />
         <div style="display: inline-block;" class="heaer-menu">
@@ -321,7 +359,7 @@ let isFixedMultipleTags = ref<boolean>(false)
           </a-dropdown>
         </div>
       </a-layout-header>
-      <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff' }">
         Content
       </a-layout-content>
     </a-layout>
@@ -374,7 +412,7 @@ let isFixedMultipleTags = ref<boolean>(false)
           <div class="settings-form-item">
             <span>固定 Header</span>
             <div>
-              <a-switch v-model:checked="currentNavigationMode.isFixedHeader.value" size="small"
+              <a-switch v-model:checked="currentNavigationMode.isFixedHeader.value" size="small" @change="onSwitch"
                 :disabled="currentNavigationMode.isFixedHeader.disabled" />
             </div>
           </div>
@@ -738,5 +776,27 @@ let isFixedMultipleTags = ref<boolean>(false)
     font-size: 0;
     visibility: hidden;
   }
+}
+
+
+/** 固定左侧菜单栏 */
+/** 左侧菜单栏 */
+.layout-fixed-left-menu {
+  overflow: 'auto';
+  height: '100vh';
+  position: 'fixed';
+  left: 0;
+  top: 0;
+  bottom: 0
+}
+
+/** 右侧内容区域 */
+.layout-fixed-left-menu-right-region {
+  margin-left: 200px;
+  transition: margin-left 0.3s ease;
+  -ms-transition: margin-left 0.3s ease;
+  -webkit-transition: margin-left 0.3s ease;
+  -o-transition: margin-left 0.3s ease;
+  -moz-transition: margin-left 0.3s ease;
 }
 </style>
