@@ -6,8 +6,17 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import 'ant-design-vue/dist/reset.css';
 import '@/style/global.scss';
+
+import {router} from '@/router'
+
+import { JdaMenu } from '@/components'
+
+
+
 const app = createApp(App);
 
+app.component('JdaMenu',JdaMenu)
+app.use(router);
 app.use(Antd);
 
 let a: {

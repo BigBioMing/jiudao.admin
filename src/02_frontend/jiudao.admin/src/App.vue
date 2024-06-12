@@ -39,7 +39,7 @@ const items = reactive([
   {
     key: '1',
     // icon: () => h(PieChartOutlined),
-    icon: h(vn1),
+    icon: ()=>h(vn1),
     // icon:  (pa:any)=>{
     //   console.log(pa);
     //   return vn1
@@ -360,7 +360,7 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
         </div>
       </a-layout-header>
       <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff' }">
-        Content
+        <router-view />
       </a-layout-content>
     </a-layout>
   </a-layout>
