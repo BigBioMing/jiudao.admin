@@ -416,7 +416,7 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
       };
     } else {
       return {
-        marginLeft: '80px',
+        marginLeft: '48px',
         transition: 'margin-left 0.2s'
       };
     }
@@ -429,13 +429,17 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
 <template>
   <a-layout style="height: 100%;">
     <a-layout-sider @collapse="onCollapse" @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed"
-      :trigger="null" collapsible :style="layoutFixedLeftMenuStyle">
+      :trigger="null" collapsible :style="layoutFixedLeftMenuStyle" collapsed-width="48">
       <div class="logo" />
       <!-- <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
         :items="items"></a-menu> -->
         <jda-menu :menus="items2" :collapsed="state.collapsed"></jda-menu>
     </a-layout-sider>
     <a-layout :style="layoutFixedLeftMenuRightRegionStyle">
+      
+      <a-layout-header :style="{ backgroundColor: '#fff', padding: 0 ,lineHeight: '48px',height: '48px'}" >
+        <jda-menu :menus="items2" :collapsed="state.collapsed" mode="horizontal"></jda-menu>
+      </a-layout-header>
       <a-layout-header :style="{ backgroundColor: '#fff', padding: 0 }">
         <!-- <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" /> -->
@@ -458,7 +462,7 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
                   <UserOutlined />
                 </template>
               </a-avatar>
-              <span style="margin-left:5px;    position: relative; top: 2px;">{{ nickName }}</span>
+              <span style="margin-left:5px;position: relative; top: 2px;">{{ nickName }}</span>
             </a>
             <template #overlay>
               <a-menu class="dropdown-menu" style="width:160px;">
