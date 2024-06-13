@@ -1,6 +1,9 @@
 {
-  "jsx": "preserve",
-  "jsxImportSource": "vue",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "vue"
+    // ...
+  },
   "files": [],
   "references": [
     {
