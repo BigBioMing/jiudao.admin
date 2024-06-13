@@ -1,20 +1,10 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch, h, createVNode, render, createCommentVNode, onMounted } from 'vue';
-import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    PieChartOutlined,
-    MailOutlined,
-    DesktopOutlined,
-    InboxOutlined,
-    AppstoreOutlined,
-} from '@ant-design/icons-vue';
-let vn1 = createVNode('PieChartOutlined');
 const items = reactive([
     {
         key: '1',
         // icon: () => h(PieChartOutlined),
-        icon: () => h(vn1),
+        icon: 'far fa-square-caret-right',
         // icon:  (pa:any)=>{
         //   console.log(pa);
         //   return vn1
@@ -24,24 +14,25 @@ const items = reactive([
     },
     {
         key: '2',
-        icon: () => h(DesktopOutlined),
+        icon: 'fab fa-bandcamp',
         label: 'Option 2',
         title: 'Option 2',
     },
     {
         key: '3',
-        icon: () => h(InboxOutlined),
+        icon: 'fas fa-leaf-maple',
         label: 'Option 3',
         title: 'Option 3',
     },
     {
         key: 'sub1',
-        icon: () => h(MailOutlined),
+        icon: 'far fa-square-caret-right',
         label: 'Navigation One',
         title: 'Navigation One',
         children: [
             {
                 key: '5',
+                icon: 'fas fa-plane-departure',
                 label: 'Option 5',
                 title: 'Option 5',
             },
@@ -64,7 +55,7 @@ const items = reactive([
     },
     {
         key: 'sub2',
-        icon: () => h(AppstoreOutlined),
+        icon: 'fas fa-umbrella-beach',
         label: 'Navigation Two',
         title: 'Navigation Two',
         children: [
@@ -99,7 +90,7 @@ const items = reactive([
     },
     {
         key: 'sub21',
-        icon: () => h(AppstoreOutlined),
+        icon: 'fas fa-cloud-sun',
         label: 'Navigation Two',
         title: 'Navigation Two',
         children: [
@@ -150,6 +141,17 @@ const items = reactive([
 <template>
     <div>
         <h1>我是首页</h1>
+        <div>
+            <font-awesome-icon icon="calendar" style="color:green" />
+            <font-awesome-icon icon="fas  fa-camera" />
+            <font-awesome-icon :icon="['far', 'square']" />
+            <font-awesome-icon icon="far fa-square" />
+            <font-awesome-icon :icon="['far', 'square-caret-right']" />
+            <font-awesome-icon icon="far fa-square-caret-right" />
+            <font-awesome-icon icon="far fa-creative-commons-nc-eu" />
+            <font-awesome-icon icon="fab fa-accusoft" />
+            <font-awesome-icon icon="fas  fa-camera" />
+        </div>
         <jda-menu :menus="items"></jda-menu>
     </div>
 </template>
