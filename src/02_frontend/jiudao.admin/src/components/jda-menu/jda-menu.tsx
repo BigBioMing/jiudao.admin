@@ -19,6 +19,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    mode:{
+        type:String,
+        default:'inline'
+    }
   },
   setup(props, context) {
     console.log("props:", props);
@@ -29,6 +33,7 @@ export default defineComponent({
       selectedKeys: [],
       openKeys: [],
       preOpenKeys: [],
+      mode: props.mode
     });
     // const toggleCollapsed = () => {
     //   state.collapsed = !state.collapsed;
@@ -45,6 +50,12 @@ export default defineComponent({
       (_val, oldVal) => {
         state.collapsed = _val;
         state.openKeys = state.collapsed ? [] : state.preOpenKeys;
+      }
+    );
+    watch(
+      () => props.mode,
+      (_val, oldVal) => {
+        state.mode = _val;
       }
     );
     const creMenu = (subMenus: any[]) => {
@@ -121,7 +132,7 @@ export default defineComponent({
       <a-menu
         v-model:openKeys={state.openKeys}
         v-model:selectedKeys={state.selectedKeys}
-        mode="inline"
+        v-model:mode={state.mode}
         theme="dark"
       >
         {els}
