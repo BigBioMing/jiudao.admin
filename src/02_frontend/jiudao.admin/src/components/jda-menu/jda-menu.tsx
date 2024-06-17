@@ -22,6 +22,10 @@ export default defineComponent({
     mode:{
         type:String,
         default:'inline'
+    },
+    theme:{
+      type:String,
+      default:'dark'
     }
   },
   setup(props, context) {
@@ -133,7 +137,7 @@ export default defineComponent({
         v-model:openKeys={state.openKeys}
         v-model:selectedKeys={state.selectedKeys}
         v-model:mode={state.mode}
-        theme="dark"
+        v-model:theme={props.theme}
       >
         {els}
       </a-menu>

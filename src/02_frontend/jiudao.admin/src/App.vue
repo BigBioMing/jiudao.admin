@@ -183,6 +183,82 @@ const items2 = reactive([
     title: 'Option 3',
   },
   {
+    key: 'aub1',
+    icon: 'far fa-square-caret-right',
+    label: 'Navigation One',
+    title: 'Navigation One',
+    children: [
+      {
+        key: 'a5',
+        icon: 'fas fa-plane-departure',
+        label: 'Option 5',
+        title: 'Option 5',
+      },
+      {
+        key: 'a6',
+        label: 'Option 6',
+        title: 'Option 6',
+      }
+    ],
+  },
+  {
+    key: 'bub1',
+    icon: 'far fa-square-caret-right',
+    label: 'Navigation One',
+    title: 'Navigation One',
+    children: [
+      {
+        key: 'b5',
+        icon: 'fas fa-plane-departure',
+        label: 'Option 5',
+        title: 'Option 5',
+      },
+      {
+        key: 'b6',
+        label: 'Option 6',
+        title: 'Option 6',
+      }
+    ],
+  },
+  {
+    key: 'cub1',
+    icon: 'far fa-square-caret-right',
+    label: 'Navigation One',
+    title: 'Navigation One',
+    children: [
+      {
+        key: 'c5',
+        icon: 'fas fa-plane-departure',
+        label: 'Option 5',
+        title: 'Option 5',
+      },
+      {
+        key: 'c6',
+        label: 'Option 6',
+        title: 'Option 6',
+      }
+    ],
+  },
+  {
+    key: 'dub1',
+    icon: 'far fa-square-caret-right',
+    label: 'Navigation One',
+    title: 'Navigation One',
+    children: [
+      {
+        key: 'd5',
+        icon: 'fas fa-plane-departure',
+        label: 'Option 5',
+        title: 'Option 5',
+      },
+      {
+        key: 'd6',
+        label: 'Option 6',
+        title: 'Option 6',
+      }
+    ],
+  },
+  {
     key: 'sub1',
     icon: 'far fa-square-caret-right',
     label: 'Navigation One',
@@ -428,24 +504,108 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
 
 <template>
   <a-layout style="height: 100%;">
-    <a-layout-sider @collapse="onCollapse" @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed"
-      :trigger="null" collapsible :style="layoutFixedLeftMenuStyle" collapsed-width="48">
-      <div class="logo">
-        <span>
-        <img src="@/assets/logo.jpg" />
-        <h1>JiuDao</h1>
-        </span>
+    <a-layout-sider v-if="currentNavigationMode.mode === 'side-menu' || currentNavigationMode.mode === 'mixed'"
+      @collapse="onCollapse" @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed" :trigger="null"
+      :class="{ 'sider-collapsed': state.collapsed }" collapsible :style="layoutFixedLeftMenuStyle"
+      collapsed-width="48" :theme="currentNavigationMode.mode === 'mixed'?'light':'dark'">
+      <div class="sider-logo">
+        <div>
+          <img src="@/assets/logo.jpg" />
+          <h1 v-if="!state.collapsed">JiuDao Admin</h1>
+        </div>
       </div>
       <!-- <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
         :items="items"></a-menu> -->
-      <jda-menu :menus="items2" :collapsed="state.collapsed"></jda-menu>
+      <jda-menu :menus="items2" :collapsed="state.collapsed" :theme="currentNavigationMode.mode === 'mixed'?'light':'dark'"></jda-menu>
     </a-layout-sider>
     <a-layout :style="layoutFixedLeftMenuRightRegionStyle">
-      
-      <a-layout-header :style="{ backgroundColor: '#fff', padding: 0 ,lineHeight: '48px',height: '48px'}" >
-        <jda-menu :menus="items2" :collapsed="state.collapsed" mode="horizontal"></jda-menu>
+      <a-layout-header v-if="currentNavigationMode.isFixedHeader.value"
+        :style="{ padding: 0, lineHeight: '48px', height: '48px', width: '100%' }">
       </a-layout-header>
-      <a-layout-header :style="{ backgroundColor: '#fff', padding: 0 }">
+      <a-layout-header :class="{ 'header': true, 'layout-fixed-header-menu': currentNavigationMode.isFixedHeader.value }"
+        v-if="currentNavigationMode.mode === 'top-menu' || currentNavigationMode.mode === 'mixed'"
+        :style="{ padding: 0, lineHeight: '48px', height: '48px' }">
+        <div class="header-main">
+          <div class="header-left">
+            <div class="header-logo">
+              <div>
+                <img src="@/assets/logo.jpg" />
+                <h1>JiuDao Admin</h1>
+              </div>
+            </div>
+          </div>
+          <div class="header-middle">
+            <div v-if="currentNavigationMode.mode === 'mixed'">
+              <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="state.collapsed = !state.collapsed"
+                style="color:#fff;" />
+              <menu-fold-outlined v-else class="trigger" @click="state.collapsed = !state.collapsed"
+                style="color:#fff;" />
+              <div style="display: inline-block;color:#fff;" class="heaer-menu">
+                <a-tooltip title="刷新页面">
+                  <ReloadOutlined />
+                </a-tooltip>
+              </div>
+            </div>
+            <jda-menu v-if="currentNavigationMode.mode === 'top-menu'" :menus="items2" :collapsed="state.collapsed"
+              mode="horizontal"></jda-menu>
+          </div>
+          <div class="header-right">
+            <div class="header-menu-top-menu" style="display: inline-block;float:right;margin-right: 20px;">
+
+              <!-- 头像昵称 -->
+              <a-dropdown :trigger="['click']" class="heaer-menu heaer-menu-right" placement="bottomRight">
+                <a @click.prevent>
+                  <a-avatar v-if="true" size="small"
+                    src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png" />
+                  <a-avatar v-else size="small">
+                    <template #icon>
+                      <UserOutlined />
+                    </template>
+                  </a-avatar>
+                  <span style="margin-left:5px;position: relative; top: 2px;">{{ nickName }}</span>
+                </a>
+                <template #overlay>
+                  <a-menu class="dropdown-menu" style="width:160px;">
+                    <a-menu-item key="0">
+                      <div>
+                        <UserOutlined />
+                        <span style="margin-left: 15px;">个人中心</span>
+                      </div>
+                    </a-menu-item>
+                    <a-menu-item key="1">
+                      <div>
+                        <SettingOutlined />
+                        <span style="margin-left: 15px;">个人设置</span>
+                      </div>
+                    </a-menu-item>
+                    <a-menu-divider />
+                    <a-menu-item key="3">
+                      <LogoutOutlined />
+                      <span style="margin-left: 15px;">退出登录</span>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+
+              <!-- 语言 -->
+              <a-dropdown :trigger="['click']" class="heaer-menu heaer-menu-right" placement="bottomRight">
+                <a @click.prevent>
+                  <global-outlined style="position: relative; top: 4px;" />
+                </a>
+                <template #overlay>
+                  <a-menu class="dropdown-menu" style="width:140px;">
+                    <a-menu-item v-for="(item, index) in languagesOptions" :key="index">
+                      <span>{{ item }}</span>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+            </div>
+          </div>
+        </div>
+      </a-layout-header>
+      <a-layout-header v-if="currentNavigationMode.mode !== 'top-menu' && currentNavigationMode.mode !== 'mixed'"
+        :style="{ backgroundColor: '#fff', padding: 0, lineHeight: '48px', height: '48px' }">
         <!-- <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" /> -->
         <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="state.collapsed = !state.collapsed" />
@@ -460,9 +620,9 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
           <!-- 头像昵称 -->
           <a-dropdown :trigger="['click']" class="heaer-menu heaer-menu-right" placement="bottomRight">
             <a @click.prevent>
-              <a-avatar v-if="true"
+              <a-avatar v-if="true" size="small"
                 src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png" />
-              <a-avatar v-else>
+              <a-avatar v-else size="small">
                 <template #icon>
                   <UserOutlined />
                 </template>
@@ -507,7 +667,7 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
           </a-dropdown>
         </div>
       </a-layout-header>
-      <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff' }">
+      <a-layout-content :style="{ margin: '24px', background: '#fff' }">
         <router-view />
       </a-layout-content>
     </a-layout>
@@ -612,7 +772,7 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
 <style lang="scss" scoped>
 .trigger {
   font-size: 18px;
-  line-height: 64px;
+  line-height: 54px;
   padding: 0 24px;
   cursor: pointer;
   transition: color 0.3s;
@@ -622,7 +782,7 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
   color: #1890ff;
 }
 
-.logo {
+.sider-logo {
   position: relative;
   display: flex;
   align-items: center;
@@ -630,7 +790,7 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
   line-height: 32px;
   cursor: pointer;
 
-  span {
+  div {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -659,6 +819,61 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
   }
 }
 
+.sider-collapsed {
+  .sider-logo {
+    padding: 16px 8px;
+  }
+}
+
+
+.header {
+
+  .header-main {
+    display: flex;
+    flex-direction: row;
+    padding-left: 16px;
+
+
+    .header-left {
+      display: flex;
+      flex-direction: row;
+      min-width: 192px;
+    }
+
+    .header-middle {
+      flex: 1 1 0%;
+      overflow: hidden;
+    }
+
+    .header-right {
+      min-width: 208px;
+    }
+  }
+}
+
+.header-logo {
+  position: relative;
+  min-width: 165px;
+  height: 100%;
+  overflow: hidden;
+  transition: all .3s;
+
+  img {
+    display: inline-block;
+    height: 32px;
+    vertical-align: middle;
+  }
+
+  h1 {
+    display: inline-block;
+    margin: 0 0 0 12px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 16px;
+    vertical-align: top;
+  }
+}
+
 .site-layout .site-layout-background {
   background: #fff;
 }
@@ -669,8 +884,15 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
   height: 100%;
   color: rgba(0, 0, 0, 0.65);
 
+
   .anticon {
     font-size: 18px;
+  }
+}
+
+.header-menu-top-menu {
+  .heaer-menu {
+    color: #fff;
   }
 }
 
@@ -967,6 +1189,16 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
   left: 0;
   top: 0;
   bottom: 0
+}
+
+/** 固定头部菜单栏 */
+/** 头部菜单栏 */
+.layout-fixed-header-menu {
+  position: fixed;
+  top: 0;
+  transition: width 0.2s;
+  left: 0;
+  right: 0;
 }
 
 /** 右侧内容区域 */
