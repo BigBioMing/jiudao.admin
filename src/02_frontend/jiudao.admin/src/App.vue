@@ -39,7 +39,7 @@ const items = reactive([
   {
     key: '1',
     // icon: () => h(PieChartOutlined),
-    icon: ()=>h(vn1),
+    icon: () => h(vn1),
     // icon:  (pa:any)=>{
     //   console.log(pa);
     //   return vn1
@@ -159,140 +159,140 @@ const items = reactive([
   }
 ]);
 const items2 = reactive([
-    {
-        key: '1',
-        // icon: () => h(PieChartOutlined),
-        icon: 'far fa-square-caret-right',
-        // icon:  (pa:any)=>{
-        //   console.log(pa);
-        //   return vn1
-        // },
-        label: 'Option 1',
-        title: 'Option 1',
-    },
-    {
-        key: '2',
-        icon: 'fab fa-bandcamp',
-        label: 'Option 2',
-        title: 'Option 2',
-    },
-    {
-        key: '3',
-        icon: 'far fa-square-caret-right',
-        label: 'Option 3',
-        title: 'Option 3',
-    },
-    {
-        key: 'sub1',
-        icon: 'far fa-square-caret-right',
-        label: 'Navigation One',
-        title: 'Navigation One',
+  {
+    key: '1',
+    // icon: () => h(PieChartOutlined),
+    icon: 'far fa-square-caret-right',
+    // icon:  (pa:any)=>{
+    //   console.log(pa);
+    //   return vn1
+    // },
+    label: 'Option 1',
+    title: 'Option 1',
+  },
+  {
+    key: '2',
+    icon: 'fab fa-bandcamp',
+    label: 'Option 2',
+    title: 'Option 2',
+  },
+  {
+    key: '3',
+    icon: 'far fa-square-caret-right',
+    label: 'Option 3',
+    title: 'Option 3',
+  },
+  {
+    key: 'sub1',
+    icon: 'far fa-square-caret-right',
+    label: 'Navigation One',
+    title: 'Navigation One',
+    children: [
+      {
+        key: '5',
+        icon: 'fas fa-plane-departure',
+        label: 'Option 5',
+        title: 'Option 5',
+      },
+      {
+        key: '6',
+        label: 'Option 6',
+        title: 'Option 6',
+      },
+      {
+        key: '7',
+        label: 'Option 7',
+        title: 'Option 7',
+      },
+      {
+        key: '8',
+        label: 'Option 8',
+        title: 'Option 8',
+      },
+    ],
+  },
+  {
+    key: 'sub2',
+    icon: 'fas fa-umbrella-beach',
+    label: 'Navigation Two',
+    title: 'Navigation Two',
+    children: [
+      {
+        key: '9',
+        label: 'Option 9',
+        title: 'Option 9',
+      },
+      {
+        key: '10',
+        label: 'Option 10',
+        title: 'Option 10',
+      },
+      {
+        key: 'sub3',
+        label: 'Submenu',
+        title: 'Submenu',
         children: [
-            {
-                key: '5',
-                icon: 'fas fa-plane-departure',
-                label: 'Option 5',
-                title: 'Option 5',
-            },
-            {
-                key: '6',
-                label: 'Option 6',
-                title: 'Option 6',
-            },
-            {
-                key: '7',
-                label: 'Option 7',
-                title: 'Option 7',
-            },
-            {
-                key: '8',
-                label: 'Option 8',
-                title: 'Option 8',
-            },
+          {
+            key: '11',
+            label: 'Option 11',
+            title: 'Option 11',
+          },
+          {
+            key: '12',
+            label: 'Option 12',
+            title: 'Option 12',
+          },
         ],
-    },
-    {
-        key: 'sub2',
-        icon: 'fas fa-umbrella-beach',
-        label: 'Navigation Two',
-        title: 'Navigation Two',
+      },
+    ],
+  },
+  {
+    key: 'sub21',
+    icon: 'fas fa-cloud-sun',
+    label: 'Navigation Two',
+    title: 'Navigation Two',
+    children: [
+      {
+        key: '91',
+        label: 'Option 9',
+        title: 'Option 9',
+      },
+      {
+        key: '101',
+        label: 'Option 10',
+        title: 'Option 10',
+      },
+      {
+        key: 'sub31',
+        label: 'Submenu',
+        title: 'Submenu',
         children: [
-            {
-                key: '9',
-                label: 'Option 9',
-                title: 'Option 9',
-            },
-            {
-                key: '10',
-                label: 'Option 10',
-                title: 'Option 10',
-            },
-            {
-                key: 'sub3',
-                label: 'Submenu',
-                title: 'Submenu',
-                children: [
-                    {
-                        key: '11',
-                        label: 'Option 11',
-                        title: 'Option 11',
-                    },
-                    {
-                        key: '12',
-                        label: 'Option 12',
-                        title: 'Option 12',
-                    },
-                ],
-            },
+          {
+            key: '111',
+            label: 'Option 111',
+            title: 'Option 111',
+          },
+          {
+            key: '121',
+            label: 'Option 121',
+            title: 'Option 121',
+            children: [
+              {
+                key: '1111',
+                label: 'Option 111',
+                title: 'Option 111',
+              },
+              {
+                key: '1211',
+                label: 'Option 121',
+                title: 'Option 121',
+              },
+            ]
+          },
         ],
-    },
-    {
-        key: 'sub21',
-        icon: 'fas fa-cloud-sun',
-        label: 'Navigation Two',
-        title: 'Navigation Two',
-        children: [
-            {
-                key: '91',
-                label: 'Option 9',
-                title: 'Option 9',
-            },
-            {
-                key: '101',
-                label: 'Option 10',
-                title: 'Option 10',
-            },
-            {
-                key: 'sub31',
-                label: 'Submenu',
-                title: 'Submenu',
-                children: [
-                    {
-                        key: '111',
-                        label: 'Option 111',
-                        title: 'Option 111',
-                    },
-                    {
-                        key: '121',
-                        label: 'Option 121',
-                        title: 'Option 121',
-                        children: [
-                            {
-                                key: '1111',
-                                label: 'Option 111',
-                                title: 'Option 111',
-                            },
-                            {
-                                key: '1211',
-                                label: 'Option 121',
-                                title: 'Option 121',
-                            },
-                        ]
-                    },
-                ],
-            },
-        ],
-    }
+      },
+    ],
+  }
 ]);
 watch(
   () => state.openKeys,
@@ -430,10 +430,15 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
   <a-layout style="height: 100%;">
     <a-layout-sider @collapse="onCollapse" @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed"
       :trigger="null" collapsible :style="layoutFixedLeftMenuStyle">
-      <div class="logo" />
+      <div class="logo">
+        <span>
+        <img src="@/assets/logo.jpg" />
+        <h1>JiuDao</h1>
+        </span>
+      </div>
       <!-- <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
         :items="items"></a-menu> -->
-        <jda-menu :menus="items2" :collapsed="state.collapsed"></jda-menu>
+      <jda-menu :menus="items2" :collapsed="state.collapsed"></jda-menu>
     </a-layout-sider>
     <a-layout :style="layoutFixedLeftMenuRightRegionStyle">
       <a-layout-header :style="{ backgroundColor: '#fff', padding: 0 }">
@@ -614,9 +619,40 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
 }
 
 .logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  margin: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  line-height: 32px;
+  cursor: pointer;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+  }
+
+  img {
+    display: inline-block;
+    height: 32px;
+    vertical-align: middle;
+    transition: height .2s;
+  }
+
+  h1 {
+    display: inline-block;
+    height: 32px;
+    margin: 0 0 0 12px;
+    overflow: hidden;
+    color: #fff;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 32px;
+    vertical-align: middle;
+    animation: fade-in;
+    animation-duration: .2s;
+  }
 }
 
 .site-layout .site-layout-background {
