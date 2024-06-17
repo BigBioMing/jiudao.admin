@@ -1,4 +1,4 @@
-import { defineComponent, reactive, watch, type SetupContext } from "vue";
+import { defineComponent, reactive, toRaw, watch, type SetupContext } from "vue";
 
 type JdaMenuPropsType = {
   menus: any[];
@@ -14,7 +14,10 @@ type JdaMenuPropsType = {
 /** 写法二 */
 export default defineComponent({
   props: {
-    menus: Array<any>,
+    menus: {
+      type:Array<any>,
+      default:()=>[]
+    },
     collapsed: {
       type: Boolean,
       default: false,
@@ -28,11 +31,13 @@ export default defineComponent({
       default:'dark'
     }
   },
+  emits:['on-menu-item-click'],
   setup(props, context) {
     console.log("props:", props);
     console.log("props:", props.menus);
     console.log("context:", context);
     const state = reactive({
+      menus: toRaw(props.menus),
       collapsed: props.collapsed,
       selectedKeys: [],
       openKeys: [],
@@ -62,6 +67,18 @@ export default defineComponent({
         state.mode = _val;
       }
     );
+    watch(
+      () => props.menus,
+      (_val, oldVal) => {
+        state.menus = toRaw(_val);
+      }
+    );
+
+    const onMenuItemClick=(menu:any)=>{
+      console.log("onMenuItemClick", menu);
+      context.emit('on-menu-item-click',menu)
+    }
+
     const creMenu = (subMenus: any[]) => {
       let menus = subMenus || [];
       let len = menus?.length || 0;
@@ -93,7 +110,7 @@ export default defineComponent({
             },
           };
           arr.push(
-            <a-sub-menu v-model:key={menu.key} v-slots={slot}>
+            <a-sub-menu v-model:key={menu.key} v-slots={slot} onClick={()=>onMenuItemClick(menu)}>
               {subEl}
             </a-sub-menu>
           );
@@ -112,13 +129,13 @@ export default defineComponent({
               },
             };
             arr.push(
-              <a-menu-item v-model:key={menu.key} v-slots={slot}>
+              <a-menu-item v-model:key={menu.key} v-slots={slot} onClick={()=>onMenuItemClick(menu)}>
                 {menu.label}
               </a-menu-item>
             );
           } else {
             arr.push(
-              <a-menu-item v-model:key={menu.key}>{menu.label}</a-menu-item>
+              <a-menu-item v-model:key={menu.key} onClick={()=>onMenuItemClick(menu)}>{menu.label}</a-menu-item>
             );
           }
         }
@@ -127,11 +144,7 @@ export default defineComponent({
       return arr;
     };
 
-    let menus = props.menus || [];
-    let els = creMenu(menus);
-    console.log("els:", els);
-    let elstr = els.join();
-    console.log("elstr:", elstr);
+    let els = creMenu(state.menus);
     return () => (
       <a-menu
         v-model:openKeys={state.openKeys}
@@ -139,7 +152,7 @@ export default defineComponent({
         v-model:mode={state.mode}
         v-model:theme={props.theme}
       >
-        {els}
+        {creMenu(state.menus)}
       </a-menu>
     );
   },

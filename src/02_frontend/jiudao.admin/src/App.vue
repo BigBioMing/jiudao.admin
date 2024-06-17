@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch, h, createVNode, render, createCommentVNode, onMounted } from 'vue';
+import { computed, reactive, ref, watch, h, createVNode, markRaw, toRaw } from 'vue';
 // import {
 //   MenuUnfoldOutlined,
 //   MenuFoldOutlined,
@@ -35,7 +35,7 @@ const onBreakpoint = (broken: boolean) => {
   console.log(broken);
 };
 let vn1 = createVNode('PieChartOutlined');
-const items = reactive([
+const items = ref([
   {
     key: '1',
     // icon: () => h(PieChartOutlined),
@@ -158,7 +158,220 @@ const items = reactive([
     ],
   }
 ]);
-const items2 = reactive([
+const items2 = ref([
+  {
+    key: '1',
+    // icon: () => h(PieChartOutlined),
+    icon: 'far fa-square-caret-right',
+    // icon:  (pa:any)=>{
+    //   console.log(pa);
+    //   return vn1
+    // },
+    label: 'Option 1',
+    title: 'Option 1',
+  },
+  {
+    key: '2',
+    icon: 'fab fa-bandcamp',
+    label: 'Option 2',
+    title: 'Option 2',
+  },
+  {
+    key: '3',
+    icon: 'far fa-square-caret-right',
+    label: 'Option 3',
+    title: 'Option 3',
+  },
+  {
+    key: 'aub1',
+    icon: 'far fa-square-caret-right',
+    label: 'Navigation One',
+    title: 'Navigation One',
+    children: [
+      {
+        key: 'a5',
+        icon: 'fas fa-plane-departure',
+        label: 'Option 5',
+        title: 'Option 5',
+      },
+      {
+        key: 'a6',
+        label: 'Option 6',
+        title: 'Option 6',
+      }
+    ],
+  },
+  {
+    key: 'bub1',
+    icon: 'far fa-square-caret-right',
+    label: 'Navigation One',
+    title: 'Navigation One',
+    children: [
+      {
+        key: 'b5',
+        icon: 'fas fa-plane-departure',
+        label: 'Option 5',
+        title: 'Option 5',
+      },
+      {
+        key: 'b6',
+        label: 'Option 6',
+        title: 'Option 6',
+      }
+    ],
+  },
+  {
+    key: 'cub1',
+    icon: 'far fa-square-caret-right',
+    label: 'Navigation One',
+    title: 'Navigation One',
+    children: [
+      {
+        key: 'c5',
+        icon: 'fas fa-plane-departure',
+        label: 'Option 5',
+        title: 'Option 5',
+      },
+      {
+        key: 'c6',
+        label: 'Option 6',
+        title: 'Option 6',
+      }
+    ],
+  },
+  {
+    key: 'dub1',
+    icon: 'far fa-square-caret-right',
+    label: 'Navigation One',
+    title: 'Navigation One',
+    children: [
+      {
+        key: 'd5',
+        icon: 'fas fa-plane-departure',
+        label: 'Option 5',
+        title: 'Option 5',
+      },
+      {
+        key: 'd6',
+        label: 'Option 6',
+        title: 'Option 6',
+      }
+    ],
+  },
+  {
+    key: 'sub1',
+    icon: 'far fa-square-caret-right',
+    label: 'Navigation One',
+    title: 'Navigation One',
+    children: [
+      {
+        key: '5',
+        icon: 'fas fa-plane-departure',
+        label: 'Option 5',
+        title: 'Option 5',
+      },
+      {
+        key: '6',
+        label: 'Option 6',
+        title: 'Option 6',
+      },
+      {
+        key: '7',
+        label: 'Option 7',
+        title: 'Option 7',
+      },
+      {
+        key: '8',
+        label: 'Option 8',
+        title: 'Option 8',
+      },
+    ],
+  },
+  {
+    key: 'sub2',
+    icon: 'fas fa-umbrella-beach',
+    label: 'Navigation Two',
+    title: 'Navigation Two',
+    children: [
+      {
+        key: '9',
+        label: 'Option 9',
+        title: 'Option 9',
+      },
+      {
+        key: '10',
+        label: 'Option 10',
+        title: 'Option 10',
+      },
+      {
+        key: 'sub3',
+        label: 'Submenu',
+        title: 'Submenu',
+        children: [
+          {
+            key: '11',
+            label: 'Option 11',
+            title: 'Option 11',
+          },
+          {
+            key: '12',
+            label: 'Option 12',
+            title: 'Option 12',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'sub21',
+    icon: 'fas fa-cloud-sun',
+    label: 'Navigation Two',
+    title: 'Navigation Two',
+    children: [
+      {
+        key: '91',
+        label: 'Option 9',
+        title: 'Option 9',
+      },
+      {
+        key: '101',
+        label: 'Option 10',
+        title: 'Option 10',
+      },
+      {
+        key: 'sub31',
+        label: 'Submenu',
+        title: 'Submenu',
+        children: [
+          {
+            key: '111',
+            label: 'Option 111',
+            title: 'Option 111',
+          },
+          {
+            key: '121',
+            label: 'Option 121',
+            title: 'Option 121',
+            children: [
+              {
+                key: '1111',
+                label: 'Option 111',
+                title: 'Option 111',
+              },
+              {
+                key: '1211',
+                label: 'Option 121',
+                title: 'Option 121',
+              },
+            ]
+          },
+        ],
+      },
+    ],
+  }
+]);
+
+const items3 = ref([
   {
     key: '1',
     // icon: () => h(PieChartOutlined),
@@ -455,6 +668,39 @@ const onChangeNavigationMode = (item: NavigationMode) => {
   currentNavigationMode.value = item;
 }
 
+watch(
+  () => currentNavigationMode,
+  (_val, oldVal) => {
+    if(_val.value.isAutoSplitMenu.value){
+      var arr = items2.value.map((mn:any)=>{
+        mn.tempChildren = mn.children;
+        mn.children = [];
+        return mn;
+      });
+      
+      items3.value= items2.value[0]?.children?items2.value[0]?.children : [] as any;
+    }else{
+      var arr = items2.value.map((mn:any)=>{
+        if(mn.tempChildren !== undefined){
+        mn.children = mn.tempChildren;
+        mn.tempChildren = undefined;
+        }
+        return mn;
+      });
+
+      items3.value = JSON.parse(JSON.stringify(toRaw(items2.value)))
+    }
+  }, { deep: true }
+);
+
+ const onMenuItemClick=(menu:any)=>{
+    if(currentNavigationMode.value.isAutoSplitMenu.value){
+      var mn:any = toRaw(menu);
+      let c = mn.tempChildren || [];
+       items3.value = c;
+    }
+ }
+
 //路由动画
 let routeAnimations = [{ value: 'Null', label: 'Null' }, { value: 'Slide Up', label: 'Slide Up' }, { value: 'Slide Right', label: 'Slide Right' }, { value: 'Fade In', label: 'Fade In' }, { value: 'Zoom', label: 'Zoom' }]
 let currentRouteAnimation = ref(routeAnimations[0])
@@ -506,8 +752,8 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
   <a-layout style="height: 100%;">
     <a-layout-sider v-if="currentNavigationMode.mode === 'side-menu' || currentNavigationMode.mode === 'mixed'"
       @collapse="onCollapse" @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed" :trigger="null"
-      :class="{ 'sider-collapsed': state.collapsed }" collapsible :style="layoutFixedLeftMenuStyle"
-      collapsed-width="48" :theme="currentNavigationMode.mode === 'mixed'?'light':'dark'">
+      :class="{ 'sider-collapsed': state.collapsed }" collapsible :style="layoutFixedLeftMenuStyle" collapsed-width="48"
+      :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'">
       <div class="sider-logo">
         <div>
           <img src="@/assets/logo.jpg" />
@@ -516,13 +762,15 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
       </div>
       <!-- <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
         :items="items"></a-menu> -->
-      <jda-menu :menus="items2" :collapsed="state.collapsed" :theme="currentNavigationMode.mode === 'mixed'?'light':'dark'"></jda-menu>
+      <jda-menu :menus="items3" :collapsed="state.collapsed"
+        :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'"></jda-menu>
     </a-layout-sider>
     <a-layout :style="layoutFixedLeftMenuRightRegionStyle">
       <a-layout-header v-if="currentNavigationMode.isFixedHeader.value"
         :style="{ padding: 0, lineHeight: '48px', height: '48px', width: '100%' }">
       </a-layout-header>
-      <a-layout-header :class="{ 'header': true, 'layout-fixed-header-menu': currentNavigationMode.isFixedHeader.value }"
+      <a-layout-header
+        :class="{ 'header': true, 'layout-fixed-header-menu': currentNavigationMode.isFixedHeader.value }"
         v-if="currentNavigationMode.mode === 'top-menu' || currentNavigationMode.mode === 'mixed'"
         :style="{ padding: 0, lineHeight: '48px', height: '48px' }">
         <div class="header-main">
@@ -535,7 +783,7 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
             </div>
           </div>
           <div class="header-middle">
-            <div v-if="currentNavigationMode.mode === 'mixed'">
+            <div v-if="currentNavigationMode.mode === 'mixed' && !currentNavigationMode.isAutoSplitMenu.value">
               <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="state.collapsed = !state.collapsed"
                 style="color:#fff;" />
               <menu-fold-outlined v-else class="trigger" @click="state.collapsed = !state.collapsed"
@@ -546,8 +794,8 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
                 </a-tooltip>
               </div>
             </div>
-            <jda-menu v-if="currentNavigationMode.mode === 'top-menu'" :menus="items2" :collapsed="state.collapsed"
-              mode="horizontal"></jda-menu>
+            <jda-menu v-if="currentNavigationMode.mode === 'top-menu' || currentNavigationMode.isAutoSplitMenu.value" :menus="items2" :collapsed="state.collapsed"
+            @on-menu-item-click="onMenuItemClick" mode="horizontal"></jda-menu>
           </div>
           <div class="header-right">
             <div class="header-menu-top-menu" style="display: inline-block;float:right;margin-right: 20px;">
