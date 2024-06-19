@@ -583,6 +583,7 @@ const items3 = ref([
     ],
   }
 ]);
+const items4 = ref([]);
 watch(
   () => state.openKeys,
   (_val, oldVal) => {
@@ -690,6 +691,25 @@ watch(
 
       items3.value = JSON.parse(JSON.stringify(toRaw(items2.value)))
     }
+
+    if (currentNavigationMode.value.mode === 'left-mixed') {
+      var arr = items3.value.map((mn: any) => {
+        mn.tempChildren = mn.children;
+        mn.children = [];
+        return mn;
+      });
+      items4.value = items3.value[0]?.children ? items3.value[0]?.children : [] as any;
+    } else {
+      var arr = items3.value.map((mn: any) => {
+        if (mn.tempChildren !== undefined) {
+          mn.children = mn.tempChildren;
+          mn.tempChildren = undefined;
+        }
+        return mn;
+      });
+
+      items4.value = JSON.parse(JSON.stringify(toRaw(items3.value)))
+    }
   }, { deep: true }
 );
 
@@ -698,6 +718,12 @@ const onMenuItemClick = (menu: any) => {
     var mn: any = toRaw(menu);
     let c = mn.tempChildren || [];
     items3.value = c;
+  }
+  console.log('menu:', menu);
+  if (currentNavigationMode.value.mode === 'left-mixed') {
+    var mn: any = toRaw(menu);
+    let c = mn.tempChildren || [];
+    items4.value = c;
   }
 }
 
@@ -756,14 +782,42 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
     return {};
   }
 })
+
+const multipleTag = reactive<{
+  activeKey: string,
+  tabs: { title: string; key: string; closable?: boolean }[]
+}>({
+  activeKey: '',
+  tabs: [
+    { title: `标签 1`, key: '1' },
+    { title: `标签 2`, key: '2' },
+    { title: `标签 3`, key: '3' },
+    { title: `标签 4`, key: '4' },
+    { title: `标签 5`, key: '5' },
+    { title: `标签 6`, key: '6' },
+    { title: `标签 7`, key: '7' },
+    { title: `标签 8`, key: '8' },
+    { title: `标签 9`, key: '9' },
+    { title: `标签 10`, key: '10' },
+    { title: `标签 11`, key: '11' },
+    { title: `标签 12`, key: '12' },
+    { title: `标签 13`, key: '13' }
+  ]
+});
+const onEdit = (targetKey: string) => {
+
+};
+const tabMenuOptions = [
+  "关闭其他", "刷新当前页"
+]
 </script>
 
 <template>
   <a-layout style="height: 100%;">
-    <a-layout-sider v-if="currentNavigationMode.mode !== 'top-menu'"
-      @collapse="onCollapse" @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed" :trigger="null"
-      :class="{ 'sider-collapsed': state.collapsed }" collapsible :style="layoutFixedLeftMenuStyle" collapsed-width="48"
-      :width="leftMenuSiderExpandWidthNum" :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'">
+    <a-layout-sider v-if="currentNavigationMode.mode !== 'top-menu'" @collapse="onCollapse" @breakpoint="onBreakpoint"
+      v-model:collapsed="state.collapsed" :trigger="null" :class="{ 'sider-collapsed': state.collapsed }" collapsible
+      :style="layoutFixedLeftMenuStyle" collapsed-width="48" :width="leftMenuSiderExpandWidthNum"
+      :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'">
       <div class="sider-logo">
         <div>
           <img src="@/assets/logo.jpg" />
@@ -773,10 +827,11 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
       <!-- <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
         :items="items"></a-menu> -->
       <jda-menu :menus="items3" :collapsed="state.collapsed"
-        :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'"></jda-menu>
+        :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'"
+        @on-menu-item-click="onMenuItemClick"></jda-menu>
     </a-layout-sider>
     <a-layout :style="layoutFixedLeftMenuRightRegionStyle">
-      <a-layout-header v-if="currentNavigationMode.isFixedHeader.value"
+      <a-layout-header v-if="currentNavigationMode.isFixedHeader.value" class="header"
         :style="{ padding: 0, lineHeight: '48px', height: '48px', width: '100%' }">
       </a-layout-header>
       <a-layout-header
@@ -864,7 +919,7 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
         </div>
       </a-layout-header>
       <a-layout-header v-if="currentNavigationMode.mode === 'side-menu' || currentNavigationMode.mode === 'left-mixed'"
-        :class="{ 'layout-fixed-header-menu_layout-left-menu': currentNavigationMode.isFixedHeader.value }"
+        :class="{ 'header': true, 'layout-fixed-header-menu_layout-left-menu': currentNavigationMode.isFixedHeader.value }"
         :style="{ backgroundColor: '#fff', padding: 0, lineHeight: '48px', height: '48px', left: state.collapsed ? '48px' : leftMenuSiderExpandWidth }">
         <!-- <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" /> -->
@@ -927,13 +982,36 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
           </a-dropdown>
         </div>
       </a-layout-header>
-      <a-layout style="min-height: 100vh">
-        <a-layout-sider v-if="true" collapsible width="160">
+      <a-layout>
+        <a-layout-sider v-if="currentNavigationMode.mode === 'left-mixed' && items4.length" collapsible width="160"
+          :theme="'light'">
           <div class="logo" />
-          <jda-menu :menus="items3" :collapsed="state.collapsed"
-            :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'"></jda-menu>
+          <jda-menu :menus="items4" :collapsed="state.collapsed" :theme="'light'"></jda-menu>
         </a-layout-sider>
         <a-layout>
+          <a-tabs class="multitab" v-model:activeKey="multipleTag.activeKey" hide-add type="editable-card"
+            @edit="onEdit">
+            <a-tab-pane v-for="tab in multipleTag.tabs" :key="tab.key" :closable="tab.closable">
+              <template #tab>
+                  {{tab.title}}
+                  <ReloadOutlined class="multitab-tab-btn"/>
+              </template>
+            </a-tab-pane>
+            <template #rightExtra>
+              <a-dropdown :trigger="['click']" placement="bottomRight">
+                <a @click.prevent class="multitab-dropdown-menu-btn">
+                  <MoreOutlined />
+                </a>
+                <template #overlay>
+                  <a-menu style="width:120px;">
+                    <a-menu-item v-for="(item, index) in tabMenuOptions" :key="index">
+                      <span>{{ item }}</span>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+            </template>
+          </a-tabs>
           <a-layout-content :style="{ margin: '24px', background: '#fff' }">
             <router-view />
           </a-layout-content>
@@ -1099,6 +1177,7 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
 
 
 .header {
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
   .header-main {
     display: flex;
@@ -1494,5 +1573,36 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
   -webkit-transition: margin-left 0.3s ease;
   -o-transition: margin-left 0.3s ease;
   -moz-transition: margin-left 0.3s ease;
+}
+
+
+/** 多标签 */
+.multitab {
+  margin: 0px;
+  padding-top: 6px;
+  width: 100%;
+  background: #ffffff;
+
+  :deep(.ant-tabs-nav) {
+    padding-left: 16px;
+  }
+
+  .multitab-dropdown-menu-btn {
+    margin-right: 8px;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .multitab-tab-btn{
+    margin-right: 0;
+    margin-left: 8px;
+    color: rgba(0, 0, 0, 0.65);
+    font-size: 12px;
+  }
+  :deep(.ant-tabs-tab-remove){
+    padding: 0;
+    margin-top: 2px;
+  }
 }
 </style>
