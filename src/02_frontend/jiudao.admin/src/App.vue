@@ -671,19 +671,19 @@ const onChangeNavigationMode = (item: NavigationMode) => {
 watch(
   () => currentNavigationMode,
   (_val, oldVal) => {
-    if(_val.value.isAutoSplitMenu.value){
-      var arr = items2.value.map((mn:any)=>{
+    if (_val.value.isAutoSplitMenu.value) {
+      var arr = items2.value.map((mn: any) => {
         mn.tempChildren = mn.children;
         mn.children = [];
         return mn;
       });
-      
-      items3.value= items2.value[0]?.children?items2.value[0]?.children : [] as any;
-    }else{
-      var arr = items2.value.map((mn:any)=>{
-        if(mn.tempChildren !== undefined){
-        mn.children = mn.tempChildren;
-        mn.tempChildren = undefined;
+
+      items3.value = items2.value[0]?.children ? items2.value[0]?.children : [] as any;
+    } else {
+      var arr = items2.value.map((mn: any) => {
+        if (mn.tempChildren !== undefined) {
+          mn.children = mn.tempChildren;
+          mn.tempChildren = undefined;
         }
         return mn;
       });
@@ -693,13 +693,13 @@ watch(
   }, { deep: true }
 );
 
- const onMenuItemClick=(menu:any)=>{
-    if(currentNavigationMode.value.isAutoSplitMenu.value){
-      var mn:any = toRaw(menu);
-      let c = mn.tempChildren || [];
-       items3.value = c;
-    }
- }
+const onMenuItemClick = (menu: any) => {
+  if (currentNavigationMode.value.isAutoSplitMenu.value) {
+    var mn: any = toRaw(menu);
+    let c = mn.tempChildren || [];
+    items3.value = c;
+  }
+}
 
 //路由动画
 let routeAnimations = [{ value: 'Null', label: 'Null' }, { value: 'Slide Up', label: 'Slide Up' }, { value: 'Slide Right', label: 'Slide Right' }, { value: 'Fade In', label: 'Fade In' }, { value: 'Zoom', label: 'Zoom' }]
@@ -729,11 +729,21 @@ const layoutFixedLeftMenuStyle = computed(() => {
     return {};
   }
 })
+
+const leftMenuSiderExpandWidthNum = computed(() => {
+  if (currentNavigationMode.value.mode === 'left-mixed')
+    return 140;
+  else
+    return 200;
+});
+const leftMenuSiderExpandWidth = computed(() => {
+  return leftMenuSiderExpandWidthNum.value + 'px';
+});
 const layoutFixedLeftMenuRightRegionStyle = computed(() => {
   if (currentNavigationMode.value.isFixedSideMenu.value) {
     if (!state.collapsed) {
       return {
-        marginLeft: '200px',
+        marginLeft: leftMenuSiderExpandWidth.value,
         transition: 'margin-left 0.2s'
       };
     } else {
@@ -750,10 +760,10 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
 
 <template>
   <a-layout style="height: 100%;">
-    <a-layout-sider v-if="currentNavigationMode.mode === 'side-menu' || currentNavigationMode.mode === 'mixed'"
+    <a-layout-sider v-if="currentNavigationMode.mode !== 'top-menu'"
       @collapse="onCollapse" @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed" :trigger="null"
       :class="{ 'sider-collapsed': state.collapsed }" collapsible :style="layoutFixedLeftMenuStyle" collapsed-width="48"
-      :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'">
+      :width="leftMenuSiderExpandWidthNum" :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'">
       <div class="sider-logo">
         <div>
           <img src="@/assets/logo.jpg" />
@@ -794,8 +804,9 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
                 </a-tooltip>
               </div>
             </div>
-            <jda-menu v-if="currentNavigationMode.mode === 'top-menu' || currentNavigationMode.isAutoSplitMenu.value" :menus="items2" :collapsed="state.collapsed"
-            @on-menu-item-click="onMenuItemClick" mode="horizontal"></jda-menu>
+            <jda-menu v-if="currentNavigationMode.mode === 'top-menu' || currentNavigationMode.isAutoSplitMenu.value"
+              :menus="items2" :collapsed="state.collapsed" @on-menu-item-click="onMenuItemClick"
+              mode="horizontal"></jda-menu>
           </div>
           <div class="header-right">
             <div class="header-menu-top-menu" style="display: inline-block;float:right;margin-right: 20px;">
@@ -852,8 +863,9 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
           </div>
         </div>
       </a-layout-header>
-      <a-layout-header v-if="currentNavigationMode.mode !== 'top-menu' && currentNavigationMode.mode !== 'mixed'"
-        :style="{ backgroundColor: '#fff', padding: 0, lineHeight: '48px', height: '48px' }">
+      <a-layout-header v-if="currentNavigationMode.mode === 'side-menu' || currentNavigationMode.mode === 'left-mixed'"
+        :class="{ 'layout-fixed-header-menu_layout-left-menu': currentNavigationMode.isFixedHeader.value }"
+        :style="{ backgroundColor: '#fff', padding: 0, lineHeight: '48px', height: '48px', left: state.collapsed ? '48px' : leftMenuSiderExpandWidth }">
         <!-- <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" /> -->
         <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="state.collapsed = !state.collapsed" />
@@ -915,9 +927,21 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
           </a-dropdown>
         </div>
       </a-layout-header>
-      <a-layout-content :style="{ margin: '24px', background: '#fff' }">
-        <router-view />
-      </a-layout-content>
+      <a-layout style="min-height: 100vh">
+        <a-layout-sider v-if="true" collapsible>
+          <div class="logo" />
+          <jda-menu :menus="items3" :collapsed="state.collapsed"
+            :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'"></jda-menu>
+        </a-layout-sider>
+        <a-layout>
+          <a-layout-content :style="{ margin: '24px', background: '#fff' }">
+            <router-view />
+          </a-layout-content>
+          <a-layout-footer style="text-align: center">
+            Copyright ©2024 Created by JiuDao
+          </a-layout-footer>
+        </a-layout>
+      </a-layout>
     </a-layout>
   </a-layout>
   <div class="settings" @click="onOpenSetting" :class="{ 'settings-open': isOpenSetting }">
@@ -1447,6 +1471,19 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
   transition: width 0.2s;
   left: 0;
   right: 0;
+}
+
+/** 头部菜单栏 -侧边菜单布局的头部菜单栏 */
+.layout-fixed-header-menu_layout-left-menu {
+  position: fixed;
+  top: 0;
+  left: 200px;
+  right: 0;
+  transition: left 0.2s ease;
+  -ms-transition: left 0.2s ease;
+  -webkit-transition: left 0.2s ease;
+  -o-transition: left 0.2s ease;
+  -moz-transition: left 0.2s ease;
 }
 
 /** 右侧内容区域 */
