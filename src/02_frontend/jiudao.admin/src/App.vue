@@ -928,7 +928,7 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
         </div>
       </a-layout-header>
       <a-layout style="min-height: 100vh">
-        <a-layout-sider v-if="true" collapsible>
+        <a-layout-sider v-if="true" collapsible width="160">
           <div class="logo" />
           <jda-menu :menus="items3" :collapsed="state.collapsed"
             :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'"></jda-menu>
