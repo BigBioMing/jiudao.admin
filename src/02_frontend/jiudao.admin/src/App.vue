@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch, h, createVNode, markRaw, toRaw } from 'vue';
+import { theme } from 'ant-design-vue';
 
 defineOptions({
   name: 'App'
@@ -294,7 +295,10 @@ let basicColors: Color[] = [
 let currentColor = ref<Color>(basicColors[0]);
 const onChangeThemeColor = (item: Color): void => {
   currentColor.value = item;
+  currrentTheme.value.colorPrimary =item;
 }
+//当前主题
+let currrentTheme= ref({colorPrimary:basicColors[0],borderRadius:'5px'});
 
 //导航模式
 type SwitchItem = {
@@ -453,7 +457,8 @@ const layoutFixedLeftMenuStyle = computed(() => {
       position: 'fixed',
       left: 0,
       top: 0,
-      bottom: 0
+      bottom: 0,
+      zIndex:99999
     };
   } else {
     return {};
@@ -510,6 +515,12 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
 </script>
 
 <template>
+   <a-config-provider
+    :theme="{
+      algorithm: theme.darkAlgorithm,
+       token: { colorPrimary: currrentTheme.colorPrimary.value, borderRadius: currrentTheme.borderRadius }
+    }"
+  >
   <a-layout style="height: 100%;">
     <a-layout-sider v-if="currentNavigationMode.mode !== 'top-menu'" @collapse="onCollapse" @breakpoint="onBreakpoint"
       v-model:collapsed="state.collapsed" :trigger="null" :class="{ 'sider-collapsed': state.collapsed }" collapsible
@@ -529,12 +540,14 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
     </a-layout-sider>
     <a-layout :style="layoutFixedLeftMenuRightRegionStyle">
       <a-layout-header v-if="currentNavigationMode.isFixedHeader.value" class="header"
+      theme="light"
         :style="{ padding: 0, lineHeight: '48px', height: '48px', width: '100%' }">
       </a-layout-header>
       <a-layout-header
         :class="{ 'header': true, 'layout-fixed-header-menu': currentNavigationMode.isFixedHeader.value }"
         v-if="currentNavigationMode.mode === 'top-menu' || currentNavigationMode.mode === 'mixed'"
-        :style="{ padding: 0, lineHeight: '48px', height: '48px' }">
+        :style="{ padding: 0, lineHeight: '48px', height: '48px' }"
+        theme="light">
         <div class="header-main">
           <div class="header-left">
             <div class="header-logo">
@@ -617,7 +630,8 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
       </a-layout-header>
       <a-layout-header v-if="currentNavigationMode.mode === 'side-menu' || currentNavigationMode.mode === 'left-mixed'"
         :class="{ 'header': true, 'layout-fixed-header-menu_layout-left-menu': currentNavigationMode.isFixedHeader.value }"
-        :style="{ backgroundColor: '#fff', padding: 0, lineHeight: '48px', height: '48px', left: state.collapsed ? '48px' : leftMenuSiderExpandWidth }">
+        :style="{ padding: 0, lineHeight: '48px', height: '48px', left: state.collapsed ? '48px' : leftMenuSiderExpandWidth }"
+        theme="light">
         <!-- <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" /> -->
         <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="state.collapsed = !state.collapsed" />
@@ -687,17 +701,19 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
             @on-menu-item-click="(menu: any) => onMenuItemClick('sub-side-menu', menu)"></jda-menu>
         </a-layout-sider>
         <a-layout>
-          <a-tabs class="multitab" v-if="multipleTag.tabs?.length" v-model:activeKey="multipleTag.activeKey" hide-add
-            type="editable-card" @edit="onEdit">
+          <div style="width: 100%;height:60px;" v-if="isFixedMultipleTags && multipleTag.tabs?.length"></div>
+          <a-tabs :class="{ 'mutiltab': true, 'mutiltab-fixed': isFixedMultipleTags }" v-if="multipleTag.tabs?.length"
+            v-model:activeKey="multipleTag.activeKey" hide-add type="editable-card" @edit="onEdit"
+            :style="{ left: state.collapsed ? '48px' : leftMenuSiderExpandWidth,paddingRight: isFixedMultipleTags?(state.collapsed ? '48px' : leftMenuSiderExpandWidth):'0'}">
             <a-tab-pane v-for="tab in multipleTag.tabs" :key="tab.key" :closable="tab.closable">
               <template #tab>
                 {{ tab.title }}
-                <ReloadOutlined class="multitab-tab-btn" />
+                <!-- <ReloadOutlined class="mutiltab-tab-btn" /> -->
               </template>
             </a-tab-pane>
             <template #rightExtra>
               <a-dropdown :trigger="['click']" placement="bottomRight">
-                <a @click.prevent class="multitab-dropdown-menu-btn">
+                <a @click.prevent class="mutiltab-dropdown-menu-btn">
                   <MoreOutlined />
                 </a>
                 <template #overlay>
@@ -710,7 +726,7 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
               </a-dropdown>
             </template>
           </a-tabs>
-          <a-layout-content :style="{ margin: '24px', background: '#fff' }">
+          <a-layout-content :style="{ margin: '24px' }">
             <router-view />
           </a-layout-content>
           <a-layout-footer style="text-align: center">
@@ -815,6 +831,7 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
       </div>
     </div>
   </a-drawer>
+  </a-config-provider>
 </template>
 
 <style lang="scss" scoped>
@@ -876,6 +893,7 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
 
 .header {
   box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+  z-index: 10000;
 
   .header-main {
     display: flex;
@@ -1275,24 +1293,24 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
 
 
 /** 多标签 */
-.multitab {
+.mutiltab {
   margin: 0px;
-  padding-top: 6px;
+  padding-top: 10px;
   width: 100%;
-  background: #ffffff;
 
   :deep(.ant-tabs-nav) {
     padding-left: 16px;
+    margin-bottom: 10px;
   }
 
-  .multitab-dropdown-menu-btn {
+  .mutiltab-dropdown-menu-btn {
     margin-right: 8px;
     padding: 12px;
     font-size: 16px;
     cursor: pointer;
   }
 
-  .multitab-tab-btn {
+  .mutiltab-tab-btn {
     margin-right: 0;
     margin-left: 8px;
     color: rgba(0, 0, 0, 0.65);
@@ -1304,4 +1322,38 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
     margin-top: 2px;
   }
 }
+
+.mutiltab-fixed {
+  position: fixed;
+  top: 48px;
+  right: 0;
+  z-index: 9;
+  transition: left 0.2s ease;
+  -ms-transition: left 0.2s ease;
+  -webkit-transition: left 0.2s ease;
+  -o-transition: left 0.2s ease;
+  -moz-transition: left 0.2s ease;
+}
+
+// .css-eq3tly.ant-layout {
+//     background-image: initial;
+//     background-color: rgb(41, 42, 42);
+// }
+// .css-eq3tly.ant-layout .ant-layout-footer {
+//     color: rgba(229, 224, 216, 0.88);
+//     background-image: initial;
+//     background-color: rgb(41, 42, 42);
+// }
+// .css-eq3tly.ant-layout .ant-layout-header {
+//     color: rgba(229, 224, 216, 0.88);
+//     background-image: initial;
+//     background-color: rgb(15, 28, 41);
+// }
+// #app-body .ant-pro-global-header {
+//     box-shadow: rgba(15, 28, 41, 0.08) 0px 1px 4px;
+//     background: var(--darkreader-bg--component-background);
+// }
+// .ant-pro-multi-tab-wrap[data-v-8f09776b] {
+//     background: #242525;
+// }
 </style>
