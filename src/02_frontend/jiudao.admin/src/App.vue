@@ -1,9 +1,5 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch, h, createVNode, markRaw, toRaw } from 'vue';
-// import {
-//   MenuUnfoldOutlined,
-//   MenuFoldOutlined,
-// } from '@ant-design/icons-vue';
 
 defineOptions({
   name: 'App'
@@ -11,12 +7,7 @@ defineOptions({
 
 import {
   MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  PieChartOutlined,
-  MailOutlined,
-  DesktopOutlined,
-  InboxOutlined,
-  AppstoreOutlined,
+  MenuUnfoldOutlined
 } from '@ant-design/icons-vue';
 console.log(import.meta.env)
 const selectedKeys = ref<string[]>(['1']);
@@ -35,343 +26,8 @@ const onBreakpoint = (broken: boolean) => {
   console.log(broken);
 };
 let vn1 = createVNode('PieChartOutlined');
-const items = ref([
-  {
-    key: '1',
-    // icon: () => h(PieChartOutlined),
-    icon: () => h(vn1),
-    // icon:  (pa:any)=>{
-    //   console.log(pa);
-    //   return vn1
-    // },
-    label: 'Option 1',
-    title: 'Option 1',
-  },
-  {
-    key: '2',
-    icon: () => h(DesktopOutlined),
-    label: 'Option 2',
-    title: 'Option 2',
-  },
-  {
-    key: '3',
-    icon: () => h(InboxOutlined),
-    label: 'Option 3',
-    title: 'Option 3',
-  },
-  {
-    key: 'sub1',
-    icon: () => h(MailOutlined),
-    label: 'Navigation One',
-    title: 'Navigation One',
-    children: [
-      {
-        key: '5',
-        label: 'Option 5',
-        title: 'Option 5',
-      },
-      {
-        key: '6',
-        label: 'Option 6',
-        title: 'Option 6',
-      },
-      {
-        key: '7',
-        label: 'Option 7',
-        title: 'Option 7',
-      },
-      {
-        key: '8',
-        label: 'Option 8',
-        title: 'Option 8',
-      },
-    ],
-  },
-  {
-    key: 'sub2',
-    icon: () => h(AppstoreOutlined),
-    label: 'Navigation Two',
-    title: 'Navigation Two',
-    children: [
-      {
-        key: '9',
-        label: 'Option 9',
-        title: 'Option 9',
-      },
-      {
-        key: '10',
-        label: 'Option 10',
-        title: 'Option 10',
-      },
-      {
-        key: 'sub3',
-        label: 'Submenu',
-        title: 'Submenu',
-        children: [
-          {
-            key: '11',
-            label: 'Option 11',
-            title: 'Option 11',
-          },
-          {
-            key: '12',
-            label: 'Option 12',
-            title: 'Option 12',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    key: 'sub21',
-    icon: () => h(AppstoreOutlined),
-    label: 'Navigation Two',
-    title: 'Navigation Two',
-    children: [
-      {
-        key: '91',
-        label: 'Option 9',
-        title: 'Option 9',
-      },
-      {
-        key: '101',
-        label: 'Option 10',
-        title: 'Option 10',
-      },
-      {
-        key: 'sub31',
-        label: 'Submenu',
-        title: 'Submenu',
-        children: [
-          {
-            key: '111',
-            label: 'Option 11',
-            title: 'Option 11',
-          },
-          {
-            key: '121',
-            label: 'Option 12',
-            title: 'Option 12',
-          },
-        ],
-      },
-    ],
-  }
-]);
-const items2 = ref([
-  {
-    key: '1',
-    // icon: () => h(PieChartOutlined),
-    icon: 'far fa-square-caret-right',
-    // icon:  (pa:any)=>{
-    //   console.log(pa);
-    //   return vn1
-    // },
-    label: 'Option 1',
-    title: 'Option 1',
-  },
-  {
-    key: '2',
-    icon: 'fab fa-bandcamp',
-    label: 'Option 2',
-    title: 'Option 2',
-  },
-  {
-    key: '3',
-    icon: 'far fa-square-caret-right',
-    label: 'Option 3',
-    title: 'Option 3',
-  },
-  {
-    key: 'aub1',
-    icon: 'far fa-square-caret-right',
-    label: 'Navigation One',
-    title: 'Navigation One',
-    children: [
-      {
-        key: 'a5',
-        icon: 'fas fa-plane-departure',
-        label: 'Option 5',
-        title: 'Option 5',
-      },
-      {
-        key: 'a6',
-        label: 'Option 6',
-        title: 'Option 6',
-      }
-    ],
-  },
-  {
-    key: 'bub1',
-    icon: 'far fa-square-caret-right',
-    label: 'Navigation One',
-    title: 'Navigation One',
-    children: [
-      {
-        key: 'b5',
-        icon: 'fas fa-plane-departure',
-        label: 'Option 5',
-        title: 'Option 5',
-      },
-      {
-        key: 'b6',
-        label: 'Option 6',
-        title: 'Option 6',
-      }
-    ],
-  },
-  {
-    key: 'cub1',
-    icon: 'far fa-square-caret-right',
-    label: 'Navigation One',
-    title: 'Navigation One',
-    children: [
-      {
-        key: 'c5',
-        icon: 'fas fa-plane-departure',
-        label: 'Option 5',
-        title: 'Option 5',
-      },
-      {
-        key: 'c6',
-        label: 'Option 6',
-        title: 'Option 6',
-      }
-    ],
-  },
-  {
-    key: 'dub1',
-    icon: 'far fa-square-caret-right',
-    label: 'Navigation One',
-    title: 'Navigation One',
-    children: [
-      {
-        key: 'd5',
-        icon: 'fas fa-plane-departure',
-        label: 'Option 5',
-        title: 'Option 5',
-      },
-      {
-        key: 'd6',
-        label: 'Option 6',
-        title: 'Option 6',
-      }
-    ],
-  },
-  {
-    key: 'sub1',
-    icon: 'far fa-square-caret-right',
-    label: 'Navigation One',
-    title: 'Navigation One',
-    children: [
-      {
-        key: '5',
-        icon: 'fas fa-plane-departure',
-        label: 'Option 5',
-        title: 'Option 5',
-      },
-      {
-        key: '6',
-        label: 'Option 6',
-        title: 'Option 6',
-      },
-      {
-        key: '7',
-        label: 'Option 7',
-        title: 'Option 7',
-      },
-      {
-        key: '8',
-        label: 'Option 8',
-        title: 'Option 8',
-      },
-    ],
-  },
-  {
-    key: 'sub2',
-    icon: 'fas fa-umbrella-beach',
-    label: 'Navigation Two',
-    title: 'Navigation Two',
-    children: [
-      {
-        key: '9',
-        label: 'Option 9',
-        title: 'Option 9',
-      },
-      {
-        key: '10',
-        label: 'Option 10',
-        title: 'Option 10',
-      },
-      {
-        key: 'sub3',
-        label: 'Submenu',
-        title: 'Submenu',
-        children: [
-          {
-            key: '11',
-            label: 'Option 11',
-            title: 'Option 11',
-          },
-          {
-            key: '12',
-            label: 'Option 12',
-            title: 'Option 12',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    key: 'sub21',
-    icon: 'fas fa-cloud-sun',
-    label: 'Navigation Two',
-    title: 'Navigation Two',
-    children: [
-      {
-        key: '91',
-        label: 'Option 9',
-        title: 'Option 9',
-      },
-      {
-        key: '101',
-        label: 'Option 10',
-        title: 'Option 10',
-      },
-      {
-        key: 'sub31',
-        label: 'Submenu',
-        title: 'Submenu',
-        children: [
-          {
-            key: '111',
-            label: 'Option 111',
-            title: 'Option 111',
-          },
-          {
-            key: '121',
-            label: 'Option 121',
-            title: 'Option 121',
-            children: [
-              {
-                key: '1111',
-                label: 'Option 111',
-                title: 'Option 111',
-              },
-              {
-                key: '1211',
-                label: 'Option 121',
-                title: 'Option 121',
-              },
-            ]
-          },
-        ],
-      },
-    ],
-  }
-]);
 
-const items3 = ref([
+const menus = [
   {
     key: '1',
     // icon: () => h(PieChartOutlined),
@@ -582,8 +238,9 @@ const items3 = ref([
       },
     ],
   }
-]);
-const items4 = ref([]);
+];
+// const menus = ref(noRefMenus);
+// const subMenus = ref([]);
 watch(
   () => state.openKeys,
   (_val, oldVal) => {
@@ -669,63 +326,110 @@ const onChangeNavigationMode = (item: NavigationMode) => {
   currentNavigationMode.value = item;
 }
 
-watch(
-  () => currentNavigationMode,
-  (_val, oldVal) => {
-    if (_val.value.isAutoSplitMenu.value) {
-      var arr = items2.value.map((mn: any) => {
-        mn.tempChildren = mn.children;
-        mn.children = [];
-        return mn;
-      });
+//当前点击的header菜单
+let currentMenuItemHeader = ref();
+//当前点击的侧边栏菜单
+let currentMenuItemSider = ref();
+//当前点击的子侧边栏菜单
+let currentMenuItemSubSider = ref();
+const onMenuItemClick = (pos: 'top-menu' | 'side-menu' | 'sub-side-menu', menu: any) => {
+  if (pos === 'top-menu')
+    currentMenuItemHeader.value = menu;
+  else if (pos === 'side-menu')
+    currentMenuItemSider.value = menu;
+  else if (pos === 'sub-side-menu')
+    currentMenuItemSubSider.value = menu;
 
-      items3.value = items2.value[0]?.children ? items2.value[0]?.children : [] as any;
-    } else {
-      var arr = items2.value.map((mn: any) => {
-        if (mn.tempChildren !== undefined) {
-          mn.children = mn.tempChildren;
-          mn.tempChildren = undefined;
-        }
-        return mn;
-      });
-
-      items3.value = JSON.parse(JSON.stringify(toRaw(items2.value)))
+  if (isMultipleTags.value) {
+    //添加tab
+    let tabMenu = null;
+    if (pos === 'top-menu') {
+      if (!currentNavigationMode.value.isAutoSplitMenu.value)
+        tabMenu = menu;
     }
-
-    if (currentNavigationMode.value.mode === 'left-mixed') {
-      var arr = items3.value.map((mn: any) => {
-        mn.tempChildren = mn.children;
-        mn.children = [];
-        return mn;
-      });
-      items4.value = items3.value[0]?.children ? items3.value[0]?.children : [] as any;
-    } else {
-      var arr = items3.value.map((mn: any) => {
-        if (mn.tempChildren !== undefined) {
-          mn.children = mn.tempChildren;
-          mn.tempChildren = undefined;
-        }
-        return mn;
-      });
-
-      items4.value = JSON.parse(JSON.stringify(toRaw(items3.value)))
+    else if (pos === 'side-menu') {
+      if (currentNavigationMode.value.mode !== 'mixed')
+        tabMenu = menu;
     }
-  }, { deep: true }
-);
+    else if (pos === 'sub-side-menu')
+      tabMenu = menu;
 
-const onMenuItemClick = (menu: any) => {
-  if (currentNavigationMode.value.isAutoSplitMenu.value) {
-    var mn: any = toRaw(menu);
-    let c = mn.tempChildren || [];
-    items3.value = c;
-  }
-  console.log('menu:', menu);
-  if (currentNavigationMode.value.mode === 'left-mixed') {
-    var mn: any = toRaw(menu);
-    let c = mn.tempChildren || [];
-    items4.value = c;
+    if (tabMenu) {
+      addTab({ key: menu.key, title: menu.title });
+    }
   }
 }
+
+const getTopMenusNoRef = (menus: any[]) => {
+  let topMenus = [];
+  for (let i = 0; i < menus.length; i++) {
+    var menu = menus[i];
+    var newMenu = { ...menu };
+    newMenu.children = [];
+    newMenu.tempChildren = menu.children;
+    topMenus.push(newMenu)
+  }
+  return topMenus;
+}
+
+/** 头部菜单栏 */
+const headerMenus = computed(() => {
+  let hMenus = [];
+
+  //根据布局类型设置头部菜单栏
+  if (currentNavigationMode.value.mode === 'side-menu') {
+    hMenus = [];
+  } else if (currentNavigationMode.value.mode === 'top-menu') {
+    hMenus = menus;
+  } else if (currentNavigationMode.value.mode === 'mixed') {
+    hMenus = [];
+  } else if (currentNavigationMode.value.mode === 'left-mixed') {
+    hMenus = [];
+  }
+
+  //如果分割了菜单
+  if (currentNavigationMode.value.isAutoSplitMenu.value) {
+    hMenus = getTopMenusNoRef(menus);
+  }
+
+  return hMenus;
+})
+
+/** 侧边菜单栏 */
+const siderMenus = computed(() => {
+  let sMenus = [];
+
+  //根据布局类型设置侧边栏
+  if (currentNavigationMode.value.mode === 'side-menu') {
+    sMenus = menus;
+  } else if (currentNavigationMode.value.mode === 'top-menu') {
+    sMenus = [];
+  } else if (currentNavigationMode.value.mode === 'mixed') {
+    sMenus = menus;
+  } else if (currentNavigationMode.value.mode === 'left-mixed') {
+    sMenus = getTopMenusNoRef(menus);
+  }
+
+  //如果分割了菜单，则侧边栏设置为当前点击的头部菜单的子菜单
+  if (currentNavigationMode.value.isAutoSplitMenu.value) {
+    sMenus = currentMenuItemHeader?.value?.tempChildren || [];
+  }
+
+  return sMenus;
+})
+
+/** 子侧边菜单栏 */
+const subSiderMenus = computed(() => {
+  let ssMenus = [];
+
+  //根据布局类型设置子侧边栏
+  if (currentNavigationMode.value.mode === 'left-mixed') {
+    //将子侧边栏设置为当前点击的侧边栏菜单的子菜单
+    ssMenus = currentMenuItemSider?.value?.tempChildren || [];
+  }
+
+  return ssMenus;
+})
 
 //路由动画
 let routeAnimations = [{ value: 'Null', label: 'Null' }, { value: 'Slide Up', label: 'Slide Up' }, { value: 'Slide Right', label: 'Slide Right' }, { value: 'Fade In', label: 'Fade In' }, { value: 'Zoom', label: 'Zoom' }]
@@ -788,21 +492,7 @@ const multipleTag = reactive<{
   tabs: { title: string; key: string; closable?: boolean }[]
 }>({
   activeKey: '',
-  tabs: [
-    { title: `标签 1`, key: '1' },
-    { title: `标签 2`, key: '2' },
-    { title: `标签 3`, key: '3' },
-    { title: `标签 4`, key: '4' },
-    { title: `标签 5`, key: '5' },
-    { title: `标签 6`, key: '6' },
-    { title: `标签 7`, key: '7' },
-    { title: `标签 8`, key: '8' },
-    { title: `标签 9`, key: '9' },
-    { title: `标签 10`, key: '10' },
-    { title: `标签 11`, key: '11' },
-    { title: `标签 12`, key: '12' },
-    { title: `标签 13`, key: '13' }
-  ]
+  tabs: []
 });
 const onEdit = (targetKey: string) => {
 
@@ -810,6 +500,13 @@ const onEdit = (targetKey: string) => {
 const tabMenuOptions = [
   "关闭其他", "刷新当前页"
 ]
+const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
+  let exists = multipleTag.tabs.some(n => n.key === tab.key);
+  if (!exists) {
+    multipleTag.activeKey = tab.key;
+    multipleTag.tabs.push(tab);
+  }
+}
 </script>
 
 <template>
@@ -826,9 +523,9 @@ const tabMenuOptions = [
       </div>
       <!-- <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
         :items="items"></a-menu> -->
-      <jda-menu :menus="items3" :collapsed="state.collapsed"
+      <jda-menu :menus="siderMenus" :collapsed="state.collapsed"
         :theme="currentNavigationMode.mode === 'mixed' ? 'light' : 'dark'"
-        @on-menu-item-click="onMenuItemClick"></jda-menu>
+        @on-menu-item-click="(menu: any) => onMenuItemClick('side-menu', menu)"></jda-menu>
     </a-layout-sider>
     <a-layout :style="layoutFixedLeftMenuRightRegionStyle">
       <a-layout-header v-if="currentNavigationMode.isFixedHeader.value" class="header"
@@ -860,8 +557,8 @@ const tabMenuOptions = [
               </div>
             </div>
             <jda-menu v-if="currentNavigationMode.mode === 'top-menu' || currentNavigationMode.isAutoSplitMenu.value"
-              :menus="items2" :collapsed="state.collapsed" @on-menu-item-click="onMenuItemClick"
-              mode="horizontal"></jda-menu>
+              :menus="headerMenus" :collapsed="state.collapsed"
+              @on-menu-item-click="(menu: any) => onMenuItemClick('top-menu', menu)" mode="horizontal"></jda-menu>
           </div>
           <div class="header-right">
             <div class="header-menu-top-menu" style="display: inline-block;float:right;margin-right: 20px;">
@@ -983,18 +680,19 @@ const tabMenuOptions = [
         </div>
       </a-layout-header>
       <a-layout>
-        <a-layout-sider v-if="currentNavigationMode.mode === 'left-mixed' && items4.length" collapsible width="160"
-          :theme="'light'">
+        <a-layout-sider v-if="currentNavigationMode.mode === 'left-mixed' && subSiderMenus.length" collapsible
+          width="160" :theme="'light'">
           <div class="logo" />
-          <jda-menu :menus="items4" :collapsed="state.collapsed" :theme="'light'"></jda-menu>
+          <jda-menu :menus="subSiderMenus" :collapsed="state.collapsed" :theme="'light'"
+            @on-menu-item-click="(menu: any) => onMenuItemClick('sub-side-menu', menu)"></jda-menu>
         </a-layout-sider>
         <a-layout>
-          <a-tabs class="multitab" v-model:activeKey="multipleTag.activeKey" hide-add type="editable-card"
-            @edit="onEdit">
+          <a-tabs class="multitab" v-if="multipleTag.tabs?.length" v-model:activeKey="multipleTag.activeKey" hide-add
+            type="editable-card" @edit="onEdit">
             <a-tab-pane v-for="tab in multipleTag.tabs" :key="tab.key" :closable="tab.closable">
               <template #tab>
-                  {{tab.title}}
-                  <ReloadOutlined class="multitab-tab-btn"/>
+                {{ tab.title }}
+                <ReloadOutlined class="multitab-tab-btn" />
               </template>
             </a-tab-pane>
             <template #rightExtra>
@@ -1594,13 +1292,14 @@ const tabMenuOptions = [
     cursor: pointer;
   }
 
-  .multitab-tab-btn{
+  .multitab-tab-btn {
     margin-right: 0;
     margin-left: 8px;
     color: rgba(0, 0, 0, 0.65);
     font-size: 12px;
   }
-  :deep(.ant-tabs-tab-remove){
+
+  :deep(.ant-tabs-tab-remove) {
     padding: 0;
     margin-top: 2px;
   }
