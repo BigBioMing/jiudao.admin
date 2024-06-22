@@ -156,11 +156,36 @@ const items = reactive([
         ],
     }
 ]);
+const open = ref<boolean>(false);
 
+const showModal = () => {
+  open.value = true;
+};
+
+const handleOk = (e: MouseEvent) => {
+  console.log(e);
+  open.value = false;
+};
 </script>
 <template>
     <a-card title="Default size card">
         <h1>我是首页</h1>
+        <a-space>
+    <a-tooltip placement="topLeft" title="Prompt Text">
+      <a-button>Align edge / 边缘对齐</a-button>
+    </a-tooltip>
+    <a-tooltip placement="topLeft" title="Prompt Text" arrow-point-at-center>
+      <a-button>Arrow points to center / 箭头指向中心</a-button>
+    </a-tooltip>
+  </a-space>
+  <div>
+    <a-button type="primary" @click="showModal">Open Modal</a-button>
+    <a-modal v-model:open="open" title="Basic Modal" @ok="handleOk">
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+    </a-modal>
+  </div>
         <div>
             <font-awesome-icon icon="calendar" style="color:green" />
             <font-awesome-icon icon="fas  fa-camera" />
