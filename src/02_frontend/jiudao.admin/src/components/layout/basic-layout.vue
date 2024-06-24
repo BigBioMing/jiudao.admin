@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch, h, createVNode, markRaw, toRaw } from 'vue';
+import { computed, reactive, ref, watch, h, createVNode, markRaw, toRaw, onMounted } from 'vue';
 import { theme } from 'ant-design-vue';
 
 defineOptions({
@@ -10,6 +10,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined
 } from '@ant-design/icons-vue';
+import { VALUE_SPLIT } from 'ant-design-vue/es/vc-cascader/utils/commonUtil';
 console.log(import.meta.env)
 
 let isMobile = ref<Boolean>(false);
@@ -21,6 +22,30 @@ const onWindowResize = () => {
   }
 }
 
+let isOpenMobileSiderMenu = ref<boolean>(false);
+const onChangeMobileSiderMenu = () => {
+  isOpenMobileSiderMenu.value = !isOpenMobileSiderMenu.value;
+}
+
+let mobileSiderMenuStyle= computed(()=>{
+  if(settingsConfig.value.currentThemeSkin === 'realDark'){
+    return{
+      'background-color':'#001529'
+    }
+  } else if(settingsConfig.value.currentThemeSkin === 'light'){
+    return{
+      'background-color':'#ffffff'
+    }
+  }else if(settingsConfig.value.currentThemeSkin === 'dark'){
+    return{
+      'background-color':'#001529'
+    }
+  }else{
+    return{
+      'background-color':'#001529'
+    }
+  }
+})
 
 //监听窗口变化，变换左侧菜单栏
 window.onload = function () {
@@ -294,18 +319,17 @@ const onCloseSetting = () => {
 //整体风格设置
 let themeStyleNames: ('light' | 'dark' | 'realDark')[] = ['light', 'dark', 'realDark'];
 // let themeStyleNames:Array<('light'|'dark'|'realDark')> = ['light','dark','realDark'];
-let currentThemeStyle = ref<string>('dark');
 const onChangeThemeStyle = (item: 'light' | 'dark' | 'realDark'): void => {
-  currentThemeStyle.value = item;
+  settingsConfig.value.currentThemeSkin = item;
   document.body.className = themeStyleClass.value;
 }
 
 const themeStyleClass = computed(() => {
-  if (currentThemeStyle.value === 'light')
+  if (settingsConfig.value.currentThemeSkin === 'light')
     return 'theme-style-light';
-  else if (currentThemeStyle.value === 'dark')
+  else if (settingsConfig.value.currentThemeSkin === 'dark')
     return 'theme-style-dark';
-  else if (currentThemeStyle.value === 'realDark')
+  else if (settingsConfig.value.currentThemeSkin === 'realDark')
     return 'theme-style-real-dark';
 
   return 'theme-style-light';
@@ -323,13 +347,9 @@ let basicColors: Color[] = [
   { name: '极光蓝', value: 'rgb(47, 84, 235)' },
   { name: '酱紫', value: 'rgb(114, 46, 209)' }
 ];
-let currentColor = ref<Color>(basicColors[0]);
 const onChangeThemeColor = (item: Color): void => {
-  currentColor.value = item;
-  currrentTheme.value.colorPrimary = item;
+  settingsConfig.value.currentThemeStyle.colorPrimary = item;
 }
-//当前主题
-let currrentTheme = ref({ colorPrimary: basicColors[0], borderRadius: '5px' });
 
 //导航模式
 type SwitchItem = {
@@ -356,10 +376,11 @@ let navigationModes: NavigationMode[] = [
   { name: '混合布局', mode: 'mixed', isFixedHeader: { value: true, disabled: true }, isFixedSideMenu: { value: true, disabled: false }, isAutoSplitMenu: { value: false, disabled: false } },
   { name: '左侧混合布局', mode: 'left-mixed', isFixedHeader: { value: true, disabled: false }, isFixedSideMenu: { value: true, disabled: false }, isAutoSplitMenu: { value: false, disabled: true } }
 ]
-let currentNavigationMode = ref<NavigationMode>(navigationModes[0])
 const onChangeNavigationMode = (item: NavigationMode) => {
-  currentNavigationMode.value = item;
+  settingsConfig.value.currentNavigationMode = item;
 }
+
+
 
 //当前点击的header菜单
 let currentMenuItemHeader = ref();
@@ -375,15 +396,15 @@ const onMenuItemClick = (pos: 'top-menu' | 'side-menu' | 'sub-side-menu', menu: 
   else if (pos === 'sub-side-menu')
     currentMenuItemSubSider.value = menu;
 
-  if (isMultipleTags.value) {
+  if (settingsConfig.value.isMultipleTags) {
     //添加tab
     let tabMenu = null;
     if (pos === 'top-menu') {
-      if (!currentNavigationMode.value.isAutoSplitMenu.value)
+      if (!settingsConfig.value.currentNavigationMode.isAutoSplitMenu.value)
         tabMenu = menu;
     }
     else if (pos === 'side-menu') {
-      if (currentNavigationMode.value.mode !== 'mixed')
+      if (settingsConfig.value.currentNavigationMode.mode !== 'mixed')
         tabMenu = menu;
     }
     else if (pos === 'sub-side-menu')
@@ -410,20 +431,23 @@ const getTopMenusNoRef = (menus: any[]) => {
 /** 头部菜单栏 */
 const headerMenus = computed(() => {
   let hMenus = [];
+  if(isMobile.value){
+    return [];
+  }
 
   //根据布局类型设置头部菜单栏
-  if (currentNavigationMode.value.mode === 'side-menu') {
+  if (settingsConfig.value.currentNavigationMode.mode === 'side-menu') {
     hMenus = [];
-  } else if (currentNavigationMode.value.mode === 'top-menu') {
+  } else if (settingsConfig.value.currentNavigationMode.mode === 'top-menu') {
     hMenus = menus;
-  } else if (currentNavigationMode.value.mode === 'mixed') {
+  } else if (settingsConfig.value.currentNavigationMode.mode === 'mixed') {
     hMenus = [];
-  } else if (currentNavigationMode.value.mode === 'left-mixed') {
+  } else if (settingsConfig.value.currentNavigationMode.mode === 'left-mixed') {
     hMenus = [];
   }
 
   //如果分割了菜单
-  if (currentNavigationMode.value.isAutoSplitMenu.value) {
+  if (settingsConfig.value.currentNavigationMode.isAutoSplitMenu.value) {
     hMenus = getTopMenusNoRef(menus);
   }
 
@@ -433,20 +457,23 @@ const headerMenus = computed(() => {
 /** 侧边菜单栏 */
 const siderMenus = computed(() => {
   let sMenus = [];
+  if(isMobile.value){
+    return menus;
+  }
 
   //根据布局类型设置侧边栏
-  if (currentNavigationMode.value.mode === 'side-menu') {
+  if (settingsConfig.value.currentNavigationMode.mode === 'side-menu') {
     sMenus = menus;
-  } else if (currentNavigationMode.value.mode === 'top-menu') {
+  } else if (settingsConfig.value.currentNavigationMode.mode === 'top-menu') {
     sMenus = [];
-  } else if (currentNavigationMode.value.mode === 'mixed') {
+  } else if (settingsConfig.value.currentNavigationMode.mode === 'mixed') {
     sMenus = menus;
-  } else if (currentNavigationMode.value.mode === 'left-mixed') {
+  } else if (settingsConfig.value.currentNavigationMode.mode === 'left-mixed') {
     sMenus = getTopMenusNoRef(menus);
   }
 
   //如果分割了菜单，则侧边栏设置为当前点击的头部菜单的子菜单
-  if (currentNavigationMode.value.isAutoSplitMenu.value) {
+  if (settingsConfig.value.currentNavigationMode.isAutoSplitMenu.value) {
     sMenus = currentMenuItemHeader?.value?.tempChildren || [];
   }
 
@@ -458,7 +485,7 @@ const subSiderMenus = computed(() => {
   let ssMenus = [];
 
   //根据布局类型设置子侧边栏
-  if (currentNavigationMode.value.mode === 'left-mixed') {
+  if (settingsConfig.value.currentNavigationMode.mode === 'left-mixed') {
     //将子侧边栏设置为当前点击的侧边栏菜单的子菜单
     ssMenus = currentMenuItemSider?.value?.tempChildren || [];
   }
@@ -468,20 +495,49 @@ const subSiderMenus = computed(() => {
 
 //路由动画
 let routeAnimations = [{ value: 'Null', label: 'Null' }, { value: 'Slide Up', label: 'Slide Up' }, { value: 'Slide Right', label: 'Slide Right' }, { value: 'Fade In', label: 'Fade In' }, { value: 'Zoom', label: 'Zoom' }]
-let currentRouteAnimation = ref(routeAnimations[0])
+
+
+//设置
+let settingsConfig=ref({
+  //主题风格
+  currentThemeSkin:'dark',
+  //主题样式
+  currentThemeStyle :{ colorPrimary: { name: '拂晓蓝', value: 'rgb(22, 119, 255)' }, borderRadius: '5px' },
+  //导航模式
+  currentNavigationMode:navigationModes[0],
 //多标签
-let isMultipleTags = ref<boolean>(false)
+  isMultipleTags:false,
 //固定多标签
-let isFixedMultipleTags = ref<boolean>(false)
+  isFixedMultipleTags:false,
+//路由动画
+  currentRouteAnimation :routeAnimations[0]
+});
+
+onMounted(() => {
+  let scstr = localStorage.getItem('settings-config');
+  if(scstr) {
+    let sc = JSON.parse(scstr);
+    settingsConfig.value = sc;
+    onChangeThemeStyle(settingsConfig.value.currentThemeSkin as any);
+  }
+});
+
+watch(
+  () => settingsConfig,
+  (_val, oldVal) => {
+    console.log(_val,oldVal);
+    let sc = toRaw(_val.value);
+    localStorage.setItem('settings-config',JSON.stringify(sc));
+  },{deep: true}//,{deep: true,immediate: true}
+);
 
 const onSwitch = (...options: any[]) => {
   console.log('options:', options)
-  console.log('currentNavigationMode:', currentNavigationMode)
 }
 
 /** 固定左侧菜单栏 */
 const layoutFixedLeftMenuStyle = computed(() => {
-  if (currentNavigationMode.value.isFixedSideMenu.value) {
+  if (settingsConfig.value.currentNavigationMode.isFixedSideMenu.value) {
     return {
       overflow: 'auto',
       height: '100vh',
@@ -497,7 +553,10 @@ const layoutFixedLeftMenuStyle = computed(() => {
 })
 
 const leftMenuSiderExpandWidthNum = computed(() => {
-  if (currentNavigationMode.value.mode === 'left-mixed')
+  if(isMobile.value)
+  return 200;
+  
+  if (settingsConfig.value.currentNavigationMode.mode === 'left-mixed')
     return 140;
   else
     return 200;
@@ -508,14 +567,14 @@ const leftMenuSiderExpandWidth = computed(() => {
 const layoutFixedLeftMenuRightRegionStyle = computed(() => {
 
   //如果是移动端，则margin-left=0
-  if(isMobile.value){
+  if (isMobile.value) {
     return {
-        marginLeft: 0,
-        transition: 'none'
-      };
+      marginLeft: 0,
+      transition: 'margin-left 0.2s'
+    };
   }
 
-  if (currentNavigationMode.value.isFixedSideMenu.value) {
+  if (settingsConfig.value.currentNavigationMode.isFixedSideMenu.value) {
     if (!state.collapsed) {
       return {
         marginLeft: leftMenuSiderExpandWidth.value,
@@ -556,29 +615,42 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
 const { darkAlgorithm, compactAlgorithm } = theme;
 const providerTheme = computed(() => {
   let algorithm = theme.defaultAlgorithm;
-  if (currentThemeStyle.value === 'light')
+  if (settingsConfig.value.currentThemeSkin === 'light')
     algorithm = theme.defaultAlgorithm;
-  else if (currentThemeStyle.value === 'dark')
+  else if (settingsConfig.value.currentThemeSkin === 'dark')
     algorithm = theme.defaultAlgorithm;
-  else if (currentThemeStyle.value === 'realDark')
+  else if (settingsConfig.value.currentThemeSkin === 'realDark')
     algorithm = theme.darkAlgorithm;
 
   return {
 
     algorithm: algorithm,
-    token: { colorPrimary: currrentTheme.value.colorPrimary.value, borderRadius: currrentTheme.value.borderRadius }
+    token: { colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius }
   }
 });
+
+let headerMenuControlStyle=computed(() => {
+  if(settingsConfig.value.currentThemeSkin === 'light' && settingsConfig.value.currentNavigationMode.mode === 'mixed'){
+    return{
+      color:'color: rgba(0, 0, 0, 0.65);'
+    }
+  }else{
+    return{
+      color:'#fff'
+    }
+  }
+})
 </script>
 
 <template>
   <a-config-provider :theme="providerTheme">
     <a-layout style="height: 100%;" :class="themeStyleClass">
-      <a-layout-sider v-if="!isMobile && currentNavigationMode.mode !== 'top-menu'" @collapse="onCollapse" @breakpoint="onBreakpoint"
-        v-model:collapsed="state.collapsed" :trigger="null" :class="{ 'sider-collapsed': state.collapsed }" collapsible
-        :style="layoutFixedLeftMenuStyle" collapsed-width="48" :width="leftMenuSiderExpandWidthNum"
-        :theme="(currentNavigationMode.mode === 'mixed' || currentThemeStyle === 'light') ? 'light' : 'dark'">
-        <div :class="{ 'sider-logo': true, 'sider-logo-dark': currentNavigationMode.mode === 'mixed' }">
+      <a-layout-sider v-if="!isMobile && settingsConfig.currentNavigationMode.mode !== 'top-menu'" @collapse="onCollapse"
+        @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed" :trigger="null"
+        :class="{ 'sider-collapsed': state.collapsed }" collapsible :style="layoutFixedLeftMenuStyle"
+        collapsed-width="48" :width="leftMenuSiderExpandWidthNum"
+        :theme="(settingsConfig.currentNavigationMode.mode === 'mixed' || settingsConfig.currentThemeSkin === 'light') ? 'light' : 'dark'">
+        <div :class="{ 'sider-logo': true, 'sider-logo-dark': settingsConfig.currentNavigationMode.mode === 'mixed' }">
           <div>
             <img src="@/assets/logo.jpg" />
             <h1 v-if="!state.collapsed">JiuDao Admin</h1>
@@ -587,16 +659,16 @@ const providerTheme = computed(() => {
         <!-- <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
         :items="items"></a-menu> -->
         <jda-menu :menus="siderMenus" :collapsed="state.collapsed"
-          :theme="(currentNavigationMode.mode === 'mixed' || currentThemeStyle === 'light') ? 'light' : 'dark'"
+          :theme="(settingsConfig.currentNavigationMode.mode === 'mixed' || settingsConfig.currentThemeSkin === 'light') ? 'light' : 'dark'"
           @on-menu-item-click="(menu: any) => onMenuItemClick('side-menu', menu)"></jda-menu>
       </a-layout-sider>
       <a-layout :style="layoutFixedLeftMenuRightRegionStyle">
-        <a-layout-header v-if="currentNavigationMode.isFixedHeader.value" class="header"
+        <a-layout-header v-if="settingsConfig.currentNavigationMode.isFixedHeader.value" class="header"
           :style="{ padding: 0, lineHeight: '48px', height: '48px', width: '100%' }">
         </a-layout-header>
         <a-layout-header :class="{
-    'header': true, 'header-dark': true, 'layout-fixed-header-menu': currentNavigationMode.isFixedHeader.value
-  }" v-if="!isMobile && (currentNavigationMode.mode === 'top-menu' || currentNavigationMode.mode === 'mixed')"
+          'header': true, 'header-dark': true, 'layout-fixed-header-menu': settingsConfig.currentNavigationMode.isFixedHeader.value
+        }" v-if="!isMobile && (settingsConfig.currentNavigationMode.mode === 'top-menu' || settingsConfig.currentNavigationMode.mode === 'mixed')"
           :style="{ padding: 0, lineHeight: '48px', height: '48px' }">
           <div class="header-main">
             <div class="header-left">
@@ -608,21 +680,21 @@ const providerTheme = computed(() => {
               </div>
             </div>
             <div class="header-middle">
-              <div v-if="currentNavigationMode.mode === 'mixed' && !currentNavigationMode.isAutoSplitMenu.value">
+              <div v-if="settingsConfig.currentNavigationMode.mode === 'mixed' && !settingsConfig.currentNavigationMode.isAutoSplitMenu.value">
                 <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="state.collapsed = !state.collapsed"
-                  style="color:#fff;" />
+                  :style="headerMenuControlStyle" />
                 <menu-fold-outlined v-else class="trigger" @click="state.collapsed = !state.collapsed"
-                  style="color:#fff;" />
-                <div style="display: inline-block;color:#fff;" class="heaer-menu">
+                  :style="headerMenuControlStyle" />
+                <div style="display: inline-block;" :style="headerMenuControlStyle" class="heaer-menu">
                   <a-tooltip title="刷新页面">
                     <ReloadOutlined />
                   </a-tooltip>
                 </div>
               </div>
-              <jda-menu v-if="currentNavigationMode.mode === 'top-menu' || currentNavigationMode.isAutoSplitMenu.value"
+              <jda-menu v-if="settingsConfig.currentNavigationMode.mode === 'top-menu' || settingsConfig.currentNavigationMode.isAutoSplitMenu.value"
                 :menus="headerMenus" :collapsed="state.collapsed"
                 @on-menu-item-click="(menu: any) => onMenuItemClick('top-menu', menu)" mode="horizontal"
-                :theme="currentThemeStyle === 'light' ? 'light' : 'dark'"></jda-menu>
+                :theme="settingsConfig.currentThemeSkin === 'light' ? 'light' : 'dark'"></jda-menu>
             </div>
             <div class="header-right">
               <div class="header-menu-top-menu" style="display: inline-block;float:right;margin-right: 20px;">
@@ -680,15 +752,22 @@ const providerTheme = computed(() => {
           </div>
         </a-layout-header>
         <a-layout-header
-          v-if="isMobile || (currentNavigationMode.mode === 'side-menu' || currentNavigationMode.mode === 'left-mixed')" :class="{
-    'header': true, 'header-light': true, 'layout-fixed-header-menu_layout-left-menu': currentNavigationMode.isFixedHeader.value
-  }"
-          :style="{ padding: 0, lineHeight: '48px', height: '48px', left: isMobile?0:(state.collapsed ? '48px' : leftMenuSiderExpandWidth) }"
+          v-if="isMobile || (settingsConfig.currentNavigationMode.mode === 'side-menu' || settingsConfig.currentNavigationMode.mode === 'left-mixed')"
+          :class="{
+            'header': true, 'header-light': true, 'layout-fixed-header-menu_layout-left-menu': settingsConfig.currentNavigationMode.isFixedHeader.value
+          }"
+          :style="{ padding: 0, lineHeight: '48px', height: '48px', left: isMobile ? 0 : (state.collapsed ? '48px' : leftMenuSiderExpandWidth) }"
           theme="light">
           <!-- <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" /> -->
-          <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="state.collapsed = !state.collapsed" />
-          <menu-fold-outlined v-else class="trigger" @click="state.collapsed = !state.collapsed" />
+          <menu-unfold-outlined v-if="!isMobile && state.collapsed" class="trigger"
+            @click="state.collapsed = !state.collapsed" />
+          <menu-fold-outlined v-if="!isMobile && !state.collapsed" class="trigger"
+            @click="state.collapsed = !state.collapsed" />
+          <menu-unfold-outlined v-if="isMobile && isOpenMobileSiderMenu" class="trigger"
+            @click="onChangeMobileSiderMenu" />
+          <menu-fold-outlined v-if="isMobile && !isOpenMobileSiderMenu" class="trigger"
+            @click="onChangeMobileSiderMenu" />
           <div style="display: inline-block;" class="heaer-menu">
             <a-tooltip title="刷新页面">
               <ReloadOutlined />
@@ -747,7 +826,7 @@ const providerTheme = computed(() => {
           </div>
         </a-layout-header>
         <a-layout>
-          <a-layout-sider v-if="currentNavigationMode.mode === 'left-mixed' && subSiderMenus.length" collapsible
+          <a-layout-sider v-if="!isMobile && settingsConfig.currentNavigationMode.mode === 'left-mixed' && subSiderMenus.length" collapsible
             width="160" :theme="'light'">
             <div class="logo" />
             <jda-menu :menus="subSiderMenus" :collapsed="state.collapsed" :theme="'light'"
@@ -755,12 +834,12 @@ const providerTheme = computed(() => {
           </a-layout-sider>
           <a-layout>
             <div style="width: 100%;padding: 33px 0;"
-              v-if="isMultipleTags && isFixedMultipleTags && multipleTag.tabs?.length">
+              v-if="settingsConfig.isMultipleTags && settingsConfig.isFixedMultipleTags && multipleTag.tabs?.length">
             </div>
-            <a-tabs :class="{ 'mutiltab': true, 'mutiltab-fixed': isFixedMultipleTags }"
-              v-if="isMultipleTags && multipleTag.tabs?.length" v-model:activeKey="multipleTag.activeKey" hide-add
+            <a-tabs :class="{ 'mutiltab': true, 'mutiltab-fixed': settingsConfig.isFixedMultipleTags }"
+              v-if="settingsConfig.isMultipleTags && multipleTag.tabs?.length" v-model:activeKey="multipleTag.activeKey" hide-add
               type="editable-card" @edit="onEdit"
-              :style="{ left: state.collapsed ? '48px' : leftMenuSiderExpandWidth, paddingRight: isFixedMultipleTags ? (state.collapsed ? '48px' : leftMenuSiderExpandWidth) : '0' }">
+              :style="{ left: isMobile?0:(state.collapsed ? '48px' : leftMenuSiderExpandWidth), paddingRight: isMobile?0:(settingsConfig.isFixedMultipleTags ? (state.collapsed ? '48px' : leftMenuSiderExpandWidth) : '0') }">
               <a-tab-pane v-for="tab in multipleTag.tabs" :key="tab.key" :closable="tab.closable">
                 <template #tab>
                   {{ tab.title }}
@@ -807,8 +886,8 @@ const providerTheme = computed(() => {
               <div v-for="(theme, index) in themeStyleNames" :key="theme" @click="onChangeThemeStyle(theme)"
                 :class="`settings-global-item settings-global-item-${theme}`">
                 <div class="inner"></div>
-                <CheckOutlined v-if="theme === currentThemeStyle"
-                  :class="{ 'settings-global-item-select-icon': theme === currentThemeStyle }" />
+                <CheckOutlined v-if="theme === settingsConfig.currentThemeSkin"
+                  :class="{ 'settings-global-item-select-icon': theme === settingsConfig.currentThemeSkin }" />
               </div>
             </div>
           </div>
@@ -819,7 +898,7 @@ const providerTheme = computed(() => {
             <div class="settings-theme-color-block clearfix">
               <div v-for="(color, index) in basicColors" :key="color.value" @click="onChangeThemeColor(color)"
                 class="clearfix settings-theme-color" :style="{ 'background-color': color.value }">
-                <CheckOutlined v-if="color.value === currentColor.value" />
+                <CheckOutlined v-if="color.value === settingsConfig.currentThemeStyle.colorPrimary.value" />
               </div>
             </div>
           </div>
@@ -832,8 +911,8 @@ const providerTheme = computed(() => {
               <div v-for="(mode, index) in navigationModes" :key="mode.mode" @click="onChangeNavigationMode(mode)"
                 :class="`settings-global-item settings-global-item-${mode.mode}`">
                 <div class="inner"></div>
-                <CheckOutlined v-if="mode.mode === currentNavigationMode.mode"
-                  :class="{ 'settings-global-item-select-icon': mode.mode === currentNavigationMode.mode }" />
+                <CheckOutlined v-if="mode.mode === settingsConfig.currentNavigationMode.mode"
+                  :class="{ 'settings-global-item-select-icon': mode.mode === settingsConfig.currentNavigationMode.mode }" />
               </div>
             </div>
           </div>
@@ -843,22 +922,22 @@ const providerTheme = computed(() => {
             <div class="settings-form-item">
               <span>固定 Header</span>
               <div>
-                <a-switch v-model:checked="currentNavigationMode.isFixedHeader.value" size="small" @change="onSwitch"
-                  :disabled="currentNavigationMode.isFixedHeader.disabled" />
+                <a-switch v-model:checked="settingsConfig.currentNavigationMode.isFixedHeader.value" size="small" @change="onSwitch"
+                  :disabled="settingsConfig.currentNavigationMode.isFixedHeader.disabled" />
               </div>
             </div>
             <div class="settings-form-item">
               <span>固定侧边菜单</span>
               <div>
-                <a-switch v-model:checked="currentNavigationMode.isFixedSideMenu.value" size="small"
-                  :disabled="currentNavigationMode.isFixedSideMenu.disabled" />
+                <a-switch v-model:checked="settingsConfig.currentNavigationMode.isFixedSideMenu.value" size="small"
+                  :disabled="settingsConfig.currentNavigationMode.isFixedSideMenu.disabled" />
               </div>
             </div>
             <div class="settings-form-item">
               <span>自动分割菜单</span>
               <div>
-                <a-switch v-model:checked="currentNavigationMode.isAutoSplitMenu.value" size="small"
-                  :disabled="currentNavigationMode.isAutoSplitMenu.disabled" />
+                <a-switch v-model:checked="settingsConfig.currentNavigationMode.isAutoSplitMenu.value" size="small"
+                  :disabled="settingsConfig.currentNavigationMode.isAutoSplitMenu.disabled" />
               </div>
             </div>
           </div>
@@ -870,25 +949,45 @@ const providerTheme = computed(() => {
             <div class="settings-form-item">
               <span>路由动画</span>
               <div>
-                <a-select size="small" v-model:value="currentRouteAnimation" style="width: 100px"
+                <a-select size="small" v-model:value="settingsConfig.currentRouteAnimation" style="width: 100px"
                   :options="routeAnimations"></a-select>
               </div>
             </div>
             <div class="settings-form-item">
               <span>多标签</span>
               <div>
-                <a-switch v-model:checked="isMultipleTags" size="small" />
+                <a-switch v-model:checked="settingsConfig.isMultipleTags" size="small" />
               </div>
             </div>
             <div class="settings-form-item">
               <span>固定多标签</span>
               <div>
-                <a-switch v-model:checked="isFixedMultipleTags" size="small" />
+                <a-switch v-model:checked="settingsConfig.isFixedMultipleTags" size="small" />
               </div>
             </div>
           </div>
         </div>
       </div>
+    </a-drawer>
+
+    <!-- 移动端左侧菜单栏 -->
+    <a-drawer v-if="isMobile" title="" :open="isOpenMobileSiderMenu" :closable="false" @close="onChangeMobileSiderMenu"
+      width="auto" placement="left" class="mobile-sider-menu-wrapper" :style="mobileSiderMenuStyle" :bodyStyle="{padding:0,'overflow-x':'hidden'}">
+      <a-layout-sider style="padding:0;" trigger="null"
+        collapsed-width="48" :width="leftMenuSiderExpandWidthNum"
+        :theme="(settingsConfig.currentNavigationMode.mode === 'mixed' || settingsConfig.currentThemeSkin === 'light') ? 'light' : 'dark'">
+        <div :class="{ 'sider-logo': true, 'sider-logo-dark': settingsConfig.currentNavigationMode.mode === 'mixed' }">
+          <div>
+            <img src="@/assets/logo.jpg" />
+            <h1>JiuDao Admin</h1>
+          </div>
+        </div>
+        <!-- <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
+        :items="items"></a-menu> -->
+        <jda-menu :menus="siderMenus" 
+          :theme="(settingsConfig.currentThemeSkin === 'light') ? 'light' : 'dark'"
+          @on-menu-item-click="(menu: any) => onMenuItemClick('side-menu', menu)"></jda-menu>
+      </a-layout-sider>
     </a-drawer>
   </a-config-provider>
 </template>
@@ -945,7 +1044,7 @@ const providerTheme = computed(() => {
 
 .sider-collapsed {
   .sider-logo {
-    padding: 16px 8px;
+    padding: 16px 11px;
   }
 }
 
@@ -1040,7 +1139,7 @@ const providerTheme = computed(() => {
   position: absolute;
   top: 240px;
   right: 0;
-  z-index: 99999;
+  z-index: 1001;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1419,6 +1518,7 @@ const providerTheme = computed(() => {
   }
 
   .sider-logo {
+    background-color: #ffffff;
     h1 {
       color: rgba(0, 0, 0, 0.65);
     }

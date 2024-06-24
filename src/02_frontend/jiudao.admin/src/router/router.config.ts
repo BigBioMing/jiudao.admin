@@ -1,4 +1,5 @@
 import Home from "@/views/home/home.vue";
+import BlankLayout from "@/components/layout/blank-layout.vue";
 import Login from "@/views/login/index.vue";
 import Error403 from "@/views/error/403.vue";
 import Error404 from "@/views/error/404.vue";
@@ -38,14 +39,22 @@ export const asyncRouterMap = [
  */
 // export const constantRouterMap: RouteRecordRaw[] = [
 export const constantRouterMap = [
-    {
-        name: '登录页',
-        path: '/login',
-        code: 'login.login',
+  {
+    path: "/login",
+    name: "登录页",
+    code: 'login',
+    component: BlankLayout,
+    meta: { title: "登录页", code: 'login' },
+    redirect: "/login/login",
+    children: [
+      {
+        path: "login",
+        name: "login",
         component: Login,
-        hidden: true,
         meta: { title: '登录页', code: 'login.login' }
-    },
+      },
+    ],
+  },
   {
     path: "/",
     name: "index",
