@@ -11,6 +11,25 @@ import {
   MenuUnfoldOutlined
 } from '@ant-design/icons-vue';
 console.log(import.meta.env)
+
+let isMobile = ref<Boolean>(false);
+const onWindowResize = () => {
+  if (window.matchMedia('(max-width: 800px)').matches) {
+    isMobile.value = true;
+  } else {
+    isMobile.value = false;
+  }
+}
+
+
+//监听窗口变化，变换左侧菜单栏
+window.onload = function () {
+  onWindowResize();
+};
+window.addEventListener('resize', () => {
+  onWindowResize();
+})
+
 const selectedKeys = ref<string[]>(['1']);
 
 const state = reactive({
@@ -546,7 +565,7 @@ const providerTheme = computed(() => {
 <template>
   <a-config-provider :theme="providerTheme">
     <a-layout style="height: 100%;" :class="themeStyleClass">
-      <a-layout-sider v-if="currentNavigationMode.mode !== 'top-menu'" @collapse="onCollapse" @breakpoint="onBreakpoint"
+      <a-layout-sider v-if="!isMobile && currentNavigationMode.mode !== 'top-menu'" @collapse="onCollapse" @breakpoint="onBreakpoint"
         v-model:collapsed="state.collapsed" :trigger="null" :class="{ 'sider-collapsed': state.collapsed }" collapsible
         :style="layoutFixedLeftMenuStyle" collapsed-width="48" :width="leftMenuSiderExpandWidthNum"
         :theme="(currentNavigationMode.mode === 'mixed' || currentThemeStyle === 'light') ? 'light' : 'dark'">
@@ -567,8 +586,8 @@ const providerTheme = computed(() => {
           :style="{ padding: 0, lineHeight: '48px', height: '48px', width: '100%' }">
         </a-layout-header>
         <a-layout-header :class="{
-          'header': true, 'header-dark': true, 'layout-fixed-header-menu': currentNavigationMode.isFixedHeader.value
-        }" v-if="currentNavigationMode.mode === 'top-menu' || currentNavigationMode.mode === 'mixed'"
+    'header': true, 'header-dark': true, 'layout-fixed-header-menu': currentNavigationMode.isFixedHeader.value
+  }" v-if="currentNavigationMode.mode === 'top-menu' || currentNavigationMode.mode === 'mixed'"
           :style="{ padding: 0, lineHeight: '48px', height: '48px' }">
           <div class="header-main">
             <div class="header-left">
@@ -653,8 +672,8 @@ const providerTheme = computed(() => {
         </a-layout-header>
         <a-layout-header
           v-if="currentNavigationMode.mode === 'side-menu' || currentNavigationMode.mode === 'left-mixed'" :class="{
-            'header': true, 'header-light': true, 'layout-fixed-header-menu_layout-left-menu': currentNavigationMode.isFixedHeader.value
-          }"
+    'header': true, 'header-light': true, 'layout-fixed-header-menu_layout-left-menu': currentNavigationMode.isFixedHeader.value
+  }"
           :style="{ padding: 0, lineHeight: '48px', height: '48px', left: state.collapsed ? '48px' : leftMenuSiderExpandWidth }"
           theme="light">
           <!-- <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
@@ -754,7 +773,7 @@ const providerTheme = computed(() => {
                 </a-dropdown>
               </template>
             </a-tabs>
-            <a-layout-content :style="{ margin: '24px', 'overflow-y':'scroll' }">
+            <a-layout-content :style="{ margin: '24px', 'overflow-y': 'scroll' }">
               <router-view />
             </a-layout-content class="full-screen">
             <!-- <a-layout-footer style="text-align: center;z-index:10">
@@ -1329,7 +1348,7 @@ const providerTheme = computed(() => {
   padding-top: 10px;
   width: 100%;
   border-radius: 8px 8px 0 0;
-    background:  #ffffff;
+  background: #ffffff;
 
   :deep(.ant-tabs-nav) {
     padding-left: 16px;
