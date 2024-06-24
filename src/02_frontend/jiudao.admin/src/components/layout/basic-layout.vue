@@ -506,6 +506,15 @@ const leftMenuSiderExpandWidth = computed(() => {
   return leftMenuSiderExpandWidthNum.value + 'px';
 });
 const layoutFixedLeftMenuRightRegionStyle = computed(() => {
+
+  //如果是移动端，则margin-left=0
+  if(isMobile.value){
+    return {
+        marginLeft: 0,
+        transition: 'none'
+      };
+  }
+
   if (currentNavigationMode.value.isFixedSideMenu.value) {
     if (!state.collapsed) {
       return {
@@ -587,7 +596,7 @@ const providerTheme = computed(() => {
         </a-layout-header>
         <a-layout-header :class="{
     'header': true, 'header-dark': true, 'layout-fixed-header-menu': currentNavigationMode.isFixedHeader.value
-  }" v-if="currentNavigationMode.mode === 'top-menu' || currentNavigationMode.mode === 'mixed'"
+  }" v-if="!isMobile && (currentNavigationMode.mode === 'top-menu' || currentNavigationMode.mode === 'mixed')"
           :style="{ padding: 0, lineHeight: '48px', height: '48px' }">
           <div class="header-main">
             <div class="header-left">
@@ -671,10 +680,10 @@ const providerTheme = computed(() => {
           </div>
         </a-layout-header>
         <a-layout-header
-          v-if="currentNavigationMode.mode === 'side-menu' || currentNavigationMode.mode === 'left-mixed'" :class="{
+          v-if="isMobile || (currentNavigationMode.mode === 'side-menu' || currentNavigationMode.mode === 'left-mixed')" :class="{
     'header': true, 'header-light': true, 'layout-fixed-header-menu_layout-left-menu': currentNavigationMode.isFixedHeader.value
   }"
-          :style="{ padding: 0, lineHeight: '48px', height: '48px', left: state.collapsed ? '48px' : leftMenuSiderExpandWidth }"
+          :style="{ padding: 0, lineHeight: '48px', height: '48px', left: isMobile?0:(state.collapsed ? '48px' : leftMenuSiderExpandWidth) }"
           theme="light">
           <!-- <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" /> -->
