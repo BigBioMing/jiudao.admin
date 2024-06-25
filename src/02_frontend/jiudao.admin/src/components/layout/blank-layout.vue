@@ -66,19 +66,32 @@ let settingsConfig = ref({
 
 const { darkAlgorithm, compactAlgorithm } = theme;
 const providerTheme = computed(() => {
-    let algorithm = theme.defaultAlgorithm;
-    if (settingsConfig.value.currentThemeSkin === 'light')
-        algorithm = theme.defaultAlgorithm;
-    else if (settingsConfig.value.currentThemeSkin === 'dark')
-        algorithm = theme.defaultAlgorithm;
-    else if (settingsConfig.value.currentThemeSkin === 'realDark')
-        algorithm = theme.darkAlgorithm;
+  let token = { colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius };
 
+  if (settingsConfig.value.currentThemeSkin === 'light') {
     return {
-
-        algorithm: algorithm,
-        token: { colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius }
+      algorithm: theme.defaultAlgorithm,
+      token: { colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius }
     }
+  }
+  else if (settingsConfig.value.currentThemeSkin === 'dark') {
+    return {
+      algorithm: theme.defaultAlgorithm,
+      token: { colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius }
+    }
+  }
+  else if (settingsConfig.value.currentThemeSkin === 'realDark') {
+    return {
+      algorithm: theme.darkAlgorithm,
+      token: {colorText:'rgba(229, 224, 216, 0.88)',colorBgContainer:'rgb(36, 37, 37)', colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius },
+      components: {Card:{colorBgContainer: 'rgb(36, 37, 37)'}}
+    }
+  }
+
+  return {
+    algorithm: theme.defaultAlgorithm,
+    token: { colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius },
+  }
 });
 
 

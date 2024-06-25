@@ -13,22 +13,31 @@ import type { RouteRecordRaw } from "vue-router";
  */
 export const asyncRouterMap = [
   {
-    path: "/",
-    name: "index",
+    path: "/sys",
+    name: "sys",
     //   component: BasicLayout,
-    meta: { title: "menu.home" },
-    redirect: "/home/home",
+    meta: { title: "系统管理" },
+    component: BasicLayout,
     children: [
       {
-        path: "/home",
-        name: "home",
-        component: Home,
-        meta: { title: "menu.home" },
+        path: "/sys/userinfo",
+        name: "sys.userinfo",
+        redirect: "/sys/userinfo/index",
+        meta: { title: "menu.sys.userinfo" },
+        children: [
+          {
+            path: "/sys/userinfo/index",
+            name: "sys.userinfo.index",
+            meta: { title: "menu.sys.userinfo.index" },
+            icon: 'far fa-square-caret-right',
+            component:() => import("@/views/pages/sys/userInfo/index.vue")
+          },
+        ],
       },
     ],
   },
   {
-    path: "*",
+    path: "/:catchAll(.*)",
     redirect: "/404",
     hidden: true,
   },
