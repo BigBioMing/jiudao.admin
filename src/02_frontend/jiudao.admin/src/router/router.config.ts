@@ -5,7 +5,7 @@ import Error403 from "@/views/error/403.vue";
 import Error404 from "@/views/error/404.vue";
 import Error500 from "@/views/error/500.vue";
 import Error from "@/views/error/error.vue";
-import BasicLayout from '@/components/layout/basic-layout.vue';
+import BasicLayout from "@/components/layout/basic-layout.vue";
 import type { RouteRecordRaw } from "vue-router";
 
 /**
@@ -40,18 +40,18 @@ export const asyncRouterMap = [
 // export const constantRouterMap: RouteRecordRaw[] = [
 export const constantRouterMap = [
   {
-    path: "/login",
+    path: "/basic",
     name: "登录页",
-    code: 'login',
+    code: "login",
     component: BlankLayout,
-    meta: { title: "登录页", code: 'login' },
-    redirect: "/login/login",
+    meta: { title: "登录页", code: "login" },
+    redirect: "/login",
     children: [
       {
-        path: "login",
+        path: "/login",
         name: "login",
         component: Login,
-        meta: { title: '登录页', code: 'login.login' }
+        meta: { title: "登录页", code: "login.login" },
       },
     ],
   },
@@ -59,7 +59,7 @@ export const constantRouterMap = [
     path: "/",
     name: "index",
     component: BasicLayout,
-    meta: { title: "menu.home", code: 'menu.home' },
+    meta: { title: "menu.home", code: "menu.home" },
     redirect: "/home",
     children: [
       {
@@ -71,32 +71,41 @@ export const constantRouterMap = [
     ],
   },
   {
-      name: 'error.403',
-      path: '/403',
-      component: Error403,
-      hidden: true,
-      meta: { title: '403' }
-  },
-  {
-      name: 'error.404',
-      path: '/404',
-      component: Error404,
-      hidden: true,
-      meta: { title: '404' }
-  },
-  {
-      name: 'error.500',
-      path: '/500',
-      component: Error500,
-      hidden: true,
-      meta: { title: '500' }
-  },
-  {
-      name: 'error',
-      path: '/error',
-      component: Error,
-      hidden: true,
-      meta: { title: 'error' }
+    path: "/err",
+    name: "错误信息",
+    code: "err",
+    component: BlankLayout,
+    meta: { title: "错误信息", code: "err" },
+    children: [
+      {
+        name: "error.403",
+        path: "/403",
+        component: Error403,
+        hidden: true,
+        meta: { title: "403" },
+      },
+      {
+        name: "error.404",
+        path: "/404",
+        component: Error404,
+        hidden: true,
+        meta: { title: "404" },
+      },
+      {
+        name: "error.500",
+        path: "/500",
+        component: Error500,
+        hidden: true,
+        meta: { title: "500" },
+      },
+      {
+        name: "error",
+        path: "/error",
+        component: Error,
+        hidden: true,
+        meta: { title: "error" },
+      },
+    ],
   },
   {
     path: "/:catchAll(.*)",

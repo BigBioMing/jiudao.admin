@@ -1,12 +1,14 @@
 <template>
     <a-config-provider :theme="providerTheme">
+      <a-watermark content="JiuDao Admin" style="height:100%;width:100%;">
             <router-view />
+          </a-watermark>
     </a-config-provider>
 </template>
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch, h, createVNode, markRaw, toRaw, onMounted } from 'vue';
-import { theme } from 'ant-design-vue';
+import { ConfigProvider, theme } from 'ant-design-vue';
 
 defineOptions({
     name: 'blank-layout'
@@ -62,15 +64,6 @@ let settingsConfig = ref({
     currentRouteAnimation: routeAnimations[0]
 });
 
-onMounted(() => {
-    let scstr = localStorage.getItem('settings-config');
-    if (scstr) {
-        let sc = JSON.parse(scstr);
-        settingsConfig.value = sc;
-        onChangeThemeStyle(settingsConfig.value.currentThemeSkin as any);
-    }
-})
-
 const { darkAlgorithm, compactAlgorithm } = theme;
 const providerTheme = computed(() => {
     let algorithm = theme.defaultAlgorithm;
@@ -99,6 +92,15 @@ const themeStyleClass = computed(() => {
 
   return 'theme-style-light';
 })
+
+// onMounted(() => {
+    let scstr = localStorage.getItem('settings-config');
+    if (scstr) {
+        let sc = JSON.parse(scstr);
+        settingsConfig.value = sc;
+        onChangeThemeStyle(settingsConfig.value.currentThemeSkin as any);
+    }
+// })
 </script>
 
 <style scoped></style>

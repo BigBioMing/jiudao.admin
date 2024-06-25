@@ -16,28 +16,39 @@
           </a-input>
         </a-form-item>
         <a-form-item>
-          <a-input
-            size="large"
-            type="password"
-            v-model:value="form.pwd"
-            autocomplete
-          >
+          <a-input size="large" type="password" v-model:value="form.pwd" autocomplete>
             <template #prefix>
               <LockOutlined />
             </template>
           </a-input>
         </a-form-item>
         <a-form-item>
-          <a-button
-            v-model:loading="loading"
-            size="large"
-            type="primary"
-            style="width: 100%"
-            @click="onSubmit"
-            >登录</a-button
-          >
+          <a-button v-model:loading="loading" size="large" type="primary" style="width: 100%"
+            @click="onSubmit">登录</a-button>
         </a-form-item>
       </a-form>
+      <a-dropdown>
+        <a class="ant-dropdown-link" @click.prevent>
+          Hover me
+          <DownOutlined />
+        </a>
+        <template #overlay>
+          <a-menu >
+            <a-menu-item key="0">
+              <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                1st menu item
+              </a>
+            </a-menu-item>
+            <a-menu-item key="1">
+              <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+                2nd menu item
+              </a>
+            </a-menu-item>
+            <a-menu-divider />
+            <a-menu-item key="3" disabled>3rd menu item（disabled）</a-menu-item>
+          </a-menu>
+        </template>
+      </a-dropdown>
     </div>
   </div>
 </template>
@@ -104,13 +115,16 @@ export default defineComponent({
     .login-header {
       margin-bottom: 30px;
       text-align: center;
+
       .login-title {
         font-size: 38px;
         color: #fff;
         font-weight: 900;
+
         .login-title-name {
           margin-right: 10px;
         }
+
         .login-title-suffix {
           letter-spacing: 5px;
         }

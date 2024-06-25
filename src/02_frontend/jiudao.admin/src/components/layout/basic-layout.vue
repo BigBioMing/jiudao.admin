@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch, h, createVNode, markRaw, toRaw, onMounted } from 'vue';
-import { theme } from 'ant-design-vue';
+import { ConfigProvider, theme } from 'ant-design-vue';
 
 defineOptions({
   name: 'basic-layout'
@@ -513,15 +513,6 @@ let settingsConfig=ref({
   currentRouteAnimation :routeAnimations[0]
 });
 
-onMounted(() => {
-  let scstr = localStorage.getItem('settings-config');
-  if(scstr) {
-    let sc = JSON.parse(scstr);
-    settingsConfig.value = sc;
-    onChangeThemeStyle(settingsConfig.value.currentThemeSkin as any);
-  }
-});
-
 watch(
   () => settingsConfig,
   (_val, oldVal) => {
@@ -640,10 +631,20 @@ let headerMenuControlStyle=computed(() => {
     }
   }
 })
+
+// onMounted(() => {
+  let scstr = localStorage.getItem('settings-config');
+  if(scstr) {
+    let sc = JSON.parse(scstr);
+    settingsConfig.value = sc;
+    onChangeThemeStyle(settingsConfig.value.currentThemeSkin as any);
+  }
+// });
 </script>
 
 <template>
   <a-config-provider :theme="providerTheme">
+      <a-watermark content="JiuDao Admin" style="height:100%;width:100%;">
     <a-layout style="height: 100%;" :class="themeStyleClass">
       <a-layout-sider v-if="!isMobile && settingsConfig.currentNavigationMode.mode !== 'top-menu'" @collapse="onCollapse"
         @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed" :trigger="null"
@@ -989,6 +990,7 @@ let headerMenuControlStyle=computed(() => {
           @on-menu-item-click="(menu: any) => onMenuItemClick('side-menu', menu)"></jda-menu>
       </a-layout-sider>
     </a-drawer>
+          </a-watermark>
   </a-config-provider>
 </template>
 
