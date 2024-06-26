@@ -622,8 +622,8 @@ const providerTheme = computed(() => {
   else if (settingsConfig.value.currentThemeSkin === 'realDark') {
     return {
       algorithm: theme.darkAlgorithm,
-      token: {colorText:'rgba(229, 224, 216, 0.88)',colorBgContainer:'rgb(36, 37, 37)', colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius },
-      components: {Card:{colorBgContainer: 'rgb(36, 37, 37)'}}
+      token: { colorText: 'rgba(229, 224, 216, 0.88)', colorBgContainer: 'rgb(36, 37, 37)', colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius },
+      components: { Card: { colorBgContainer: 'rgb(36, 37, 37)' } }
     }
   }
 
@@ -657,7 +657,7 @@ if (scstr) {
 
 <template>
   <a-config-provider :theme="providerTheme">
-    <a-watermark content="JiuDao Admin" style="height:100%;width:100%;" :font="{color:'rgba(0,0,0,.3)', fontSize:14 }">
+    <a-watermark content="JiuDao Admin" style="height:100%;width:100%;" :font="{ color: 'rgba(0,0,0,.3)', fontSize: 14 }">
       <a-layout style="height: 100%;" :class="themeStyleClass">
         <a-layout-sider v-if="!isMobile && settingsConfig.currentNavigationMode.mode !== 'top-menu'"
           @collapse="onCollapse" @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed" :trigger="null"
@@ -682,8 +682,9 @@ if (scstr) {
             :style="{ padding: 0, lineHeight: '48px', height: '48px', width: '100%' }">
           </a-layout-header>
           <a-layout-header :class="{
-            'header': true, 'header-dark': true, 'layout-fixed-header-menu': settingsConfig.currentNavigationMode.isFixedHeader.value
-          }" v-if="!isMobile && (settingsConfig.currentNavigationMode.mode === 'top-menu' || settingsConfig.currentNavigationMode.mode === 'mixed')"
+    'header': true, 'header-dark': true, 'layout-fixed-header-menu': settingsConfig.currentNavigationMode.isFixedHeader.value
+  }"
+            v-if="!isMobile && (settingsConfig.currentNavigationMode.mode === 'top-menu' || settingsConfig.currentNavigationMode.mode === 'mixed')"
             :style="{ padding: 0, lineHeight: '48px', height: '48px' }">
             <div class="header-main">
               <div class="header-left">
@@ -771,8 +772,8 @@ if (scstr) {
           <a-layout-header
             v-if="isMobile || (settingsConfig.currentNavigationMode.mode === 'side-menu' || settingsConfig.currentNavigationMode.mode === 'left-mixed')"
             :class="{
-              'header': true, 'header-light': true, 'layout-fixed-header-menu_layout-left-menu': settingsConfig.currentNavigationMode.isFixedHeader.value
-            }"
+    'header': true, 'header-light': true, 'layout-fixed-header-menu_layout-left-menu': settingsConfig.currentNavigationMode.isFixedHeader.value
+  }"
             :style="{ padding: 0, lineHeight: '48px', height: '48px', left: isMobile ? 0 : (state.collapsed ? '48px' : leftMenuSiderExpandWidth) }"
             theme="light">
             <!-- <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
@@ -850,7 +851,8 @@ if (scstr) {
               <jda-menu :menus="subSiderMenus" :collapsed="state.collapsed" :theme="'light'"
                 @on-menu-item-click="(menu: any) => onMenuItemClick('sub-side-menu', menu)"></jda-menu>
             </a-layout-sider>
-            <a-layout>
+            <a-layout :style="{ 'overflow-y': 'scroll' }">
+              <!-- 多标签 -->
               <div style="width: 100%;padding: 33px 0;"
                 v-if="settingsConfig.isMultipleTags && settingsConfig.isFixedMultipleTags && multipleTag.tabs?.length">
               </div>
@@ -879,7 +881,14 @@ if (scstr) {
                   </a-dropdown>
                 </template>
               </a-tabs>
-              <a-layout-content :style="{ margin: '24px', 'overflow-y': 'scroll' }">
+              <!-- 面包屑 -->
+  <a-breadcrumb>
+    <a-breadcrumb-item>Home</a-breadcrumb-item>
+    <a-breadcrumb-item><a href="">Application Center</a></a-breadcrumb-item>
+    <a-breadcrumb-item><a href="">Application List</a></a-breadcrumb-item>
+    <a-breadcrumb-item>An Application</a-breadcrumb-item>
+  </a-breadcrumb>
+              <a-layout-content :style="{ margin: '24px' }">
                 <router-view />
               </a-layout-content class="full-screen">
               <!-- <a-layout-footer style="text-align: center;z-index:10">
