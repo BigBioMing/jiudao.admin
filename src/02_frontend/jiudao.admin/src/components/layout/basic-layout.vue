@@ -48,9 +48,7 @@ let mobileSiderMenuStyle = computed(() => {
 })
 
 //监听窗口变化，变换左侧菜单栏
-window.onload = function () {
-  onWindowResize();
-};
+onWindowResize();
 window.addEventListener('resize', () => {
   onWindowResize();
 })

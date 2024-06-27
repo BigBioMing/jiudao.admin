@@ -47,6 +47,19 @@ body {
   background-color: #ffffff;
 }
 
+// table斑马纹
+.ant-table-striped {
+  .table-striped {
+    td {
+      background-color: #fafafa;
+    }
+  }
+}
+
+// table横向滚动
+//文档描述：设置横向或纵向滚动，也可用于指定滚动区域的宽和高，建议为 x 设置一个数字，如果要设置为 true，需要配合样式 .ant-table td { white-space: nowrap; }
+.ant-table td { white-space: nowrap; }
+
 .theme-style-real-dark {
   color: rgba(229, 224, 216, 0.88);
   .jda-container {
@@ -57,5 +70,13 @@ body {
   .jda-search-container {
     color: #e5e0d8;
     background-color: #242525;
+  }
+
+  .ant-table-striped {
+    .table-striped {
+      td {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
   }
 }
