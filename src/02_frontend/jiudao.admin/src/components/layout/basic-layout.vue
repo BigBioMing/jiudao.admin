@@ -850,7 +850,7 @@ if (scstr) {
               <jda-menu :menus="subSiderMenus" :collapsed="state.collapsed" :theme="'light'"
                 @on-menu-item-click="(menu: any) => onMenuItemClick('sub-side-menu', menu)"></jda-menu>
             </a-layout-sider>
-            <a-layout :style="{ 'overflow-y': 'scroll' }">
+            <a-layout :style="{ 'overflow-y': 'auto' }">
               <!-- 多标签 -->
               <div style="width: 100%;padding: 33px 0;"
                 v-if="settingsConfig.isMultipleTags && settingsConfig.isFixedMultipleTags && multipleTag.tabs?.length">

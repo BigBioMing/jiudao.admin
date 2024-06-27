@@ -58,7 +58,13 @@ body {
 
 // table横向滚动
 //文档描述：设置横向或纵向滚动，也可用于指定滚动区域的宽和高，建议为 x 设置一个数字，如果要设置为 true，需要配合样式 .ant-table td { white-space: nowrap; }
-.ant-table td { white-space: nowrap; }
+.ant-table td {
+  white-space: nowrap;
+}
+
+.ant-layout {
+  background-color: #f0f2f5;
+}
 
 .theme-style-real-dark {
   color: rgba(229, 224, 216, 0.88);
@@ -78,5 +84,11 @@ body {
         background-color: rgba(0, 0, 0, 0.1);
       }
     }
+  }
+}
+
+.j-card-table-wrapper {
+  .ant-card-body {
+    padding-top: 0;
   }
 }
