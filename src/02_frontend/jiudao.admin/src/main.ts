@@ -2,6 +2,8 @@ import Antd from 'ant-design-vue';
 import * as AntdIcons from '@ant-design/icons-vue';
 console.log('AntdIcons', AntdIcons);
 
+import { VueDraggable } from 'vue-draggable-plus';
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import 'ant-design-vue/dist/reset.css';
@@ -24,6 +26,7 @@ const app = createApp(App);
 app.component('font-awesome-icon',FontAwesomeIcon)
 app.component('JdaMenu',JdaMenu)
 app.component('JdaTable',JdaTable)
+app.component(VueDraggable.name,VueDraggable)
 app.use(router);
 app.use(Antd);
 

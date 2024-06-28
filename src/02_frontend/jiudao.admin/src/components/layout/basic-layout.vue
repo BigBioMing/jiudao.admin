@@ -500,7 +500,7 @@ let settingsConfig = ref({
   //主题风格
   currentThemeSkin: 'dark',
   //主题样式
-  currentThemeStyle: { colorPrimary: { name: '拂晓蓝', value: 'rgb(22, 119, 255)' }, borderRadius: '5px' },
+  currentThemeStyle: { colorPrimary: { name: '拂晓蓝', value: 'rgb(22, 119, 255)' }, borderRadius: 6 },
   //导航模式
   currentNavigationMode: navigationModes[0],
   //多标签
@@ -601,34 +601,206 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
   }
 }
 
+// 将16进制颜色字符串转换为RGB对象
+function hexToRgb(hex: any) {
+  // 移除开头的#，如果有的话
+  hex = hex.replace(/^#/, '');
+
+  // 确保hex长度是6
+  if (hex.length !== 6) {
+    throw new Error('Invalid hex color code');
+  }
+
+  // 转换RGB
+  let r = parseInt(hex.substr(0, 2), 16);
+  let g = parseInt(hex.substr(2, 2), 16);
+  let b = parseInt(hex.substr(4, 2), 16);
+
+  return { r, g, b };
+}
+
+// RGB到HSL的转换函数
+function rgbToHsl(r: any, g: any, b: any) {
+  r /= 255;
+  g /= 255;
+  b /= 255;
+
+  let max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h, s, l = (max + min) / 2;
+
+  if (max == min) {
+    h = s = 0; // achromatic
+  } else {
+    let d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+
+    h /= 6;
+  }
+
+  return { h: h * 360, s: s * 100, l: l * 100 };
+}
+
+function rgbaToNumbers(rgbaString: string) {
+  const match = rgbaString.match(/^rgba\((\d+), (\d+), (\d+), (\d+(?:\.\d+)?)\)$/);
+  if (!match) {
+    throw new Error('Invalid RGBA string');
+  }
+  return {
+    r: parseInt(match[1], 10), // Red
+    g: parseInt(match[2], 10), // Green
+    b: parseInt(match[3], 10), // Blue
+    a: parseFloat(match[4])    // Alpha
+  }
+}
+
+function rgbToNumbers(rgbString: string) {
+  const match = rgbString.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  if (!match) return null;
+  return {
+    r: parseInt(match[1], 10), // Red
+    g: parseInt(match[2], 10), // Green
+    b: parseInt(match[3], 10) // Blue
+  }
+}
+
+// 辅助函数：HSL转RGB
+function hslToRgbString({ h, s, l }:any) {
+  console.log('h s l')
+  console.log(h,s,l)
+  let r, g, b;
+ 
+  if (s === 0) {
+    r = g = b = l; // 灰色
+  } else {
+    function hue2rgb(p:any, q:any, t:any) {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    }
+ 
+    let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    let p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+ console.log( `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`)
+  return `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`;
+}
+function hslToHex(h:any, s:any, l:any) {
+  // 将HSL转换为RGB
+  let r, g, b;
+  function hue2Rgb(p:any, q:any, t:any) {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1/6) return p + (q - p) * 6 * t;
+    if (t < 1/2) return q;
+    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    return p;
+  }
+ 
+  let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  let p = 2 * l - q;
+  r = hue2Rgb(p, q, h + 1/3);
+  g = hue2Rgb(p, q, h);
+  b = hue2Rgb(p, q, h - 1/3);
+ 
+  // 将RGB转换为HEX
+  function rgbToHex(c:any) {
+    return ('0' + Math.round(c * 255).toString(16)).slice(-2);
+  }
+ 
+  const hexR = rgbToHex(r);
+  const hexG = rgbToHex(g);
+  const hexB = rgbToHex(b);
+ 
+  return `#${hexR}${hexG}${hexB}`;
+}
+
+
+
+// 获取hover和active状态的相近颜色
+function getHoverAndActiveColors(color: any) {
+  // 转换颜色到RGB
+  let rgb: any = null;
+  if (color.length <= 7) {
+    rgb = hexToRgb(color)
+  } else if (color.indexOf('rgba') > -1) {
+    rgb = rgbaToNumbers(color)
+  } else if (color.indexOf('rgb') > -1) {
+    rgb = rgbToNumbers(color)
+  } else {
+    console.error('color参数错误：', color)
+  }
+
+  // 转换RGB到HSL
+  let hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+  // 减少饱和度以生成hover颜色
+  let hoverHsl = `hsl(${hsl.h.toFixed(0)}, ${Math.max(hsl.s - 20, 0)}%, ${hsl.l + 10}%)`;
+
+  // 减少亮度以生成active颜色
+  let activeHsl = `hsl(${hsl.h.toFixed(0)}, ${hsl.s}%, ${Math.max(hsl.l - 10, 0)}%)`;
+  console.log({
+    hover: hoverHsl,
+    active: activeHsl
+  }); 
+  console.log('hslToHex:',hslToHex(hsl.h,hsl.s,hsl.l))
+  return {
+    // hover: hslToHex(hsl.h,Math.max(hsl.s - 20, 0),hsl.l + 10),
+    // active: hslToHex(hsl.h,hsl.s,Math.max(hsl.l - 10, 0))
+    // hover: hslToRgbString({h:hsl.h.toFixed(0),s:Math.max(hsl.s - 20, 0),l:hsl.l + 10}),
+    // active: hslToRgbString({h:hsl.h.toFixed(0),s:hsl.s,l:Math.max(hsl.l - 10, 0)})
+    hover: hoverHsl,
+    active: activeHsl
+  };
+}
+
+// // 使用示例
+// let hexColor = '#ff8800'; // 你的基础颜色
+// let { hover, active } = getHoverAndActiveColors(hexColor);
+
+// console.log(hover); // 相近的hover颜色
+// console.log(active); // 相近的active颜色
 const { darkAlgorithm, compactAlgorithm } = theme;
 const providerTheme = computed(() => {
-  let token = { colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius };
+  var primary = settingsConfig.value.currentThemeStyle.colorPrimary.value;
+  console.log('primary:', primary)
+  let cl = getHoverAndActiveColors(primary);
+  console.log('cl:', cl)
+  let pt: any = {
+    algorithm: theme.defaultAlgorithm,
+    token: {
+      colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value,
+      borderRadius: settingsConfig.value.currentThemeStyle.borderRadius,
+      colorLink: settingsConfig.value.currentThemeStyle.colorPrimary.value,
+      colorLinkActive: cl.active,
+      colorLinkHover: cl.hover
+    },
+  };
 
+  console.log('settingsConfig.value.currentThemeSkin', settingsConfig.value.currentThemeSkin)
   if (settingsConfig.value.currentThemeSkin === 'light') {
-    return {
-      algorithm: theme.defaultAlgorithm,
-      token: { colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius }
-    }
   }
   else if (settingsConfig.value.currentThemeSkin === 'dark') {
-    return {
-      algorithm: theme.defaultAlgorithm,
-      token: { colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius }
-    }
   }
   else if (settingsConfig.value.currentThemeSkin === 'realDark') {
-    return {
-      algorithm: theme.darkAlgorithm,
-      token: { colorText: 'rgba(229, 224, 216, 0.88)', colorBgContainer: 'rgb(36, 37, 37)', colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius },
-      components: { Card: { colorBgContainer: 'rgb(36, 37, 37)' } }
-    }
+    pt.algorithm = theme.darkAlgorithm;
+    pt.colorText = 'rgba(229, 224, 216, 0.88)';
+    pt.colorBgContainer = 'rgb(36, 37, 37)';
+    pt.components = { Card: { colorBgContainer: 'rgb(36, 37, 37)' } };
   }
 
-  return {
-    algorithm: theme.defaultAlgorithm,
-    token: { colorPrimary: settingsConfig.value.currentThemeStyle.colorPrimary.value, borderRadius: settingsConfig.value.currentThemeStyle.borderRadius },
-  }
+  return pt;
 });
 
 let headerMenuControlStyle = computed(() => {
@@ -681,9 +853,8 @@ if (scstr) {
             :style="{ padding: 0, lineHeight: '48px', height: '48px', width: '100%' }">
           </a-layout-header>
           <a-layout-header :class="{
-            'header': true, 'header-dark': true, 'layout-fixed-header-menu': settingsConfig.currentNavigationMode.isFixedHeader.value
-          }"
-            v-if="!isMobile && (settingsConfig.currentNavigationMode.mode === 'top-menu' || settingsConfig.currentNavigationMode.mode === 'mixed')"
+    'header': true, 'header-dark': true, 'layout-fixed-header-menu': settingsConfig.currentNavigationMode.isFixedHeader.value
+  }" v-if="!isMobile && (settingsConfig.currentNavigationMode.mode === 'top-menu' || settingsConfig.currentNavigationMode.mode === 'mixed')"
             :style="{ padding: 0, lineHeight: '48px', height: '48px' }">
             <div class="header-main">
               <div class="header-left">
@@ -771,9 +942,8 @@ if (scstr) {
           <a-layout-header
             v-if="isMobile || (settingsConfig.currentNavigationMode.mode === 'side-menu' || settingsConfig.currentNavigationMode.mode === 'left-mixed')"
             :class="{
-              'header': true, 'header-light': true, 'layout-fixed-header-menu_layout-left-menu': settingsConfig.currentNavigationMode.isFixedHeader.value
-            }"
-            :style="{ padding: 0, lineHeight: '48px', height: '48px', left: isMobile ? 0 : (state.collapsed ? '48px' : leftMenuSiderExpandWidth) }"
+    'header': true, 'header-light': true, 'layout-fixed-header-menu_layout-left-menu': settingsConfig.currentNavigationMode.isFixedHeader.value
+  }" :style="{ padding: 0, lineHeight: '48px', height: '48px', left: isMobile ? 0 : (state.collapsed ? '48px' : leftMenuSiderExpandWidth) }"
             theme="light">
             <!-- <menu-unfold-outlined v-if="state.collapsed" class="trigger" @click="toggleCollapsed" />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" /> -->

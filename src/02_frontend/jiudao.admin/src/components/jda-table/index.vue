@@ -8,23 +8,47 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { useSlots } from 'vue'
+import { reactive, ref, useSlots } from 'vue'
 
 defineOptions({
     name: 'jda-table'
 })
 
-const slots = useSlots()
-console.log('---------------slots s---------------')
-console.log(slots);
-for (let key in slots) {
-    console.log('key:' + key, slots[key]);
-}
 
+const columns = reactive([
+    {
+        title: '名称',
+        dataIndex: 'name',
+        key: 'name',
+    },
+    {
+        title: '年龄',
+        dataIndex: 'age',
+        key: 'age',
+    },
+    {
+        title: '家庭住址',
+        dataIndex: 'address',
+        key: 'address',
+    },
+    {
+        title: '标签',
+        key: 'tags',
+        dataIndex: 'tags',
+    },
+    {
+        title: '操作',
+        key: 'action',
+        fixed: 'right',
+    },
+]);
 
+// 列展示/排序是否全选
+let isColumnShowAndOrderCheckAll = ref<Boolean>(false);
 //vue3中访问$attrs
 // import { useAttrs } from 'vue'
 // const attrs = useAttrs()
+
 
 
 /**
@@ -75,7 +99,7 @@ for (let key in slots) {
 */
 </script>
 <template>
-    <div class="jds-table">
+    <div class="jda-table">
         <div class="jda-table-toolbar">
             <div class="jda-table-toolbar-wrapper">
                 <div class="jda-table-toolbar-list">
@@ -98,10 +122,44 @@ for (let key in slots) {
                     </div>
                     <div class="jda-table-toolbar-icon-btns">
                         <div class="jda-table-toolbar-icon-btn">
-                            <font-awesome-icon icon="fas fa-list-ul" class="jda-table-toolbar-icon" />
+                            <a-popover placement="bottomRight" trigger="click">
+                                <template #title>
+                                    <div class="jda-table-column-settings-title">
+                                        <a-checkbox v-model:checked="isColumnShowAndOrderCheckAll">列展示 / 排序</a-checkbox>
+                                        <a>重置</a>
+                                    </div>
+                                </template>
+                                <template #content>
+                                    <vue-draggable ref="el" v-model="columns" class="jda-table-column-settings">
+                                        <div class="jda-table-column-draggable-item" v-for="(item) in columns"
+                                            :key="item.key">
+                                            <span><font-awesome-icon icon="fas fa-list-ul" /></span>
+                                            <a-checkbox v-model:checked="item.checked">{{ item.title }}</a-checkbox>
+                                        </div>
+                                    </vue-draggable>
+                                </template>
+                                <span>
+                                    <font-awesome-icon icon="fas fa-list-ul" class="jda-table-toolbar-icon" />
+                                </span>
+                            </a-popover>
                         </div>
                         <div class="jda-table-toolbar-icon-btn">
-                            <font-awesome-icon icon="fas fa-anchor" class="jda-table-toolbar-icon" />
+                            <a-popover title="Title" placement="bottomRight" trigger="click">
+                                <template #content>
+                                    <vue-draggable ref="el" v-model="columns" class="jda-table-column-settings">
+                                        <div class="jda-table-column-draggable-item" v-for="(item) in columns"
+                                            :key="item.key">
+                                            <span>
+                                                <font-awesome-icon icon="far fa-calendar-check" />
+                                            </span>
+                                            <a-checkbox v-model:checked="item.checked">{{ item.title }}</a-checkbox>
+                                        </div>
+                                    </vue-draggable>
+                                </template>
+                                <span>
+                                    <font-awesome-icon icon="fas fa-anchor" class="jda-table-toolbar-icon" />
+                                </span>
+                            </a-popover>
                         </div>
                     </div>
                 </div>
@@ -119,7 +177,7 @@ for (let key in slots) {
     </div>
 </template>
 <style lang="scss" scoped>
-.jds-table {
+.jda-table {
     .jda-table-toolbar {
         display: flex;
         flex-direction: row;
@@ -172,6 +230,38 @@ for (let key in slots) {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+.jda-table-column-settings-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.jda-table-column-settings {
+    padding: 5px 10px;
+
+    .jda-table-column-draggable-item {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 4px 16px 4px 0;
+        cursor: pointer;
+
+        &>span {
+            padding-right: 6px;
+            cursor: move;
+            position: relative;
+            top: -1px;
+        }
+
+        :deep(.ant-checkbox-wrapper) {
+            span:nth-child(2) {
+                position: relative;
+                top: -1px;
             }
         }
     }
