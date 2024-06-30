@@ -1,94 +1,123 @@
 <script setup lang="ts">
 import type { Key } from 'ant-design-vue/es/table/interface';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 
 const searchForm = ref({
   UserName: '',
   Account: '',
+  Mobile:'',
+  Email:''
 });
 
 // table配置&数据
-const columns = [
+const columns = reactive([
   {
-    title: 'name',
-    dataIndex: 'name',
-    key: 'name',
+    title: '账号',
+    dataIndex: 'Account',
+    key: 'Account',
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: '名称',
+    dataIndex: 'Name',
+    key: 'Name',
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    title: '手机号码',
+    dataIndex: 'Mobile',
+    key: 'Mobile',
   },
   {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
+    title: '性别',
+    key: 'Gender',
+    dataIndex: 'Gender',
+  },
+  {
+    title: '邮箱',
+    key: 'Email',
+    dataIndex: 'Email',
   },
   {
     title: 'Action',
     key: 'action',
     fixed: 'right',
   },
-];
+]);
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-  {
-    key: '4',
-    name: 'Joe Black1',
-    age: 32,
-    address: 'Sidney No1. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
+const data: any[] = [];
+for (let i = 0; i < 100; i++) {
+  data.push({
+    Id: i,
+    Account: 'account' + i,
+    Name: 'John Brown' + i,
+    Mobile: 32,
+    Gender: i % 2 == 0 ? 0 : 1,
+    Email: 'Email' + i,
+  })
+}
 let selectedRowKeys = ref<any[]>([]);
 const onSelectChange = (selected: Key[]) => {
   selectedRowKeys.value = selected;
   console.log('selected:', selected)
 };
+
+let openCreateModal = ref<boolean>(false);
+let createConfirmLoading = ref<boolean>(false);
+
+const onGetTableDataSource = (opts) => {
+  console.log(opts)
+}
+const onTableCreateClick = () => {
+  openCreateModal.value = true;
+  console.log('onTableCreateClick')
+}
+const onTableImportClick = () => {
+  console.log('onTableImportClick')
+}
+const handleOk = () => {
+  createConfirmLoading.value = true;
+  setTimeout(() => {
+    openCreateModal.value = false;
+    createConfirmLoading.value = false;
+  }, 1000);
+};
+
+//控制是否展开高级搜索
+let advanced = ref<boolean>(false)
 </script>
 <template>
   <div class="jda-search-container">
-    <a-form :model="searchForm" layout="horizontal" labelAlign="left" :label-col="{ style: { width: '60px' } }">
+    <a-form :model="searchForm" layout="horizontal" labelAlign="left" :label-col="{ style: { width: '70px' } }">
       <a-row :gutter="48">
-        <a-col :md="12" :sm="24" :xs="24" :lg="7">
+        <a-col :md="12" :sm="24" :xs="24" :lg="8">
           <a-form-item label="用户名">
-            <a-input v-model:value="searchForm.UserName" placeholder="input placeholder" />
+            <a-input v-model:value="searchForm.UserName" placeholder="请输入用户名" />
           </a-form-item>
         </a-col>
-        <a-col :md="12" :sm="24" :xs="24" :lg="7">
+        <a-col :md="12" :sm="24" :xs="24" :lg="8">
           <a-form-item label="账号">
-            <a-input v-model:value="searchForm.Account" placeholder="input placeholder" />
+            <a-input v-model:value="searchForm.Account" placeholder="请输入账号" />
           </a-form-item>
         </a-col>
-        <a-col :md="12" :sm="24" :xs="24" :lg="7">
+        <template v-if="advanced">
+          <a-col :md="12" :sm="24" :xs="24" :lg="8">
+            <a-form-item label="手机号码">
+              <a-input v-model:value="searchForm.Mobile" placeholder="请输入手机号码" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="12" :sm="24" :xs="24" :lg="8">
+            <a-form-item label="邮箱">
+              <a-input v-model:value="searchForm.Email" placeholder="请输入邮箱" />
+            </a-form-item>
+          </a-col>
+        </template>
+        <a-col :md="12" :sm="24" :xs="24" :lg="8">
           <a-form-item>
             <a-button type="primary">查询</a-button>
+            <a @click="advanced = !advanced" style="margin-left: 8px">
+              {{ advanced ? '收起' : '展开' }}
+              <font-awesome-icon v-if="advanced" icon="fas fa-angle-up" />
+              <font-awesome-icon v-else icon="fas fa-angle-down" />
+            </a>
           </a-form-item>
         </a-col>
       </a-row>
@@ -96,30 +125,27 @@ const onSelectChange = (selected: Key[]) => {
   </div>
   <a-card class="j-card-table-wrapper">
     <jda-table class="ant-table-striped" :columns="columns" :data-source="data" :scroll="{ x: true }" bordered
-      :total="20"
-      :pagination="{ showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'], 'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页` }"
-      :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
-      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }">
+      :total="100" :pagination="{
+        showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'],
+        'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
+      }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
+      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+      @get-table-data-source="onGetTableDataSource" @create-click="onTableCreateClick"
+      @import-click="onTableImportClick">
 
-      <template #headerCell="{ column }">
-        <template v-if="column.key === 'name'">
-          <span>
-            <smile-outlined />
-            Name
-          </span>
-        </template>
-      </template>
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'name'">
+        <template v-if="column.key === 'Account'">
           <a>
-            {{ record.name }}
+            {{ record.Account }}
           </a>
         </template>
-        <template v-else-if="column.key === 'tags'">
+        <template v-else-if="column.key === 'Gender'">
           <span>
-            <a-tag v-for="tag in record.tags" :key="tag"
-              :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'">
-              {{ tag.toUpperCase() }}
+            <a-tag :key="0" v-if="record.Gender === 0" color="green">
+              女
+            </a-tag>
+            <a-tag :key="1" v-if="record.Gender === 1" color="geekblue">
+              男
             </a-tag>
           </span>
         </template>
@@ -141,5 +167,24 @@ const onSelectChange = (selected: Key[]) => {
       </template>
     </jda-table>
   </a-card>
+  <a-modal :width="800" v-model:open="openCreateModal" title="新建" :confirm-loading="createConfirmLoading"
+    @ok="handleOk">
+    <a-card>
+      <a-form layout="horizontal" labelAlign="left" :label-col="{ style: { width: '60px' } }">
+        <a-row :gutter="48">
+          <a-col :md="12" :sm="24" :xs="24" :lg="12">
+            <a-form-item label="用户名">
+              <a-input v-model:value="searchForm.UserName" placeholder="input placeholder" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="12" :sm="24" :xs="24" :lg="12">
+            <a-form-item label="账号">
+              <a-input v-model:value="searchForm.Account" placeholder="input placeholder" />
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </a-form>
+    </a-card>
+  </a-modal>
 </template>
 <style lang="scss" scoped></style>

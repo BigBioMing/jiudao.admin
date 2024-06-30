@@ -33,9 +33,6 @@ export default defineComponent({
   },
   emits:['on-menu-item-click'],
   setup(props, context) {
-    console.log("props:", props);
-    console.log("props:", props.menus);
-    console.log("context:", context);
     const state = reactive({
       menus: toRaw(props.menus),
       collapsed: props.collapsed,
@@ -75,7 +72,6 @@ export default defineComponent({
     );
 
     const onMenuItemClick=(menu:any)=>{
-      console.log("onMenuItemClick", menu);
       context.emit('on-menu-item-click',menu)
     }
 

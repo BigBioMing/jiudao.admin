@@ -514,7 +514,6 @@ let settingsConfig = ref({
 watch(
   () => settingsConfig,
   (_val, oldVal) => {
-    console.log(_val, oldVal);
     let sc = toRaw(_val.value);
     localStorage.setItem('settings-config', JSON.stringify(sc));
   }, { deep: true }//,{deep: true,immediate: true}
@@ -788,7 +787,6 @@ const providerTheme = computed(() => {
     },
   };
 
-  console.log('settingsConfig.value.currentThemeSkin', settingsConfig.value.currentThemeSkin)
   if (settingsConfig.value.currentThemeSkin === 'light') {
   }
   else if (settingsConfig.value.currentThemeSkin === 'dark') {

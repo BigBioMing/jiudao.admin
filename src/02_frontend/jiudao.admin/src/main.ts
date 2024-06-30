@@ -1,6 +1,5 @@
 import Antd from 'ant-design-vue';
 import * as AntdIcons from '@ant-design/icons-vue';
-console.log('AntdIcons', AntdIcons);
 
 import { VueDraggable } from 'vue-draggable-plus';
 
@@ -26,7 +25,7 @@ const app = createApp(App);
 app.component('font-awesome-icon',FontAwesomeIcon)
 app.component('JdaMenu',JdaMenu)
 app.component('JdaTable',JdaTable)
-app.component(VueDraggable.name,VueDraggable)
+app.component('VueDraggable',VueDraggable)
 app.use(router);
 app.use(Antd);
 
@@ -39,6 +38,5 @@ for (let key in AntdIcons) {
     // app.component(key, (AntdIcons as any)[key]);
     app.component(key, AntdIcons[key as keyof typeof AntdIcons]);
 }
-console.log('typeof(AntdIcons)', typeof (AntdIcons));
 
 app.mount('#app');
