@@ -23,9 +23,9 @@ let props = defineProps<{
 }>()
 
 //'get-table-data-source'-获取表格数据源
-//'create-click'-点击新建按钮
+//'create'-点击新建按钮
 //'get-table-data-source'-点击导出按钮
-const emit = defineEmits(['get-table-data-source', 'create-click', 'import-click'])
+const emit = defineEmits(['get-table-data-source', 'create', 'import'])
 
 //分页配置
 let pagination = {
@@ -61,10 +61,10 @@ watch(
 
 
 const onCreate = () => {
-    emit('create-click')
+    emit('create')
 }
 const onImport = () => {
-    emit('import-click')
+    emit('import')
 }
 
 //对象克隆

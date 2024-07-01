@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { Key } from 'ant-design-vue/es/table/interface';
-import { reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 
 const searchForm = ref({
   UserName: '',
   Account: '',
-  Mobile:'',
-  Email:''
+  Mobile: '',
+  Email: ''
 });
 
 // table配置&数据
@@ -82,10 +82,36 @@ const handleOk = () => {
 };
 
 //控制是否展开高级搜索
-let advanced = ref<boolean>(false)
+// let advanced = ref<boolean>(false)
 </script>
 <template>
-  <div class="jda-search-container">
+  <jda-table-search :model="searchForm">
+    <template v-slot="{advanced}">
+      <a-col :md="12" :sm="24" :xs="24" :lg="8">
+        <a-form-item label="用户名">
+          <a-input v-model:value="searchForm.UserName" placeholder="请输入用户名" />
+        </a-form-item>
+      </a-col>
+      <a-col :md="12" :sm="24" :xs="24" :lg="8">
+        <a-form-item label="账号">
+          <a-input v-model:value="searchForm.Account" placeholder="请输入账号" />
+        </a-form-item>
+      </a-col>
+      <template v-if="advanced">
+        <a-col :md="12" :sm="24" :xs="24" :lg="8">
+          <a-form-item label="手机号码">
+            <a-input v-model:value="searchForm.Mobile" placeholder="请输入手机号码" />
+          </a-form-item>
+        </a-col>
+        <a-col :md="12" :sm="24" :xs="24" :lg="8">
+          <a-form-item label="邮箱">
+            <a-input v-model:value="searchForm.Email" placeholder="请输入邮箱" />
+          </a-form-item>
+        </a-col>
+      </template>
+    </template>
+  </jda-table-search>
+  <!-- <div class="jda-search-container">
     <a-form :model="searchForm" layout="horizontal" labelAlign="left" :label-col="{ style: { width: '70px' } }">
       <a-row :gutter="48">
         <a-col :md="12" :sm="24" :xs="24" :lg="8">
@@ -122,16 +148,15 @@ let advanced = ref<boolean>(false)
         </a-col>
       </a-row>
     </a-form>
-  </div>
+  </div> -->
   <a-card class="j-card-table-wrapper">
     <jda-table class="ant-table-striped" :columns="columns" :data-source="data" :scroll="{ x: true }" bordered
       :total="100" :pagination="{
-        showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'],
-        'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
-      }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
+    showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'],
+    'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
+  }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
       :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-      @get-table-data-source="onGetTableDataSource" @create-click="onTableCreateClick"
-      @import-click="onTableImportClick">
+      @get-table-data-source="onGetTableDataSource" @create="onTableCreateClick" @import="onTableImportClick">
 
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'Account'">

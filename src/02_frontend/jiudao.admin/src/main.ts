@@ -10,7 +10,7 @@ import '@/style/global.scss';
 
 import {router} from '@/router'
 
-import { JdaMenu,JdaTable } from '@/components'
+import { JdaMenu,JdaTable,JdaTableSearch } from '@/components'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -25,6 +25,7 @@ const app = createApp(App);
 app.component('font-awesome-icon',FontAwesomeIcon)
 app.component('JdaMenu',JdaMenu)
 app.component('JdaTable',JdaTable)
+app.component('JdaTableSearch',JdaTableSearch)
 app.component('VueDraggable',VueDraggable)
 app.use(router);
 app.use(Antd);
