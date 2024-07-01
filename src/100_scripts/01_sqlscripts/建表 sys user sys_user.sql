@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`(
 	`Id` bigint NOT NULL COMMENT '主键',
 	`Account` varchar(30) NOT NULL COMMENT '账号',
@@ -11,10 +12,10 @@ CREATE TABLE `sys_user`(
 	`IsDeleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除 0-正常 1-已删除',
 	`CreateId` bigint NOT NULL COMMENT '创建人Id',
 	`CreateSource` varchar(30) NOT NULL COMMENT '创建人',
-	`CreateDate` varchar(30) NOT NULL COMMENT '创建时间',
+	`CreateDate` datetime NOT NULL COMMENT '创建时间',
 	`UpdateId` bigint NOT NULL COMMENT '修改人Id',
 	`UpdateSource` varchar(30) NOT NULL COMMENT '修改人',
-	`UpdateDate` varchar(30) NOT NULL COMMENT '修改时间',
+	`UpdateDate` datetime NOT NULL COMMENT '修改时间',
 	PRIMARY KEY (`Id`) USING BTREE,
 	KEY `idx_Account`(`Account`) USING BTREE
 ) COMMENT '系统用户表';

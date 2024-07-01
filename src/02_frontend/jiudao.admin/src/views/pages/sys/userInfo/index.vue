@@ -87,23 +87,23 @@ const handleOk = () => {
 <template>
   <jda-table-search :model="searchForm">
     <template v-slot="{advanced}">
-      <a-col :md="12" :sm="24" :xs="24" :lg="8">
+      <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
         <a-form-item label="用户名">
           <a-input v-model:value="searchForm.UserName" placeholder="请输入用户名" />
         </a-form-item>
       </a-col>
-      <a-col :md="12" :sm="24" :xs="24" :lg="8">
+      <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
         <a-form-item label="账号">
           <a-input v-model:value="searchForm.Account" placeholder="请输入账号" />
         </a-form-item>
       </a-col>
       <template v-if="advanced">
-        <a-col :md="12" :sm="24" :xs="24" :lg="8">
+        <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
           <a-form-item label="手机号码">
             <a-input v-model:value="searchForm.Mobile" placeholder="请输入手机号码" />
           </a-form-item>
         </a-col>
-        <a-col :md="12" :sm="24" :xs="24" :lg="8">
+        <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
           <a-form-item label="邮箱">
             <a-input v-model:value="searchForm.Email" placeholder="请输入邮箱" />
           </a-form-item>

@@ -30,7 +30,7 @@ namespace JDA.Service.Sys
             if (defines.Any())
             {
                 List<long> defineIds = defines.Select(n => n.Id).ToList();
-                var dicItems = await this._sysDictionaryDataRepository.GetEntitiesAsync(n => defineIds.Contains(n.Id));
+                var dicItems = await this._sysDictionaryDataRepository.GetEntitiesAsync(n => defineIds.Contains(n.DictionaryDefineId));
                 foreach (var defineTree in defineTrees)
                 {
                     var items = dicItems.Where(n => n.DictionaryDefineId == defineTree.Id).ToList();

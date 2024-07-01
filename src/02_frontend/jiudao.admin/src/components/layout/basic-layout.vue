@@ -783,8 +783,8 @@ const providerTheme = computed(() => {
       borderRadius: settingsConfig.value.currentThemeStyle.borderRadius,
       colorLink: settingsConfig.value.currentThemeStyle.colorPrimary.value,
       colorLinkActive: cl.active,
-      colorLinkHover: cl.hover
-    },
+      colorLinkHover: cl.hover,
+    }
   };
 
   if (settingsConfig.value.currentThemeSkin === 'light') {

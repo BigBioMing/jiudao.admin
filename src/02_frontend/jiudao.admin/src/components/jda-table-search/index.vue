@@ -49,17 +49,20 @@ const onAdvancedToggle = () => {
         <a-form :model="props.model" v-bind="props.formProps">
             <a-row v-bind="props.rowProps">
                 <slot :advanced="advanced"></slot>
-                <a-col :md="12" :sm="24" :xs="24" :lg="8">
-                    <a-form-item>
-                        <a-button type="primary" @click="onSearch">查询</a-button>
-                        <a-button style="margin-left:8px;" @click="onReset" v-if="props.resetControl">重置</a-button>
-                        <a @click="onAdvancedToggle" style="margin-left: 8px" v-if="props.advancedControl">
-                            {{ advanced ? '收起' : '展开' }}
-                            <font-awesome-icon v-if="advanced" icon="fas fa-angle-up" />
-                            <font-awesome-icon v-else icon="fas fa-angle-down" />
-                        </a>
-                    </a-form-item>
-                </a-col>
+                <slot name="action">
+                    <a-col :sm="24" :xs="24" :md="!advanced && 12 || 24" :lg="!advanced && 8 || 24" :xl="!advanced && 6 || 24">
+                        <a-form-item>
+                            <span :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+                            <a-button type="primary" @click="onSearch">查询</a-button>
+                            <a-button style="margin-left:8px;" @click="onReset" v-if="props.resetControl">重置</a-button>
+                            <a @click="onAdvancedToggle" style="margin-left: 8px" v-if="props.advancedControl">
+                                {{ advanced ? '收起' : '展开' }}
+                                <font-awesome-icon v-if="advanced" icon="fas fa-angle-up" />
+                                <font-awesome-icon v-else icon="fas fa-angle-down" />
+                            </a></span>
+                        </a-form-item>
+                    </a-col>
+                </slot>
             </a-row>
         </a-form>
     </div>

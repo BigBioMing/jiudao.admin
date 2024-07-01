@@ -375,7 +375,7 @@ const onMove = (/**Event*/evt: any) => {
 
         .jda-table-toolbar-wrapper {
             padding: 0 24px;
-            height: 72px;
+            min-height: 72px;
             line-height: 72px;
 
             .jda-table-toolbar-list {
