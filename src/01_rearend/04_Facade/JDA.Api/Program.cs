@@ -125,7 +125,22 @@ try
 
     builder.Services.AddJdaSwagger();
 
+    //¿çÓò
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("MyCorsPolicy",
+            builder =>
+            {
+                builder
+                       //.WithOrigins("http://example.com")
+                       .AllowAnyOrigin()
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+            });
+    });
+
     var app = builder.Build();
+    app.UseCors("MyCorsPolicy");
     app.UseHttpLogging();
     app.UseLoggerScope();
     app.UseException();

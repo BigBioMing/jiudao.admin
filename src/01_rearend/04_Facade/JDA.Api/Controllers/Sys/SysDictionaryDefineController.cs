@@ -59,6 +59,7 @@ namespace JDA.Api.Controllers.Sys
         [Route("GetDictionaryTree")]
         public virtual async Task<IActionResult> GetDictionaryTree([FromQuery] NoPageViewModel filterParams)
         {
+            throw new Exception("hhhhh");
             Expression<Func<SysDictionaryDefine, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;
             if (!string.IsNullOrWhiteSpace(name))

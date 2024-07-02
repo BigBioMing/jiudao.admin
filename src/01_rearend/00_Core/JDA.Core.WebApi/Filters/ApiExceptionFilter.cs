@@ -29,7 +29,7 @@ namespace JDA.Core.WebApi.Filters
                 else
                 {
                     var res = new UnifyResponse() { Message = context.Exception.Message, Code = "50000" };
-                    //context.HttpContext.Response.StatusCode = 500;
+                    context.HttpContext.Response.StatusCode = 500;
                     await context.HttpContext.Response.WriteAsJsonAsync(res);
                 }
                 context.ExceptionHandled = true;

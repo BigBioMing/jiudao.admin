@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import type { Key } from 'ant-design-vue/es/table/interface';
 import { computed, onMounted, reactive, ref } from 'vue';
+import request from '@/utils/http'
+
+const onTest = async () => {
+ await request({
+    'url': '/api/Sys/SysDictionaryDefine/GetDictionaryTree',
+    method: 'get',
+    data: { aaa: 1, bbb: '33' }
+  })
+}
 
 const searchForm = ref({
   UserName: '',
@@ -85,8 +94,8 @@ const handleOk = () => {
 // let advanced = ref<boolean>(false)
 </script>
 <template>
-  <jda-table-search :model="searchForm">
-    <template v-slot="{advanced}">
+  <jda-table-search :model="searchForm" @search="onTest">
+    <template v-slot="{ advanced }">
       <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
         <a-form-item label="用户名">
           <a-input v-model:value="searchForm.UserName" placeholder="请输入用户名" />

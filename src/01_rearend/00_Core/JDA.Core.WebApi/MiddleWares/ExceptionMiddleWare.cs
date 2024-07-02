@@ -78,6 +78,7 @@ namespace JDA.Core.WebApi.MiddleWares
                         }
                         else
                         {
+                            context.Response.StatusCode = 500;
                             res = new UnifyResponse() { Message = ex.Message, Code = "50000" };
                             //context.Response.StatusCode = 500;
                         }
