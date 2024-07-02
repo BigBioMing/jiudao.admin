@@ -2,6 +2,8 @@
 import type { Key } from 'ant-design-vue/es/table/interface';
 import { computed, onMounted, reactive, ref } from 'vue';
 import request from '@/utils/http'
+import { message } from 'ant-design-vue';
+const [messageApi, contextHolder] = message.useMessage();
 
 const onTest = async () => {
  await request({
@@ -90,10 +92,15 @@ const handleOk = () => {
   }, 1000);
 };
 
+onMounted(()=>{
+
+  messageApi.error("网络暂时不可用，请检查下哦~11");
+})
 //控制是否展开高级搜索
 // let advanced = ref<boolean>(false)
 </script>
 <template>
+  <context-holder />
   <jda-table-search :model="searchForm" @search="onTest">
     <template v-slot="{ advanced }">
       <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
