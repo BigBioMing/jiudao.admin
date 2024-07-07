@@ -8,6 +8,8 @@ import App from './App.vue'
 import 'ant-design-vue/dist/reset.css';
 import '@/style/global.scss';
 
+import pinia from '@/stores'
+
 import {router} from '@/router'
 
 import { JdaMenu,JdaTable,JdaTableSearch } from '@/components'
@@ -27,6 +29,7 @@ app.component('JdaMenu',JdaMenu)
 app.component('JdaTable',JdaTable)
 app.component('JdaTableSearch',JdaTableSearch)
 app.component('VueDraggable',VueDraggable)
+app.use(pinia);
 app.use(router);
 app.use(Antd);
 

@@ -3,15 +3,33 @@ import type { Key } from 'ant-design-vue/es/table/interface';
 import { computed, onMounted, reactive, ref } from 'vue';
 import request from '@/utils/http'
 import { message } from 'ant-design-vue';
+import { useGlobalStore } from '@/stores'
+import { getDicItem } from '@/utils/sysdicitem'
 const [messageApi, contextHolder] = message.useMessage();
+const globalStore = useGlobalStore();
 
+const dics: any = globalStore.getDics();
+console.log(dics)
 const onTest = async () => {
- await request({
+  await request({
     'url': '/api/Sys/SysDictionaryDefine/GetDictionaryTree',
     method: 'get',
     data: { aaa: 1, bbb: '33' }
   })
 }
+const dicItem = computed(() => {
+  const dics: any = globalStore.getDics();
+  if (!dics) return null;
+
+  var define = dics.filter((n: any) => n.code === 'Sex');
+  if (!define || define.length === 0) return null;
+
+  let childrens = define[0].childrens || [];
+  let dataItem = childrens.filter((n: any) => n.code === 'Sex_Man');
+  return dataItem[0];
+})
+console.log('getDicItem(\'Sex\',\'Sex_Man\')', getDicItem('Sex', 'Sex_Man'))
+console.log('dicItem', dicItem)
 
 const searchForm = ref({
   UserName: '',
@@ -92,7 +110,7 @@ const handleOk = () => {
   }, 1000);
 };
 
-onMounted(()=>{
+onMounted(() => {
 
   messageApi.error("网络暂时不可用，请检查下哦~11");
 })
@@ -101,6 +119,7 @@ onMounted(()=>{
 </script>
 <template>
   <context-holder />
+  {{ dicItem }}
   <jda-table-search :model="searchForm" @search="onTest">
     <template v-slot="{ advanced }">
       <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
@@ -168,9 +187,9 @@ onMounted(()=>{
   <a-card class="j-card-table-wrapper">
     <jda-table class="ant-table-striped" :columns="columns" :data-source="data" :scroll="{ x: true }" bordered
       :total="100" :pagination="{
-    showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'],
-    'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
-  }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
+        showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'],
+        'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
+      }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
       :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
       @get-table-data-source="onGetTableDataSource" @create="onTableCreateClick" @import="onTableImportClick">
 
@@ -183,10 +202,9 @@ onMounted(()=>{
         <template v-else-if="column.key === 'Gender'">
           <span>
             <a-tag :key="0" v-if="record.Gender === 0" color="green">
-              女
+              {{ dics['Sex'] }}
             </a-tag>
             <a-tag :key="1" v-if="record.Gender === 1" color="geekblue">
-              男
             </a-tag>
           </span>
         </template>
