@@ -5,8 +5,11 @@ import request from '@/utils/http'
 import { message } from 'ant-design-vue';
 import { useGlobalStore } from '@/stores'
 import { getDicItem } from '@/utils/sysdicitem'
+import { useSysDic } from '@/hooks'
+
 const [messageApi, contextHolder] = message.useMessage();
 const globalStore = useGlobalStore();
+const { dicItemName } = useSysDic();
 
 const dics: any = globalStore.getDics();
 console.log(dics)
@@ -17,19 +20,6 @@ const onTest = async () => {
     data: { aaa: 1, bbb: '33' }
   })
 }
-const dicItem = computed(() => {
-  const dics: any = globalStore.getDics();
-  if (!dics) return null;
-
-  var define = dics.filter((n: any) => n.code === 'Sex');
-  if (!define || define.length === 0) return null;
-
-  let childrens = define[0].childrens || [];
-  let dataItem = childrens.filter((n: any) => n.code === 'Sex_Man');
-  return dataItem[0];
-})
-console.log('getDicItem(\'Sex\',\'Sex_Man\')', getDicItem('Sex', 'Sex_Man'))
-console.log('dicItem', dicItem)
 
 const searchForm = ref({
   UserName: '',
@@ -79,7 +69,7 @@ for (let i = 0; i < 100; i++) {
     Account: 'account' + i,
     Name: 'John Brown' + i,
     Mobile: 32,
-    Gender: i % 2 == 0 ? 0 : 1,
+    Gender: i % 2 == 0 ? 'Sex_Man' : 'Sex_Woman',
     Email: 'Email' + i,
   })
 }
@@ -114,12 +104,20 @@ onMounted(() => {
 
   messageApi.error("网络暂时不可用，请检查下哦~11");
 })
+
+let model = reactive({
+  Account: null,
+  Password: null,
+  UserName: null,
+  Mobile: null,
+  Email: null,
+  Gender: null
+})
 //控制是否展开高级搜索
 // let advanced = ref<boolean>(false)
 </script>
 <template>
   <context-holder />
-  {{ dicItem }}
   <jda-table-search :model="searchForm" @search="onTest">
     <template v-slot="{ advanced }">
       <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
@@ -187,9 +185,9 @@ onMounted(() => {
   <a-card class="j-card-table-wrapper">
     <jda-table class="ant-table-striped" :columns="columns" :data-source="data" :scroll="{ x: true }" bordered
       :total="100" :pagination="{
-        showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'],
-        'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
-      }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
+    showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'],
+    'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
+  }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
       :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
       @get-table-data-source="onGetTableDataSource" @create="onTableCreateClick" @import="onTableImportClick">
 
@@ -201,10 +199,11 @@ onMounted(() => {
         </template>
         <template v-else-if="column.key === 'Gender'">
           <span>
-            <a-tag :key="0" v-if="record.Gender === 0" color="green">
-              {{ dics['Sex'] }}
+            <a-tag :key="0" v-if="record.Gender === 'Sex_Man'" color="green">
+              {{ dicItemName('Sex', record.Gender) }}
             </a-tag>
-            <a-tag :key="1" v-if="record.Gender === 1" color="geekblue">
+            <a-tag :key="1" v-if="record.Gender === 'Sex_Woman'" color="geekblue">
+              {{ dicItemName('Sex', record.Gender) }}
             </a-tag>
           </span>
         </template>
@@ -229,16 +228,36 @@ onMounted(() => {
   <a-modal :width="800" v-model:open="openCreateModal" title="新建" :confirm-loading="createConfirmLoading"
     @ok="handleOk">
     <a-card>
-      <a-form layout="horizontal" labelAlign="left" :label-col="{ style: { width: '60px' } }">
+      <a-form :model="model" layout="horizontal" labelAlign="left" :label-col="{ style: { width: '60px' } }">
         <a-row :gutter="48">
           <a-col :md="12" :sm="24" :xs="24" :lg="12">
-            <a-form-item label="用户名">
-              <a-input v-model:value="searchForm.UserName" placeholder="input placeholder" />
+            <a-form-item label="账号">
+              <a-input v-model:value="model.Account" placeholder="input placeholder" />
             </a-form-item>
           </a-col>
           <a-col :md="12" :sm="24" :xs="24" :lg="12">
-            <a-form-item label="账号">
-              <a-input v-model:value="searchForm.Account" placeholder="input placeholder" />
+            <a-form-item label="密码">
+              <a-input v-model:value="model.Password" placeholder="input placeholder" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="12" :sm="24" :xs="24" :lg="12">
+            <a-form-item label="名称">
+              <a-input v-model:value="model.UserName" placeholder="input placeholder" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="12" :sm="24" :xs="24" :lg="12">
+            <a-form-item label="手机号">
+              <a-input v-model:value="model.Mobile" placeholder="input placeholder" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="12" :sm="24" :xs="24" :lg="12">
+            <a-form-item label="性别">
+              <a-input v-model:value="model.Gender" placeholder="input placeholder" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="12" :sm="24" :xs="24" :lg="12">
+            <a-form-item label="邮箱">
+              <a-input v-model:value="model.Email" placeholder="input placeholder" />
             </a-form-item>
           </a-col>
         </a-row>
