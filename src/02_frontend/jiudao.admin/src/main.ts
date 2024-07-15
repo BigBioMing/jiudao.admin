@@ -12,7 +12,7 @@ import pinia from '@/stores'
 
 import {router} from '@/router'
 
-import { JdaMenu,JdaTable,JdaTableSearch } from '@/components'
+import { JdaMenu,JdaTable,JdaTableSearch,JdaModalFooter,JdaModal } from '@/components'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -28,6 +28,8 @@ app.component('font-awesome-icon',FontAwesomeIcon)
 app.component('JdaMenu',JdaMenu)
 app.component('JdaTable',JdaTable)
 app.component('JdaTableSearch',JdaTableSearch)
+app.component('JdaModal',JdaModal)
+app.component('JdaModalFooter',JdaModalFooter)
 app.component('VueDraggable',VueDraggable)
 app.use(pinia);
 app.use(router);

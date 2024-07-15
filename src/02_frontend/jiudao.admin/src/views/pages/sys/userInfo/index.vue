@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import type { Key } from 'ant-design-vue/es/table/interface';
-import { computed, onMounted, reactive, ref } from 'vue';
+import { computed, createVNode, h, onMounted, reactive, ref } from 'vue';
 import request from '@/utils/http'
 import { message } from 'ant-design-vue';
-import { useGlobalStore } from '@/stores'
-import { getDicItem } from '@/utils/sysdicitem'
 import { useSysDic } from '@/hooks'
+import Edit from './edit.vue'
+import { Modal } from 'ant-design-vue'
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+
 
 const [messageApi, contextHolder] = message.useMessage();
-const globalStore = useGlobalStore();
 const { dicItemName } = useSysDic();
 
-const dics: any = globalStore.getDics();
-console.log(dics)
 const onTest = async () => {
   await request({
     'url': '/api/Sys/SysDictionaryDefine/GetDictionaryTree',
@@ -56,9 +55,10 @@ const columns = reactive([
     dataIndex: 'Email',
   },
   {
-    title: 'Action',
+    title: '操作',
     key: 'action',
     fixed: 'right',
+    width: 60
   },
 ]);
 
@@ -79,44 +79,27 @@ const onSelectChange = (selected: Key[]) => {
   console.log('selected:', selected)
 };
 
-let openCreateModal = ref<boolean>(false);
-let createConfirmLoading = ref<boolean>(false);
-
 const onGetTableDataSource = (opts) => {
   console.log(opts)
 }
-const onTableCreateClick = () => {
-  openCreateModal.value = true;
-  console.log('onTableCreateClick')
+const onTableImportClick = (columns: any[]) => {
+  console.log('onTableImportClick', columns)
 }
-const onTableImportClick = () => {
-  console.log('onTableImportClick')
-}
-const handleOk = () => {
-  createConfirmLoading.value = true;
-  setTimeout(() => {
-    openCreateModal.value = false;
-    createConfirmLoading.value = false;
-  }, 1000);
-};
 
 onMounted(() => {
 
   messageApi.error("网络暂时不可用，请检查下哦~11");
 })
-
-let model = reactive({
-  Account: null,
-  Password: null,
-  UserName: null,
-  Mobile: null,
-  Email: null,
-  Gender: null
-})
 //控制是否展开高级搜索
 // let advanced = ref<boolean>(false)
+
+let openCreateModal = ref<boolean>(false);
+const onEdit = (row?: any) => {
+  openCreateModal.value = true;
+}
 </script>
 <template>
+  openCreateModal:{{ openCreateModal }}
   <context-holder />
   <jda-table-search :model="searchForm" @search="onTest">
     <template v-slot="{ advanced }">
@@ -189,7 +172,7 @@ let model = reactive({
     'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
   }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
       :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-      @get-table-data-source="onGetTableDataSource" @create="onTableCreateClick" @import="onTableImportClick">
+      @get-table-data-source="onGetTableDataSource" @create="onEdit" @import="onTableImportClick">
 
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'Account'">
@@ -209,60 +192,26 @@ let model = reactive({
         </template>
         <template v-else-if="column.key === 'action'">
           <span>
-            <a>Invite 一 {{ record.name }}</a>
+            <a-button type="link" @click="onEdit(record)">
+              <span class="jda-table-action-btn-text">修改</span>
+              <template #icon>
+                <font-awesome-icon icon="fas fa-edit" />
+              </template>
+            </a-button>
             <a-divider type="vertical" />
-            <a>Delete</a>
-            <a-divider type="vertical" />
-            <a class="ant-dropdown-link">
-              More actions
-              <down-outlined />
-            </a>
+            <a-button danger type="link">
+              <span class="jda-table-action-btn-text">删除</span>
+              <template #icon>
+                <font-awesome-icon icon="fas fa-trash-alt" />
+              </template>
+            </a-button>
           </span>
         </template>
       </template>
-      <template #dd>
-        <div>我是headerCell1</div>
-      </template>
     </jda-table>
   </a-card>
-  <a-modal :width="800" v-model:open="openCreateModal" title="新建" :confirm-loading="createConfirmLoading"
-    @ok="handleOk">
-    <a-card>
-      <a-form :model="model" layout="horizontal" labelAlign="left" :label-col="{ style: { width: '60px' } }">
-        <a-row :gutter="48">
-          <a-col :md="12" :sm="24" :xs="24" :lg="12">
-            <a-form-item label="账号">
-              <a-input v-model:value="model.Account" placeholder="input placeholder" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="12" :sm="24" :xs="24" :lg="12">
-            <a-form-item label="密码">
-              <a-input v-model:value="model.Password" placeholder="input placeholder" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="12" :sm="24" :xs="24" :lg="12">
-            <a-form-item label="名称">
-              <a-input v-model:value="model.UserName" placeholder="input placeholder" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="12" :sm="24" :xs="24" :lg="12">
-            <a-form-item label="手机号">
-              <a-input v-model:value="model.Mobile" placeholder="input placeholder" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="12" :sm="24" :xs="24" :lg="12">
-            <a-form-item label="性别">
-              <a-input v-model:value="model.Gender" placeholder="input placeholder" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="12" :sm="24" :xs="24" :lg="12">
-            <a-form-item label="邮箱">
-              <a-input v-model:value="model.Email" placeholder="input placeholder" />
-            </a-form-item>
-          </a-col>
-        </a-row>
-      </a-form>
-    </a-card>
-  </a-modal>
+  <jda-modal :width="800" v-model:open="openCreateModal" title="新建">
+    <Edit v-model:openCreateModal="openCreateModal"></Edit>
+  </jda-modal>
 </template>
 <style lang="scss" scoped></style>

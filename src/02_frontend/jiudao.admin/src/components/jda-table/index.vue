@@ -9,6 +9,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { computed, reactive, ref, useSlots, useAttrs, watch } from 'vue'
+import common from '@/utils/common'
 
 //vue3中访问$attrs
 // import { useAttrs } from 'vue'
@@ -64,13 +65,7 @@ const onCreate = () => {
     emit('create')
 }
 const onImport = () => {
-    emit('import')
-}
-
-//对象克隆
-const clone: any = (obj: any) => {
-    if (!obj) return obj;
-    return JSON.parse(JSON.stringify(obj));
+    emit('import', innerColumns.value)
 }
 
 //初始化innerColumns
@@ -90,7 +85,7 @@ let innerColumns = ref<any[]>([]);
 watch(
     () => props.columns,
     (newVal, oldVal) => {
-        initInnerColumns(clone(newVal));
+        initInnerColumns(common.clone(newVal));
     },
     { deep: true, immediate: true }
 );
@@ -141,7 +136,7 @@ let columnSetting = reactive({
         onChange: (e: Event) => {
         },
         onReset: () => {
-            initInnerColumns(clone(props.columns));
+            initInnerColumns(common.clone(props.columns));
         }
     },
     // 列固定
@@ -181,7 +176,7 @@ let columnSetting = reactive({
             innerColumns.value = [...leftArr, ...cancelArr, ...rightArr]
         },
         onReset: () => {
-            initInnerColumns(clone(props.columns));
+            initInnerColumns(common.clone(props.columns));
         }
     }
 })
@@ -286,7 +281,7 @@ const onMove = (/**Event*/evt: any) => {
                                 导出</a-button>
                         </a-space>
                     </div>
-                    <div class="jda-table-toolbar-divider" >
+                    <div class="jda-table-toolbar-divider">
                         <a-divider type="vertical" />
                     </div>
                     <div class="jda-table-toolbar-icon-btns">
