@@ -21,10 +21,10 @@ const onTest = async () => {
 }
 
 const searchForm = ref({
-  UserName: '',
-  Account: '',
-  Mobile: '',
-  Email: ''
+  UserName: null,
+  Account: null,
+  Mobile: null,
+  Email: null
 });
 
 // table配置&数据
@@ -65,6 +65,7 @@ const columns = reactive([
 const data: any[] = [];
 for (let i = 0; i < 100; i++) {
   data.push({
+    key: i,
     Id: i,
     Account: 'account' + i,
     Name: 'John Brown' + i,
@@ -74,11 +75,10 @@ for (let i = 0; i < 100; i++) {
   })
 }
 let selectedRowKeys = ref<any[]>([]);
-const onSelectChange = (selected: Key[]) => {
-  selectedRowKeys.value = selected;
-  console.log('selected:', selected)
+const onSelectChange = (selectedKeys: (string | number)[], selectedRows: any[]) => {
+  selectedRowKeys.value = selectedRows.map(n => n.Id);
+  console.log('selected:', selectedKeys, selectedRows)
 };
-
 const onGetTableDataSource = (opts) => {
   console.log(opts)
 }
@@ -87,8 +87,7 @@ const onTableImportClick = (columns: any[]) => {
 }
 
 onMounted(() => {
-
-  messageApi.error("网络暂时不可用，请检查下哦~11");
+  // messageApi.error("网络暂时不可用，请检查下哦~11");
 })
 //控制是否展开高级搜索
 // let advanced = ref<boolean>(false)
@@ -99,7 +98,6 @@ const onEdit = (row?: any) => {
 }
 </script>
 <template>
-  openCreateModal:{{ openCreateModal }}
   <context-holder />
   <jda-table-search :model="searchForm" @search="onTest">
     <template v-slot="{ advanced }">
