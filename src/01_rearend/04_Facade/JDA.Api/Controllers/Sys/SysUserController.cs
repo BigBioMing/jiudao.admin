@@ -9,6 +9,7 @@ using JDA.Core.Utilities;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ApiDocs;
 using JDA.Core.WebApi.ControllerBases;
+using JDA.Core.WebApi.ModelBinds;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
 using JDA.Model.Sys.SysUsers;
@@ -72,7 +73,7 @@ namespace JDA.Api.Controllers.Sys
         [HttpGet]
         [Route("GetPageEntities")]
         //[ApiExplorerSettings(GroupName = "V2")]
-        public virtual async Task<IActionResult> GetPageEntities([FromQuery] Pa? filterParams)
+        public virtual async Task<IActionResult> GetPageEntities([FromQuery][ModelBinder(BinderType = typeof(CustomModelBinder))] Pa? filterParams)
         {
             Expression<Func<SysUser, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;

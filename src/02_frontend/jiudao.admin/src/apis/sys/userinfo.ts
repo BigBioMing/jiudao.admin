@@ -1,6 +1,7 @@
 import type { Paging } from "@/types/sys/global";
 import type { GetPageEntitiesInputParams } from "@/types/sys/userinfo";
 import request from "@/utils/http";
+import qs from "qs";
 
 /**
  * 获取用户分页数据
@@ -14,7 +15,11 @@ export const getPageEntitiesApi = async (
     url: "/api/Sys/SysUser/GetPageEntities",
     method: "get",
     // params: params,
-    params:params
+    params: params,
+    paramsSerializer: (params) => {
+      // return qs.stringify(params, { indices: false,allowDots: true })
+      return qs.stringify(params, { allowDots: true });
+    },
   });
 };
 /**
