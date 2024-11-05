@@ -7,6 +7,7 @@ import { useSysDic } from '@/hooks'
 import Edit from './edit.vue'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { getPageEntitiesApi } from '@/apis/sys/userinfo';
 
 
 const [messageApi, contextHolder] = message.useMessage();
@@ -87,6 +88,7 @@ const onTableImportClick = (columns: any[]) => {
 }
 
 onMounted(() => {
+  getPageEntitiesApi({ pageIndex: 2, pageSize: 30,so:{ mobile: 'name111', account: 'acc01' } , params: { name: 'name111', account: 'acc01' } });
   // messageApi.error("网络暂时不可用，请检查下哦~11");
 })
 //控制是否展开高级搜索

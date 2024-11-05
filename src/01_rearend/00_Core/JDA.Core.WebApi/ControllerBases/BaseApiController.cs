@@ -37,7 +37,7 @@ namespace JDA.Core.WebApi.ControllerBases
         /// <returns></returns>
         protected virtual async Task<PageResult<List<TEntity>>> GetPageEntitiesAsync(PageViewModel filterParams, Expression<Func<TEntity, bool>>? predicate)
         {
-            var pageResult = await this._currentService.GetPageEntitiesAsync(filterParams.Page, predicate);
+            var pageResult = await this._currentService.GetPageEntitiesAsync(new PageInParams() { PageIndex = filterParams?.PageIndex ?? 1, PageSize = filterParams?.PageSize ?? 10 }, predicate);
             return pageResult;
         }
         #endregion

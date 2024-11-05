@@ -72,7 +72,7 @@ namespace JDA.Api.Controllers.Sys
         [HttpGet]
         [Route("GetPageEntities")]
         //[ApiExplorerSettings(GroupName = "V2")]
-        public virtual async Task<IActionResult> GetPageEntities([FromQuery] PageViewModel filterParams)
+        public virtual async Task<IActionResult> GetPageEntities([FromQuery] Pa? filterParams)
         {
             Expression<Func<SysUser, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;

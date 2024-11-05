@@ -1,4 +1,5 @@
 ﻿using JDA.Core.Attributes;
+using JDA.Core.Views.ViewModels;
 using JDA.Core.Views.ViewModels.Base;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,34 @@ using System.Threading.Tasks;
 
 namespace JDA.Model.Sys.SysUsers
 {
+    public class Pa : PageViewModel
+    {
+        public SysUserSaveVO2? So { get; set; }
+    }
+    /// <summary>
+    /// 保存用户信息模型
+    /// </summary>
+    public class SysUserSaveVO2 : BaseSugerEntityViewModel
+    {
+        /// <summary>
+        /// 账号
+        /// </summary>
+        [Display(Name = "账号", Order = 1)]
+        [ColumnMetadata(Name = "账号", Order = 1)]
+        public string? Account { get; set; }
+        /// <summary>
+        /// 名称
+        /// </summary>
+        [Display(Name = "名称", Order = 2)]
+        [ColumnMetadata(Name = "名称", Order = 2)]
+        public string? Name { get; set; }
+        /// <summary>
+        /// 手机号码
+        /// </summary>
+        [Display(Name = "手机号码", Order = 3)]
+        [ColumnMetadata(Name = "手机号码", Order = 3, IsEncry = true, EncryType = "AES")]
+        public string? Mobile { get; set; }
+    }
     /// <summary>
     /// 保存用户信息模型
     /// </summary>

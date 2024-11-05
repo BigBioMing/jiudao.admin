@@ -11,8 +11,12 @@ namespace JDA.Core.Views.ViewModels
     public class PageViewModel : NoPageViewModel
     {
         /// <summary>
-        /// 分页大小
+        /// 要跳转到的页码
         /// </summary>
-        public PageInParams Page { get; set; }
+        public int? PageIndex { get; set; }
+        /// <summary>
+        /// 每页大小
+        /// </summary>
+        public int? PageSize { get; set; }
     }
 }
