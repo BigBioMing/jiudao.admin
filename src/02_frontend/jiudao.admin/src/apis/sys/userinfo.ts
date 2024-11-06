@@ -1,4 +1,4 @@
-import type { Paging } from "@/types/sys/global";
+import type { Paging, TablePageResult } from "@/types/global";
 import type { GetPageEntitiesInputParams } from "@/types/sys/userinfo";
 import request from "@/utils/http";
 import qs from "qs";
@@ -10,7 +10,7 @@ import qs from "qs";
  */
 export const getPageEntitiesApi = async (
   params: Paging<GetPageEntitiesInputParams>
-) => {
+): Promise<TablePageResult<any>> => {
   return await request({
     url: "/api/Sys/SysUser/GetPageEntities",
     method: "get",

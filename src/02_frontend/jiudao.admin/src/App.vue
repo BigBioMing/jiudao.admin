@@ -5,8 +5,8 @@ import { useGlobalStore } from '@/stores'
 const globalStore = useGlobalStore();
 const onInit = async () => {
   const res = await getDicApi();
-  const dics = res.data.data;
-  globalStore.setDics(dics);
+  // const dics = res.data.data;
+  globalStore.setDics(res);
 }
 
 

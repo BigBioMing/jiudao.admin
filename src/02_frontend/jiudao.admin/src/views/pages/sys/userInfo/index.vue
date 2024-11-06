@@ -7,53 +7,46 @@ import { useSysDic } from '@/hooks'
 import Edit from './edit.vue'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { getPageEntitiesApi } from '@/apis/sys/userinfo';
+import { getPageEntitiesApi,delUserApi } from '@/apis/sys/userinfo';
+import type { PaginationChangeEvent } from '@/types/global';
 
 
 const [messageApi, contextHolder] = message.useMessage();
 const { dicItemName } = useSysDic();
 
-const onTest = async () => {
-  await request({
-    'url': '/api/Sys/SysDictionaryDefine/GetDictionaryTree',
-    method: 'get',
-    data: { aaa: 1, bbb: '33' }
-  })
-}
-
 const searchForm = ref({
-  UserName: null,
-  Account: null,
-  Mobile: null,
-  Email: null
+  userName: null,
+  account: null,
+  mobile: null,
+  email: null
 });
 
 // table配置&数据
 const columns = reactive([
   {
     title: '账号',
-    dataIndex: 'Account',
-    key: 'Account',
+    dataIndex: 'account',
+    key: 'account',
   },
   {
     title: '名称',
-    dataIndex: 'Name',
-    key: 'Name',
+    dataIndex: 'name',
+    key: 'name',
   },
   {
     title: '手机号码',
-    dataIndex: 'Mobile',
-    key: 'Mobile',
+    dataIndex: 'mobile',
+    key: 'mobile',
   },
   {
     title: '性别',
-    key: 'Gender',
-    dataIndex: 'Gender',
+    key: 'gender',
+    dataIndex: 'gender',
   },
   {
     title: '邮箱',
-    key: 'Email',
-    dataIndex: 'Email',
+    key: 'email',
+    dataIndex: 'email',
   },
   {
     title: '操作',
@@ -67,41 +60,64 @@ const data: any[] = [];
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i,
-    Id: i,
-    Account: 'account' + i,
-    Name: 'John Brown' + i,
-    Mobile: 32,
-    Gender: i % 2 == 0 ? 'Sex_Man' : 'Sex_Woman',
-    Email: 'Email' + i,
+    id: i,
+    account: 'account' + i,
+    name: 'John Brown' + i,
+    mobile: 32,
+    gender: i % 2 == 0 ? 'Sex_Man' : 'Sex_Woman',
+    email: 'Email' + i,
   })
 }
+//表格选中事件
 let selectedRowKeys = ref<any[]>([]);
 const onSelectChange = (selectedKeys: (string | number)[], selectedRows: any[]) => {
   selectedRowKeys.value = selectedRows.map(n => n.Id);
   console.log('selected:', selectedKeys, selectedRows)
 };
-const onGetTableDataSource = (opts) => {
+//获取表格数据源
+const onGetTableDataSource = async (opts?: PaginationChangeEvent) => {
   console.log(opts)
+  let pageIndex: number = opts?.page?.pageIndex || 1;
+  let pageSize: number = opts?.page?.pageSize || 10;
+  var res = await getPageEntitiesApi({ pageIndex: pageIndex, pageSize: pageSize });
 }
+//导出
 const onTableImportClick = (columns: any[]) => {
   console.log('onTableImportClick', columns)
 }
 
 onMounted(() => {
-  getPageEntitiesApi({ pageIndex: 2, pageSize: 30,so:{ mobile: 'name111', account: 'acc01' } , params: { name: 'name111', account: 'acc01' } });
+  onGetTableDataSource();
   // messageApi.error("网络暂时不可用，请检查下哦~11");
 })
 //控制是否展开高级搜索
 // let advanced = ref<boolean>(false)
 
+//创建用户-打开创建用户弹窗
 let openCreateModal = ref<boolean>(false);
 const onEdit = (row?: any) => {
   openCreateModal.value = true;
 }
+
+//删除用户
+const onDelete = (row: any) => {
+  Modal.confirm({
+    title: '删除提示',
+    icon: createVNode(ExclamationCircleOutlined),
+    content: `确定要删除用户【${row.name}】吗？`,
+    okText: '确认',
+    cancelText: '取消',
+    async onOk(e){
+      console.log(e)
+     let res =  await delUserApi(row.id);
+      console.log(res)
+    }
+  });
+}
 </script>
 <template>
   <context-holder />
-  <jda-table-search :model="searchForm" @search="onTest">
+  <jda-table-search :model="searchForm" @search="onGetTableDataSource">
     <template v-slot="{ advanced }">
       <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
         <a-form-item label="用户名">
@@ -199,7 +215,7 @@ const onEdit = (row?: any) => {
               </template>
             </a-button>
             <a-divider type="vertical" />
-            <a-button danger type="link">
+            <a-button danger type="link" @click="onDelete(record)">
               <span class="jda-table-action-btn-text">删除</span>
               <template #icon>
                 <font-awesome-icon icon="fas fa-trash-alt" />

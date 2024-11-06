@@ -53,32 +53,32 @@ const closeModal = () => {
             <a-row :gutter="48">
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
                     <a-form-item label="账号">
-                        <a-input v-model:value="model.Account" placeholder="input placeholder" />
+                        <a-input v-model:value="model.Account" placeholder="请输入账号" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
                     <a-form-item label="密码">
-                        <a-input v-model:value="model.Password" placeholder="input placeholder" />
+                        <a-input v-model:value="model.Password" placeholder="请输入密码" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
                     <a-form-item label="名称">
-                        <a-input v-model:value="model.UserName" placeholder="input placeholder" />
+                        <a-input v-model:value="model.UserName" placeholder="请输入姓名" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
                     <a-form-item label="手机号">
-                        <a-input v-model:value="model.Mobile" placeholder="input placeholder" />
+                        <a-input v-model:value="model.Mobile" placeholder="请输入手机号码" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
                     <a-form-item label="性别">
-                        <a-input v-model:value="model.Gender" placeholder="input placeholder" />
+                        <a-input v-model:value="model.Gender" placeholder="请输入性别" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
                     <a-form-item label="邮箱">
-                        <a-input v-model:value="model.Email" placeholder="input placeholder" />
+                        <a-input v-model:value="model.Email" placeholder="请输入邮箱" />
                     </a-form-item>
                 </a-col>
             </a-row>

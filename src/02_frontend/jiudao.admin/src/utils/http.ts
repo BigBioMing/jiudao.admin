@@ -7,7 +7,7 @@ const instance = axios.create({
 });
 instance.interceptors.request.use(
   function (config) {
-    console.log("config.data:", config.data);
+    // console.log("config.data:", config.data);
     // if (
     //   config.method === "post" ||
     //   config.method === "put" ||
@@ -25,7 +25,7 @@ instance.interceptors.request.use(
   },
   (error) => {
     messageError("error:", error);
-    return Promise.reject(error.data.error.console);
+    return Promise.reject(error);
   }
 );
 // 响应拦截器
@@ -36,7 +36,9 @@ instance.interceptors.response.use(
       setTimeout(() => {
         //   dataList.show = false
       }, 400);
-      return Promise.resolve(config);
+      // console.log(config)
+      // return Promise.resolve(config);
+      return Promise.resolve(config.data.data);
     } else {
       return Promise.reject(config);
     }
@@ -105,7 +107,7 @@ instance.interceptors.response.use(
         default:
           messageError("其他错误错误==>" + error.response.status);
       }
-      return Promise.reject(error.response);
+      return Promise.reject(error);
     } else {
       // 处理断网的情况
       // eg:请求超时或断网时，更新state的network状态
@@ -113,6 +115,7 @@ instance.interceptors.response.use(
       // 关于断网组件中的刷新重新获取数据，会在断网组件中说明
       //   store.commit('changeNetwork', false);
       messageError('网络暂时不可用，请检查下哦~');
+      return Promise.reject(error);
     }
   }
 );
