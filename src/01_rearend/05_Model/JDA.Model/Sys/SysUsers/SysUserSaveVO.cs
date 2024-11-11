@@ -61,16 +61,16 @@ namespace JDA.Model.Sys.SysUsers
         /// 是否启用（关联字段表）
         /// </summary>
         [Display(Name = "是否启用", Order = 900)]
-        public long Enabled { get; set; }
+        public long? Enabled { get; set; }
         /// <summary>
         /// 组织机构ID
         /// </summary>
         [Display(Name = "组织机构ID", Order = 901)]
-        public List<long> OrgIds { get; set; }
+        public List<long>? OrgIds { get; set; }
         /// <summary>
         /// 角色ID
         /// </summary>
         [Display(Name = "角色ID", Order = 902)]
-        public List<long> RoleIds { get; set; }
+        public List<long>? RoleIds { get; set; }
     }
 }

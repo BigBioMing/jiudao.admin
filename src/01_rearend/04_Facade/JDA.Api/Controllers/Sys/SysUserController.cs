@@ -97,10 +97,6 @@ namespace JDA.Api.Controllers.Sys
         //[ApiVersion(Version = ApiVersionDefine.V1, GroupName = "V2")]
         public virtual async Task<UnifyResponse<object>> Save([FromBody] SysUserSaveVO model)
         {
-            if (ModelState.IsValid)
-            {
-
-            }
             var operationResult = await _sysUserService.SaveAsync(model);
             if (operationResult.Status != JDA.Core.Models.Operations.OperationResultStatus.Success)
                 return UnifyResponse<object>.Error(operationResult.Message);
