@@ -24,6 +24,7 @@ using Microsoft.OpenApi.Models;
 using JDA.Core.WebApi.Authorizations;
 using Microsoft.AspNetCore.Authorization;
 using JDA.Core.WebApi.Swaggers.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 try
 {
@@ -50,7 +51,8 @@ try
 
     builder.Services.AddControllers(options =>
     {
-        options.Filters.Add(typeof(ApiActionFilter));
+        //options.Filters.Add(typeof(ApiActionFilter));
+        options.Filters.Add(new ApiActionFilter()); //注册全全局模型验证过滤器
         options.Filters.Add(typeof(ApiExceptionFilter));
     })
         .AddNewtonsoftJson(options =>
@@ -66,6 +68,8 @@ try
             //options.SerializerSettings.ContractResolver = new DefaultContractResolver();//设置JSON返回格式同model一致
             options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();//设置JSON返回格式同model一致
         });
+    //关闭自动验证 -- 模型验证
+    builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
     builder.Services.AddDatabase<JDADbContext>(builder.Configuration);
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddScoped<ITenant>(sp =>
@@ -124,6 +128,8 @@ try
     #endregion
 
     builder.Services.AddJdaSwagger();
+
+
 
     //跨域
     builder.Services.AddCors(options =>

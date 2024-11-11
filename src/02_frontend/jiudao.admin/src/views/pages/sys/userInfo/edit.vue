@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+import type { Rule } from 'ant-design-vue/es/form';
+import { reactive, ref, toRaw, watch, type UnwrapRef } from 'vue'
+import { saveUserApi } from '@/apis/sys/userinfo'
 defineOptions({
     name: 'userinfo-edit'
 })
@@ -24,24 +26,45 @@ const emits = defineEmits(['update:openCreateModal'])
 //     { deep: true, immediate: true }
 // )
 
+const formRef = ref();
+//表单对象-用户信息
 let model = reactive({
-    Account: null,
-    Password: null,
-    UserName: null,
-    Mobile: null,
-    Email: null,
-    Gender: null
+    account: null,
+    password: null,
+    name: null,
+    mobile: null,
+    email: null,
+    gender: null
 })
+
+// 表单验证规则
+const rules: Record<string, Rule[]> = {
+    account: [
+        { required: true, message: '请输入账号名称', trigger: 'change' },
+        { min: 3, max: 20, message: '长度应该是3-20', trigger: 'blur' },
+    ],
+    password: [
+        { required: true, message: '请输入密码', trigger: 'change' },
+        { min: 6, max: 20, message: '长度应该是6-20', trigger: 'blur' }
+    ]
+};
+
 let createConfirmLoading = ref<boolean>(false);
 const handleOk = () => {
-    createConfirmLoading.value = true;
-    setTimeout(() => {
-        closeModal();
-        // props.openCreateModal = false;
-        createConfirmLoading.value = false;
-    }, 1000);
+    formRef.value.validate()
+        .then(async () => {
+            createConfirmLoading.value = true;
+            let sendData = toRaw(model);
+            await saveUserApi(sendData);
+            createConfirmLoading.value = false;
+            closeModal();
+        })
+        .catch((error: any) => {
+            console.log('error', error);
+        });
 };
 const closeModal = () => {
+    createConfirmLoading.value = false;
     emits('update:openCreateModal', false);
 }
 </script>
@@ -49,36 +72,37 @@ const closeModal = () => {
     <!-- <jda-modal :width="800" v-model:open="openCreateModal" title="新建" :confirm-loading="createConfirmLoading"
         @ok="handleOk" @cancel="closeModal"> -->
     <a-card>
-        <a-form :model="model" layout="horizontal" labelAlign="left" :label-col="{ style: { width: '60px' } }">
+        <a-form ref="formRef" :model="model" layout="horizontal" labelAlign="left" :rules="rules"
+            :label-col="{ style: { width: '60px' } }">
             <a-row :gutter="48">
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="账号">
-                        <a-input v-model:value="model.Account" placeholder="请输入账号" />
+                    <a-form-item label="账号" name="account">
+                        <a-input v-model:value="model.account" placeholder="请输入账号" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="密码">
-                        <a-input v-model:value="model.Password" placeholder="请输入密码" />
+                    <a-form-item label="密码" name="password">
+                        <a-input v-model:value="model.password" placeholder="请输入密码" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="名称">
-                        <a-input v-model:value="model.UserName" placeholder="请输入姓名" />
+                    <a-form-item label="名称" name="name">
+                        <a-input v-model:value="model.name" placeholder="请输入姓名" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="手机号">
-                        <a-input v-model:value="model.Mobile" placeholder="请输入手机号码" />
+                    <a-form-item label="手机号" name="mobile">
+                        <a-input v-model:value="model.mobile" placeholder="请输入手机号码" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="性别">
-                        <a-input v-model:value="model.Gender" placeholder="请输入性别" />
+                    <a-form-item label="性别" name="gender">
+                        <a-input v-model:value="model.gender" placeholder="请输入性别" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="邮箱">
-                        <a-input v-model:value="model.Email" placeholder="请输入邮箱" />
+                    <a-form-item label="邮箱" name="email">
+                        <a-input v-model:value="model.email" placeholder="请输入邮箱" />
                     </a-form-item>
                 </a-col>
             </a-row>
