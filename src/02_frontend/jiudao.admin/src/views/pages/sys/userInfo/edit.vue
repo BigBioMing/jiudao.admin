@@ -2,6 +2,7 @@
 import type { Rule } from 'ant-design-vue/es/form';
 import { reactive, ref, toRaw, watch, type UnwrapRef } from 'vue'
 import { saveUserApi } from '@/apis/sys/userinfo'
+import { useSysDic } from '@/hooks'
 defineOptions({
     name: 'userinfo-edit'
 })
@@ -13,6 +14,10 @@ const props = withDefaults(defineProps<{
 })
 
 const emits = defineEmits(['update:openCreateModal'])
+
+const { getDicItems } = useSysDic();
+//性别字典
+const sexDicItems = getDicItems('Sex');
 
 // let openCreateModal = ref<boolean>(props.openCreateModal);
 
@@ -97,7 +102,10 @@ const closeModal = () => {
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
                     <a-form-item label="性别" name="gender">
-                        <a-input v-model:value="model.gender" placeholder="请输入性别" />
+                        <!-- <a-input v-model:value="model.gender" placeholder="请输入性别" /> -->
+                        <a-select v-model:value="model.gender" allowClear>
+                            <a-select-option v-for="(item, index) in sexDicItems" :value="item.id" >{{item.name}}</a-select-option>
+                        </a-select>
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">

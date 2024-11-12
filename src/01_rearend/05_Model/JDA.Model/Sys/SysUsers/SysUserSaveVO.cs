@@ -38,7 +38,7 @@ namespace JDA.Model.Sys.SysUsers
         /// 手机号码
         /// </summary>
         [Display(Name = "手机号码", Order = 3)]
-        public string Mobile { get; set; }
+        public string? Mobile { get; set; }
         /// <summary>
         /// 性别（关联字典表）
         /// </summary>
@@ -48,7 +48,7 @@ namespace JDA.Model.Sys.SysUsers
         /// 邮箱
         /// </summary>
         [Display(Name = "邮箱", Order = 5)]
-        [Required(ErrorMessage = "{0}是必填项")]
+        //[Required(ErrorMessage = "{0}是必填项")]
         public string? Email { get; set; }
         /// <summary>
         /// 密码
