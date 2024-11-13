@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS `sys_organization`;
 CREATE TABLE `sys_organization`(
-	`Id` bigint NOT NULL COMMENT '主键',
+	`Id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
 	`Code` varchar(20) NOT NULL COMMENT '编码',
 	`Name` varchar(30) NOT NULL COMMENT '名称',
 	`ParentId` bigint NOT NULL COMMENT '上级机构ID',

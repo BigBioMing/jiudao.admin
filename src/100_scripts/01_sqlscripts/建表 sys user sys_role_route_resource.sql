@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS `sys_role_route_resource`;
 CREATE TABLE `sys_role_route_resource`(
-	`Id` bigint NOT NULL COMMENT '主键',
+	`Id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
 	`RoleId` bigint NOT NULL COMMENT '角色ID',
 	`RouteResourceId` bigint NOT NULL COMMENT '路由资源表ID',
 	`IsDeleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除 0-正常 1-已删除',

@@ -42,6 +42,29 @@ namespace JDA.Core.WebApi.ControllerBases
         }
         #endregion
 
+        #region 获取单条数据
+        /// <summary>
+        /// 获取单条数据
+        /// </summary>
+        /// <param name="filterParams">查询条件</param>
+        /// <returns></returns>
+        protected virtual async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            TEntity? entity = await this._currentService.FirstOrDefaultAsync(predicate);
+            return entity;
+        }
+        /// <summary>
+        /// 根据Id获取单条数据
+        /// </summary>
+        /// <param name="filterParams">查询条件</param>
+        /// <returns></returns>
+        protected virtual async Task<TEntity?> GetEntityByIdAsync(long id)
+        {
+            TEntity? entity = await this._currentService.FirstOrDefaultAsync(n => n.Id == id);
+            return entity;
+        }
+        #endregion
+
         #region 保存
         /// <summary>
         /// 保存数据

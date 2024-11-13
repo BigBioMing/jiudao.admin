@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS `sys_dictionary_data`;
 CREATE TABLE `sys_dictionary_data`(
-	`Id` bigint NOT NULL COMMENT '主键',
+	`Id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
 	`Code` varchar(20) NOT NULL COMMENT '编码',
 	`Name` varchar(30) NOT NULL COMMENT '名称',
 	`DictionaryDefineId` bigint NOT NULL COMMENT '字典定义表ID',

@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS `sys_user_organization`;
 CREATE TABLE `sys_user_organization`(
-	`Id` bigint NOT NULL COMMENT '主键',
+	`Id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
 	`UserId` bigint NOT NULL COMMENT '用户ID',
 	`OrgId` bigint NOT NULL COMMENT '组织机构ID',
 	`IsDeleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除 0-正常 1-已删除',

@@ -32,19 +32,19 @@ namespace JDA.Entity.Entities.Sys
         /// </summary>
         [Display(Name = "手机号码", Order = 3)]
         [ColumnMetadata(Name = "手机号码", Order = 3, IsEncry = true, EncryType = "AES")]
-        public string Mobile { get; set; }
+        public string? Mobile { get; set; }
         /// <summary>
         /// 性别（关联字段表）
         /// </summary>
         [Display(Name = "性别", Order = 4)]
         [ColumnMetadata(Name = "性别", Order = 4, IsDic = true, DicKey = "Gender")]
-        public long Gender { get; set; }
+        public long? Gender { get; set; }
         /// <summary>
         /// 邮箱
         /// </summary>
         [Display(Name = "邮箱", Order = 5)]
         [ColumnMetadata(Name = "邮箱", Order = 5)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         /// <summary>
         /// 密码
         /// </summary>

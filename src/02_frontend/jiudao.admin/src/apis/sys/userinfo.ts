@@ -23,6 +23,23 @@ export const getPageEntitiesApi = async (
   });
 };
 /**
+ * 获取用户信息
+ * @param params
+ * @returns
+ */
+export const getUserApi = async (id: number): Promise<TablePageResult<any>> => {
+  return await request({
+    url: "/api/Sys/SysUser/GetUserById",
+    method: "get",
+    // params: params,
+    params: { id: id },
+    paramsSerializer: (params) => {
+      // return qs.stringify(params, { indices: false,allowDots: true })
+      return qs.stringify(params, { allowDots: true });
+    },
+  });
+};
+/**
  * 保存用户信息
  * @param params 用户信息
  * @returns

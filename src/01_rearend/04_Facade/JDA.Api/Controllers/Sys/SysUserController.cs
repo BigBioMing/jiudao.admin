@@ -88,6 +88,21 @@ namespace JDA.Api.Controllers.Sys
         }
 
         /// <summary>
+        /// 根据id获取用户信息
+        /// </summary>
+        /// <param name="id">用户id</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetUserById")]
+        //[ApiExplorerSettings(GroupName = "V2")]
+        public virtual async Task<IActionResult> GetUserById([FromQuery] long id)
+        {
+            var entity = await base.GetEntityByIdAsync(id);
+
+            return new JsonResult(entity);
+        }
+
+        /// <summary>
         /// 保存数据
         /// </summary>
         /// <param name="model">待添加的数据模型</param>

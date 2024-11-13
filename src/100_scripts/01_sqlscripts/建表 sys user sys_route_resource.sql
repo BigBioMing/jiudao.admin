@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS `sys_route_resource`;
 CREATE TABLE `sys_route_resource`(
-	`Id` bigint NOT NULL COMMENT '主键',
+	`Id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
 	`Code` varchar(20) NOT NULL COMMENT '编码',
 	`Name` varchar(30) NOT NULL COMMENT '名称',
 	`Enabled` bigint NOT NULL DEFAULT 0 COMMENT '是否启用（关联字段表）',

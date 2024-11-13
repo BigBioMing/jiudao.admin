@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import type { Rule } from 'ant-design-vue/es/form';
 import { reactive, ref, toRaw, watch, type UnwrapRef } from 'vue'
-import { saveUserApi } from '@/apis/sys/userinfo'
+import { getUserApi, saveUserApi } from '@/apis/sys/userinfo'
 import { useSysDic } from '@/hooks'
+import { onMounted } from 'vue';
 defineOptions({
     name: 'userinfo-edit'
 })
 
 const props = withDefaults(defineProps<{
-    openCreateModal?: boolean
+    openCreateModal?: boolean,
+    id: number | null
 }>(), {
-    openCreateModal: false
+    openCreateModal: false,
+    id: null
 })
 
 const emits = defineEmits(['update:openCreateModal'])
@@ -31,6 +34,7 @@ const sexDicItems = getDicItems('Sex');
 //     { deep: true, immediate: true }
 // )
 
+
 const formRef = ref();
 //表单对象-用户信息
 let model = reactive({
@@ -41,6 +45,7 @@ let model = reactive({
     email: null,
     gender: null
 })
+
 
 // 表单验证规则
 const rules: Record<string, Rule[]> = {
@@ -53,6 +58,18 @@ const rules: Record<string, Rule[]> = {
         { min: 6, max: 20, message: '长度应该是6-20', trigger: 'blur' }
     ]
 };
+
+//获取用户信息
+const onGetUser = async () => {
+    if (props.id && props.id > 0) {
+        //根据id获取用户信息
+        const res = await getUserApi(props.id!);
+        Object.assign(model, res);
+    }
+}
+
+//获取用户信息
+onGetUser();
 
 let createConfirmLoading = ref<boolean>(false);
 const handleOk = () => {
@@ -104,7 +121,8 @@ const closeModal = () => {
                     <a-form-item label="性别" name="gender">
                         <!-- <a-input v-model:value="model.gender" placeholder="请输入性别" /> -->
                         <a-select v-model:value="model.gender" allowClear>
-                            <a-select-option v-for="(item, index) in sexDicItems" :value="item.id" >{{item.name}}</a-select-option>
+                            <a-select-option v-for="(item, index) in sexDicItems" :value="item.id">{{ item.name
+                                }}</a-select-option>
                         </a-select>
                     </a-form-item>
                 </a-col>

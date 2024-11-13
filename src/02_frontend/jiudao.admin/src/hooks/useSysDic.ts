@@ -36,7 +36,7 @@ export default function () {
     return (defineKey: string, dataKey: string | number) => {
       const dics: any = globalStore.getDics();
       if (!dics) return null;
-
+      
       if (typeof dataKey === "string") {
         var define = dics.find((n: any) => n.code === defineKey);
         if (!define) return null;

@@ -1,7 +1,10 @@
-﻿using JDA.Core.Persistence.Maps;
+﻿using JDA.Core.Models.ApiModelErrors;
+using JDA.Core.Persistence.Maps;
 using JDA.Core.Utilities;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,6 +20,7 @@ namespace JDA.Core.Persistence.Contexts
     /// </summary>
     public abstract class JDABaseDbContext : DbContext
     {
+        public DbSet<Models.ApiModelErrors.ApiModelError> ApiModelErrors { get; set; }
         public JDABaseDbContext()
         {
 
@@ -24,7 +28,71 @@ namespace JDA.Core.Persistence.Contexts
 
         public JDABaseDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
+            this.Entry<ApiModelError>(new ApiModelError()).Property(n => n.Message).IsModified = true;
 
+            #region MyRegion
+            #region 方式一
+            {
+                //// 1. 直接创建对象修改到数据库 不用先查询
+                //t_user user = new t_user()
+                //{
+                //    id = id,
+                //    name = "周",
+                //    age = 1,
+
+                //};
+
+                //// 2. 将实体对象加入 EF 对象容器中 获取容器对象
+                //DbEntityEntry<t_user> entry = DbContent.Entry<t_user>(user);
+
+                //// 3. 容器对象状态设置为 unchanged
+                //entry.State = System.Data.EntityState.Unchanged;
+
+                //// 4. 设置被改变的属性  是否要提交到数据库的字段
+                //entry.Property(a => a.name).IsModified = true;
+                //entry.Property(a => a.age).IsModified = true;
+
+                //// 5. 更新数据
+                //DbContent.SaveChanges();
+            }
+            #endregion
+            #region 方式二
+            {
+                //// 1. 先查询实体
+                //var user = DbContent.t_user.Where(o => o.id == id).FirstOrDefault();
+
+                //// 2. 再修改字段的值
+                //user.name = "周";
+                //user.age = 1;
+
+                //// 3. age 属性不想修改，标记其 IsModified 属性 = false
+                //// ---- 设置容器空间某一个模型的某一个字段 不提交到数据库
+                //// ---- DbContent.Entry 是要更新到数据库的整个对象
+
+                //DbContent.Entry<t_user>(user).Property("age").IsModified = false;
+
+                //// 4. 更新数据
+                //DbContent.SaveChanges();
+            }
+            #endregion
+            #region 方式三
+            {
+                //// 假设有一个实体的实例entity，你想要更新其Name字段
+                //var entity = new YourEntity { Id = 1, Name = "新名称" };
+
+                //// 方法1: 使用DbSet.Attach
+                //context.YourEntities.Attach(entity);
+                //context.Entry(entity).Property(e => e.Name).IsModified = true;
+                //context.SaveChanges();
+
+                //// 方法2: 使用DbContext.Entry
+                //var entry = context.Entry(entity);
+                //entry.State = EntityState.Unchanged; // 先将状态设置为Unchanged
+                //entry.Property(e => e.Name).IsModified = true; // 标记Name字段为修改过
+                //context.SaveChanges();
+            }
+            #endregion
+            #endregion
         }
 
         public int TenantId { get; set; }

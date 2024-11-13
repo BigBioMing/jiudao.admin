@@ -74,6 +74,7 @@ namespace JDA.Service.Sys
             }
             else
             {
+                user.PasswordSalt = Guid.NewGuid().ToString("N");
                 operationResult = await base.InsertAsync(user);
             }
 
@@ -114,7 +115,7 @@ namespace JDA.Service.Sys
                 var middles = await this._sysUserOrganizationRepository.GetEntitiesAsync(n => n.UserId == user.Id);
                 var middleIds = middles.Select(n => n.OrgId).ToList();
                 //需要删除的中间表
-                var delMiddles = middles.Where(n => model.RoleIds?.Contains(n.OrgId) != true).ToList();
+                var delMiddles = middles.Where(n => model.OrgIds?.Contains(n.OrgId) != true).ToList();
                 if (delMiddles?.Count > 0)
                 {
                     var delOperationResult = await this._sysUserOrganizationRepository.DeleteAsync(delMiddles);
@@ -122,7 +123,7 @@ namespace JDA.Service.Sys
                         return OperationResult<SysUser>.Error("保存用户所属机构失败[0]");
                 }
                 //需要添加的中间表
-                var addMiddles = model.RoleIds?.Where(orgId => middleIds?.Contains(orgId) != true).Select(orgId => new SysUserOrganization()
+                var addMiddles = model.OrgIds?.Where(orgId => middleIds?.Contains(orgId) != true).Select(orgId => new SysUserOrganization()
                 {
                     UserId = user.Id,
                     OrgId = orgId,
