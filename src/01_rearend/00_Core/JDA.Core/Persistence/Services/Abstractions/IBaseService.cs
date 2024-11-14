@@ -336,6 +336,13 @@ namespace JDA.Core.Persistence.Services.Abstractions
 
         #region 更新
         /// <summary>
+        /// 更新（只更新指定字段）
+        /// </summary>
+        /// <param name="entity">待更新的实体</param>
+        /// <param name="keySelector">需要更新的字段</param>
+        /// <returns>返回操作结果</returns>
+        Task<OperationResult<TEntity>> UpdateAsync<TKey>(TEntity entity, Expression<Func<TEntity, TKey>> keySelector);
+        /// <summary>
         /// 更新
         /// </summary>
         /// <param name="entity">待更新的实体</param>

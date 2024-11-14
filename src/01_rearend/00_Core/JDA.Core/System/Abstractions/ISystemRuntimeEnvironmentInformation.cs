@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace JDA.Core.System.Abstractions
+namespace JDA.Core.SystemOperate.Abstractions
 {
     /// <summary>
     /// 系统运行环境信息

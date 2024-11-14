@@ -1,4 +1,4 @@
-﻿using JDA.Core.System.Implements;
+﻿using JDA.Core.SystemOperate.Implements;
 using System;
 using System.Collections;
 using System.Collections.Generic;

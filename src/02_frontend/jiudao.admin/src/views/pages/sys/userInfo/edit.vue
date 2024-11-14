@@ -56,6 +56,9 @@ const rules: Record<string, Rule[]> = {
     password: [
         { required: true, message: '请输入密码', trigger: 'change' },
         { min: 6, max: 20, message: '长度应该是6-20', trigger: 'blur' }
+    ],
+    name: [
+        { required: true, message: '请输入姓名', trigger: 'change' }
     ]
 };
 

@@ -1,4 +1,6 @@
-﻿using JDA.Core.Models.Deletes;
+﻿using AutoMapper.Execution;
+using AutoMapper.Internal;
+using JDA.Core.Models.Deletes;
 using JDA.Core.Models.Operations;
 using JDA.Core.Models.OrderBys;
 using JDA.Core.Models.Tables;
@@ -7,7 +9,12 @@ using JDA.Core.Persistence.Entities.Abstractions;
 using JDA.Core.Users.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Reflection.Metadata;
 
 namespace JDA.Core.Persistence.Repositories.Implements
 {
@@ -546,6 +553,46 @@ namespace JDA.Core.Persistence.Repositories.Implements
 
         #region 更新
         /// <summary>
+        /// 更新（只更新指定字段）
+        /// </summary>
+        /// <param name="entity">待更新的实体</param>
+        /// <param name="keySelector">需要更新的字段</param>
+        /// <returns>返回操作结果</returns>
+        public virtual async Task<OperationResult<TEntity>> UpdateAsync<TKey>(TEntity entity, Expression<Func<TEntity, TKey>> keySelector)
+        {
+            this._dbContext.Attach(entity);
+            var dbSetEntry = this._dbContext.Entry<TEntity>(entity);
+            ParameterExpression parameterExpr = Expression.Parameter(typeof(TEntity), keySelector.Parameters[0].Name);
+            if (keySelector.Body.NodeType == ExpressionType.New)
+            {
+                var a = (NewExpression)keySelector.Body;
+                foreach (var p in a.Members)
+                {
+                    dbSetEntry.Property(p.Name).IsModified = true;
+                }
+            }
+            else if (keySelector.Body.NodeType == ExpressionType.MemberAccess)
+            {
+                var a = (MemberExpression)keySelector.Body;
+                dbSetEntry.Property(a.Member.Name).IsModified = true;
+            }
+
+
+            //entity.UpdateId = Random.Shared.NextInt64();
+            entity.UpdateId = _currentRunningContext.UserId;
+            entity.UpdateSource = _currentRunningContext.UserName;
+            entity.UpdateDate = DateTime.Now;
+
+            dbSetEntry.Property(n => n.UpdateId).IsModified = true;
+            dbSetEntry.Property(n => n.UpdateSource).IsModified = true;
+            dbSetEntry.Property(n => n.UpdateDate).IsModified = true;
+
+            //this._dbContext.Update(entity);
+            await this._dbContext.SaveChangesAsync();
+
+            return OperationResult<TEntity>.Success(entity);
+        }
+        /// <summary>
         /// 更新
         /// </summary>
         /// <param name="entity">待更新的实体</param>
@@ -577,7 +624,7 @@ namespace JDA.Core.Persistence.Repositories.Implements
                 entity.UpdateDate = DateTime.Now;
             }
 
-            this._dbContext.Update(entities);
+            this._dbContext.UpdateRange(entities);
             await this._dbContext.SaveChangesAsync();
 
             return OperationResult<List<TEntity>>.Success(entities);
@@ -667,7 +714,7 @@ namespace JDA.Core.Persistence.Repositories.Implements
                     entity.UpdateDate = DateTime.Now;
                 }
 
-                this._dbContext.Update(entities);
+                this._dbContext.UpdateRange(entities);
                 await this._dbContext.SaveChangesAsync();
                 return OperationResult.Success();
             }

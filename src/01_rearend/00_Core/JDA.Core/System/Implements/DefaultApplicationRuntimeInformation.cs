@@ -1,4 +1,4 @@
-﻿using JDA.Core.System.Abstractions;
+﻿using JDA.Core.SystemOperate.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JDA.Core.System.Implements
+namespace JDA.Core.SystemOperate.Implements
 {
     /// <summary>
     /// 应用程序运行信息

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JDA.Core.System.Abstractions
+namespace JDA.Core.SystemOperate.Abstractions
 {
     /// <summary>
     /// 机器信息

@@ -20,7 +20,6 @@ namespace JDA.Core.Persistence.Contexts
     /// </summary>
     public abstract class JDABaseDbContext : DbContext
     {
-        public DbSet<Models.ApiModelErrors.ApiModelError> ApiModelErrors { get; set; }
         public JDABaseDbContext()
         {
 
@@ -28,7 +27,6 @@ namespace JDA.Core.Persistence.Contexts
 
         public JDABaseDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
-            this.Entry<ApiModelError>(new ApiModelError()).Property(n => n.Message).IsModified = true;
 
             #region MyRegion
             #region 方式一

@@ -26,14 +26,14 @@ namespace JDA.Model.Sys.SysUsers
         [Display(Name = "账号", Order = 1)]
         [Required(ErrorMessage = "{0}是必填项")]
         [Length(3, 20, ErrorMessage = "{0}长度必须在3到20之间")]
-        public string Account { get; set; }
+        public required string Account { get; set; }
         /// <summary>
         /// 名称
         /// </summary>
-        [Display(Name = "名称", Order = 2,Prompt ="hhhh")]
+        [Display(Name = "名称", Order = 2)]
         [Required(ErrorMessage = "名称是必填项")]
-        [Length(1, 5, ErrorMessage = "名称长度必须在1到5之间")]
-        public string Name { get; set; }
+        //[Length(1, 5, ErrorMessage = "名称长度必须在1到5之间")]
+        public required string Name { get; set; }
         /// <summary>
         /// 手机号码
         /// </summary>
@@ -56,7 +56,7 @@ namespace JDA.Model.Sys.SysUsers
         [Display(Name = "密码", Order = 6)]
         [Required(ErrorMessage = "{0}是必填项")]
         [Length(6, 20, ErrorMessage = "{0}长度必须在6到20之间")]
-        public string Password { get; set; }
+        public required string Password { get; set; }
         /// <summary>
         /// 是否启用（关联字段表）
         /// </summary>

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JDA.Core.Formats.WebApi;
 using JDA.Core.Mappers.Abstractions;
+using JDA.Core.Models.ApiModelErrors;
 using JDA.Core.Models.Operations;
 using JDA.Core.Persistence.Repositories.Abstractions.Default;
 using JDA.Core.Persistence.Services.Abstractions.Default;
@@ -66,11 +67,17 @@ namespace JDA.Service.Sys
         public virtual async Task<OperationResult<SysUser>> SaveAsync(SysUserSaveVO model)
         {
             SysUser user = _mapper.Map<SysUser>(model);
+            //var a = this._currentRepository.DbContext.Entry<SysUser>(user).Property(n => n.Name);
+            //var b = this._currentRepository.DbContext.Entry<SysUser>(user).Property(n => new { n.Password, n.Name });
+            //this._currentRepository.DbContext.Entry<SysUser>(user).Property(n => n.Name).IsModified = true;
+            //this._currentRepository.DbContext.Entry<SysUser>(user).Property(n => new { n.Password, n.Name }).IsModified = true;
+
             OperationResult<SysUser> operationResult;
             //Id>0即为修改，Id<0即为添加
             if (model.Id > 0)
             {
-                operationResult = await base.UpdateAsync(user);
+                operationResult = await base.UpdateAsync(user, n => new { n.Name, n.Password });
+                //operationResult = await base.UpdateAsync(user);
             }
             else
             {

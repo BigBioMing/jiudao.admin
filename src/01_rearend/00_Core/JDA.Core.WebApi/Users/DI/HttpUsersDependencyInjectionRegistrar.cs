@@ -1,5 +1,5 @@
 ﻿using JDA.Core.DI.Abstractions;
-using JDA.Core.System.Abstractions;
+using JDA.Core.SystemOperate.Abstractions;
 using JDA.Core.Users.Abstractions;
 using JDA.Core.Users.Implements;
 using JDA.Core.WebApi.Users.Implements;

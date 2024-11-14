@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JDA.Core.Attributes;
 using JDA.Core.Formats.WebApi;
+using JDA.Core.Models.ApiModelErrors;
 using JDA.Core.Models.Operations;
 using JDA.Core.Models.Tables;
 using JDA.Core.Persistence.Repositories.Abstractions.Default;

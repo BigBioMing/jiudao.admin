@@ -379,6 +379,13 @@ namespace JDA.Core.Persistence.Services.Implements
 
         #region 更新
         /// <summary>
+        /// 更新（只更新指定字段）
+        /// </summary>
+        /// <param name="entity">待更新的实体</param>
+        /// <param name="keySelector">需要更新的字段</param>
+        /// <returns>返回操作结果</returns>
+        public virtual async Task<OperationResult<TEntity>> UpdateAsync<TKey>(TEntity entity, Expression<Func<TEntity, TKey>> keySelector) => await this._currentRepository.UpdateAsync(entity, keySelector);
+        /// <summary>
         /// 更新
         /// </summary>
         /// <param name="entity">待更新的实体</param>

@@ -1,6 +1,6 @@
 ﻿using JDA.Core.DI.Abstractions;
-using JDA.Core.System.Abstractions;
-using JDA.Core.System.Implements;
+using JDA.Core.SystemOperate.Abstractions;
+using JDA.Core.SystemOperate.Implements;
 using JDA.Core.Users.Abstractions;
 using JDA.Core.Users.Implements;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JDA.Core.System.DI
+namespace JDA.Core.SystemOperate.DI
 {
     /// <summary>
     /// 注册系统运行信息服务
