@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JDA.Core.Attributes;
+using JDA.Core.Exceptions;
 using JDA.Core.Formats.WebApi;
 using JDA.Core.Models.ApiModelErrors;
 using JDA.Core.Models.Operations;
@@ -73,7 +74,7 @@ namespace JDA.Api.Controllers.Sys
         [HttpGet]
         [Route("GetPageEntities")]
         //[ApiExplorerSettings(GroupName = "V2")]
-        public virtual async Task<IActionResult> GetPageEntities([FromQuery] SysUserGetListVO? filterParams)
+        public virtual async Task<UnifyResponse<object>> GetPageEntities([FromQuery] SysUserGetListVO? filterParams)
         {
             Expression<Func<SysUser, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;
@@ -85,7 +86,7 @@ namespace JDA.Api.Controllers.Sys
 
             var pageResult = await base.GetPageEntitiesAsync(filterParams, predicate);
 
-            return new JsonResult(pageResult);
+            return UnifyResponse<object>.ErrorCustomCode("3300", "错误了", pageResult);
         }
 
         /// <summary>

@@ -1,4 +1,10 @@
-import { defineComponent, reactive, toRaw, watch, type SetupContext } from "vue";
+import {
+  defineComponent,
+  reactive,
+  toRaw,
+  watch,
+  type SetupContext,
+} from "vue";
 
 type JdaMenuPropsType = {
   menus: any[];
@@ -15,23 +21,23 @@ type JdaMenuPropsType = {
 export default defineComponent({
   props: {
     menus: {
-      type:Array<any>,
-      default:()=>[]
+      type: Array<any>,
+      default: () => [],
     },
     collapsed: {
       type: Boolean,
       default: false,
     },
-    mode:{
-        type:String,
-        default:'inline'
+    mode: {
+      type: String,
+      default: "inline",
     },
-    theme:{
-      type:String,
-      default:'dark'
-    }
+    theme: {
+      type: String,
+      default: "dark",
+    },
   },
-  emits:['on-menu-item-click'],
+  emits: ["on-menu-item-click"],
   setup(props, context) {
     const state = reactive({
       menus: toRaw(props.menus),
@@ -39,7 +45,7 @@ export default defineComponent({
       selectedKeys: [],
       openKeys: [],
       preOpenKeys: [],
-      mode: props.mode
+      mode: props.mode,
     });
     // const toggleCollapsed = () => {
     //   state.collapsed = !state.collapsed;
@@ -71,9 +77,14 @@ export default defineComponent({
       }
     );
 
-    const onMenuItemClick=(menu:any)=>{
-      context.emit('on-menu-item-click',menu)
-    }
+    /**
+     * 菜单点击事件
+     * @param menu 菜单对象
+     * @param isLeaf 是否叶子节点 true-是
+     */
+    const onMenuItemClick = (menu: any, isLeaf: boolean) => {
+      context.emit("on-menu-item-click", menu, isLeaf);
+    };
 
     const creMenu = (subMenus: any[]) => {
       let menus = subMenus || [];
@@ -106,7 +117,11 @@ export default defineComponent({
             },
           };
           arr.push(
-            <a-sub-menu v-model:key={menu.key} v-slots={slot} onClick={()=>onMenuItemClick(menu)}>
+            <a-sub-menu
+              v-model:key={menu.key}
+              v-slots={slot}
+              onClick={() => onMenuItemClick(menu, false)}
+            >
               {subEl}
             </a-sub-menu>
           );
@@ -125,13 +140,22 @@ export default defineComponent({
               },
             };
             arr.push(
-              <a-menu-item v-model:key={menu.key} v-slots={slot} onClick={()=>onMenuItemClick(menu)}>
+              <a-menu-item
+                v-model:key={menu.key}
+                v-slots={slot}
+                onClick={() => onMenuItemClick(menu, true)}
+              >
                 {menu.label}
               </a-menu-item>
             );
           } else {
             arr.push(
-              <a-menu-item v-model:key={menu.key} onClick={()=>onMenuItemClick(menu)}>{menu.label}</a-menu-item>
+              <a-menu-item
+                v-model:key={menu.key}
+                onClick={() => onMenuItemClick(menu, true)}
+              >
+                {menu.label}
+              </a-menu-item>
             );
           }
         }

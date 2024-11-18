@@ -386,7 +386,7 @@ let currentMenuItemHeader = ref();
 let currentMenuItemSider = ref();
 //当前点击的子侧边栏菜单
 let currentMenuItemSubSider = ref();
-const onMenuItemClick = (pos: 'top-menu' | 'side-menu' | 'sub-side-menu', menu: any) => {
+const onMenuItemClick = (pos: 'top-menu' | 'side-menu' | 'sub-side-menu', menu: any, isLeaf: boolean) => {
   if (pos === 'top-menu')
     currentMenuItemHeader.value = menu;
   else if (pos === 'side-menu')
@@ -409,7 +409,8 @@ const onMenuItemClick = (pos: 'top-menu' | 'side-menu' | 'sub-side-menu', menu: 
       tabMenu = menu;
 
     if (tabMenu) {
-      addTab({ key: menu.key, title: menu.title });
+      if (isLeaf)
+        addTab({ key: menu.key, title: menu.title });
     }
   }
 }
@@ -544,8 +545,9 @@ const leftMenuSiderExpandWidthNum = computed(() => {
   if (isMobile.value)
     return 200;
 
-  if (settingsConfig.value.currentNavigationMode.mode === 'left-mixed')
+  if (settingsConfig.value.currentNavigationMode.mode === 'left-mixed') {
     return 140;
+  }
   else
     return 200;
 });
@@ -579,6 +581,13 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
   }
 })
 
+const tabLeft = computed(() => {
+  if (subSiderMenus.value.length)
+    return '300px';
+  else
+    return leftMenuSiderExpandWidth.value;
+})
+
 const multipleTag = reactive<{
   activeKey: string,
   tabs: { title: string; key: string; closable?: boolean }[]
@@ -586,9 +595,6 @@ const multipleTag = reactive<{
   activeKey: '',
   tabs: []
 });
-const onEdit = (targetKey: string) => {
-
-};
 const tabMenuOptions = [
   "关闭其他", "刷新当前页"
 ]
@@ -599,7 +605,28 @@ const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
     multipleTag.tabs.push(tab);
   }
 }
-
+const removeTab = (targetKey: string) => {
+  let lastIndex = 0;
+  multipleTag.tabs.forEach((tab, i) => {
+    if (tab.key === targetKey) {
+      lastIndex = i - 1;
+    }
+  });
+  multipleTag.tabs = multipleTag.tabs.filter(tab => tab.key !== targetKey);
+  if (multipleTag.tabs.length && multipleTag.activeKey === targetKey) {
+    if (lastIndex >= 0) {
+      multipleTag.activeKey = multipleTag.tabs[lastIndex].key;
+    } else {
+      multipleTag.activeKey = multipleTag.tabs[0].key;
+    }
+  }
+}
+const onTabEdit = (targetKey: string | MouseEvent, action: string) => {
+  if (action === 'add') {
+  } else {
+    removeTab(targetKey as string);
+  }
+};
 // 将16进制颜色字符串转换为RGB对象
 function hexToRgb(hex: any) {
   // 移除开头的#，如果有的话
@@ -669,59 +696,59 @@ function rgbToNumbers(rgbString: string) {
 }
 
 // 辅助函数：HSL转RGB
-function hslToRgbString({ h, s, l }:any) {
+function hslToRgbString({ h, s, l }: any) {
   console.log('h s l')
-  console.log(h,s,l)
+  console.log(h, s, l)
   let r, g, b;
- 
+
   if (s === 0) {
     r = g = b = l; // 灰色
   } else {
-    function hue2rgb(p:any, q:any, t:any) {
+    function hue2rgb(p: any, q: any, t: any) {
       if (t < 0) t += 1;
       if (t > 1) t -= 1;
-      if (t < 1/6) return p + (q - p) * 6 * t;
-      if (t < 1/2) return q;
-      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
       return p;
     }
- 
+
     let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
     let p = 2 * l - q;
-    r = hue2rgb(p, q, h + 1/3);
+    r = hue2rgb(p, q, h + 1 / 3);
     g = hue2rgb(p, q, h);
-    b = hue2rgb(p, q, h - 1/3);
+    b = hue2rgb(p, q, h - 1 / 3);
   }
- console.log( `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`)
+  console.log(`rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`)
   return `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`;
 }
-function hslToHex(h:any, s:any, l:any) {
+function hslToHex(h: any, s: any, l: any) {
   // 将HSL转换为RGB
   let r, g, b;
-  function hue2Rgb(p:any, q:any, t:any) {
+  function hue2Rgb(p: any, q: any, t: any) {
     if (t < 0) t += 1;
     if (t > 1) t -= 1;
-    if (t < 1/6) return p + (q - p) * 6 * t;
-    if (t < 1/2) return q;
-    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
     return p;
   }
- 
+
   let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
   let p = 2 * l - q;
-  r = hue2Rgb(p, q, h + 1/3);
+  r = hue2Rgb(p, q, h + 1 / 3);
   g = hue2Rgb(p, q, h);
-  b = hue2Rgb(p, q, h - 1/3);
- 
+  b = hue2Rgb(p, q, h - 1 / 3);
+
   // 将RGB转换为HEX
-  function rgbToHex(c:any) {
+  function rgbToHex(c: any) {
     return ('0' + Math.round(c * 255).toString(16)).slice(-2);
   }
- 
+
   const hexR = rgbToHex(r);
   const hexG = rgbToHex(g);
   const hexB = rgbToHex(b);
- 
+
   return `#${hexR}${hexG}${hexB}`;
 }
 
@@ -752,8 +779,8 @@ function getHoverAndActiveColors(color: any) {
   console.log({
     hover: hoverHsl,
     active: activeHsl
-  }); 
-  console.log('hslToHex:',hslToHex(hsl.h,hsl.s,hsl.l))
+  });
+  console.log('hslToHex:', hslToHex(hsl.h, hsl.s, hsl.l))
   return {
     // hover: hslToHex(hsl.h,Math.max(hsl.s - 20, 0),hsl.l + 10),
     // active: hslToHex(hsl.h,hsl.s,Math.max(hsl.l - 10, 0))
@@ -844,7 +871,7 @@ if (scstr) {
         :items="items"></a-menu> -->
           <jda-menu :menus="siderMenus" :collapsed="state.collapsed"
             :theme="(settingsConfig.currentNavigationMode.mode === 'mixed' || settingsConfig.currentThemeSkin === 'light') ? 'light' : 'dark'"
-            @on-menu-item-click="(menu: any) => onMenuItemClick('side-menu', menu)"></jda-menu>
+            @on-menu-item-click="(menu: any, isLeaf: boolean) => onMenuItemClick('side-menu', menu, isLeaf)"></jda-menu>
         </a-layout-sider>
         <a-layout :style="layoutFixedLeftMenuRightRegionStyle">
           <a-layout-header v-if="settingsConfig.currentNavigationMode.isFixedHeader.value" class="header"
@@ -879,8 +906,8 @@ if (scstr) {
                 <jda-menu
                   v-if="settingsConfig.currentNavigationMode.mode === 'top-menu' || settingsConfig.currentNavigationMode.isAutoSplitMenu.value"
                   :menus="headerMenus" :collapsed="state.collapsed"
-                  @on-menu-item-click="(menu: any) => onMenuItemClick('top-menu', menu)" mode="horizontal"
-                  :theme="settingsConfig.currentThemeSkin === 'light' ? 'light' : 'dark'"></jda-menu>
+                  @on-menu-item-click="(menu: any, isLeaf: boolean) => onMenuItemClick('top-menu', menu, isLeaf)"
+                  mode="horizontal" :theme="settingsConfig.currentThemeSkin === 'light' ? 'light' : 'dark'"></jda-menu>
               </div>
               <div class="header-right">
                 <div class="header-menu-top-menu" style="display: inline-block;float:right;margin-right: 20px;">
@@ -1016,7 +1043,7 @@ if (scstr) {
               collapsible width="160" :theme="'light'">
               <div class="logo" />
               <jda-menu :menus="subSiderMenus" :collapsed="state.collapsed" :theme="'light'"
-                @on-menu-item-click="(menu: any) => onMenuItemClick('sub-side-menu', menu)"></jda-menu>
+                @on-menu-item-click="(menu: any, isLeaf: boolean) => onMenuItemClick('sub-side-menu', menu, isLeaf)"></jda-menu>
             </a-layout-sider>
             <a-layout :style="{ 'overflow-y': 'auto' }">
               <!-- 多标签 -->
@@ -1025,8 +1052,8 @@ if (scstr) {
               </div>
               <a-tabs :class="{ 'mutiltab': true, 'mutiltab-fixed': settingsConfig.isFixedMultipleTags }"
                 v-if="settingsConfig.isMultipleTags && multipleTag.tabs?.length"
-                v-model:activeKey="multipleTag.activeKey" hide-add type="editable-card" @edit="onEdit"
-                :style="{ left: isMobile ? 0 : (state.collapsed ? '48px' : leftMenuSiderExpandWidth), paddingRight: isMobile ? 0 : (settingsConfig.isFixedMultipleTags ? (state.collapsed ? '48px' : leftMenuSiderExpandWidth) : '0') }">
+                v-model:activeKey="multipleTag.activeKey" hide-add type="editable-card" @edit="onTabEdit"
+                :style="{ left: isMobile ? 0 : (state.collapsed ? '48px' : tabLeft), paddingRight: isMobile ? 0 : (settingsConfig.isFixedMultipleTags ? (state.collapsed ? '48px' : tabLeft) : '0') }">
                 <a-tab-pane v-for="tab in multipleTag.tabs" :key="tab.key" :closable="tab.closable">
                   <template #tab>
                     {{ tab.title }}
@@ -1182,7 +1209,7 @@ if (scstr) {
           <!-- <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
         :items="items"></a-menu> -->
           <jda-menu :menus="siderMenus" :theme="(settingsConfig.currentThemeSkin === 'light') ? 'light' : 'dark'"
-            @on-menu-item-click="(menu: any) => onMenuItemClick('side-menu', menu)"></jda-menu>
+            @on-menu-item-click="(menu: any, isLeaf: boolean) => onMenuItemClick('side-menu', menu, isLeaf)"></jda-menu>
         </a-layout-sider>
       </a-drawer>
     </a-watermark>

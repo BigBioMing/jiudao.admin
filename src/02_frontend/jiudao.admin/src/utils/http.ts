@@ -1,5 +1,5 @@
 import axios from "axios";
-import { message } from 'ant-design-vue';
+import { message } from "ant-design-vue";
 const instance = axios.create({
   baseURL: "https://localhost:7256",
   timeout: 20000,
@@ -38,8 +38,16 @@ instance.interceptors.response.use(
       }, 400);
       // console.log(config)
       // return Promise.resolve(config);
-      return Promise.resolve(config.data.data);
+
+      const res = config.data;
+      if (res?.code === "0") {
+        return Promise.resolve(config.data.data);
+      } else {
+        messageError(res?.message || "请求错误");
+        return Promise.reject(config);
+      }
     } else {
+      messageError("非正常响应==>" + config.status);
       return Promise.reject(config);
     }
   },
@@ -114,15 +122,15 @@ instance.interceptors.response.use(
       // network状态在app.vue中控制着一个全局的断网提示组件的显示隐藏
       // 关于断网组件中的刷新重新获取数据，会在断网组件中说明
       //   store.commit('changeNetwork', false);
-      messageError('网络暂时不可用，请检查下哦~');
+      messageError("网络暂时不可用，请检查下哦~");
       return Promise.reject(error);
     }
   }
 );
 
-const messageError=(text:string,error?:any)=>{
-  message.error(text,error);
+const messageError = (text: string, error?: any) => {
+  message.error(text, error);
   console.error(text);
-}
+};
 
 export default instance;
