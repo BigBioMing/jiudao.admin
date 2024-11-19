@@ -34,6 +34,21 @@ export const asyncRouterMap = [
           },
         ],
       },
+      {
+        path: "/sys/role",
+        name: "sys.role",
+        redirect: "/sys/role/index",
+        meta: { title: "menu.sys.role" },
+        children: [
+          {
+            path: "/sys/role/index",
+            name: "sys.role.index",
+            meta: { title: "menu.sys.role.index" },
+            icon: 'far fa-square-caret-right',
+            component:() => import("@/views/pages/sys/role/index.vue")
+          },
+        ],
+      },
     ],
   },
   {
