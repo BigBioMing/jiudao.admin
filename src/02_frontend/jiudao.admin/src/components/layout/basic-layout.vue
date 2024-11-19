@@ -10,7 +10,6 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined
 } from '@ant-design/icons-vue';
-import { VALUE_SPLIT } from 'ant-design-vue/es/vc-cascader/utils/commonUtil';
 console.log(import.meta.env)
 
 let isMobile = ref<Boolean>(false);
@@ -402,8 +401,8 @@ const onMenuItemClick = (pos: 'top-menu' | 'side-menu' | 'sub-side-menu', menu: 
         tabMenu = menu;
     }
     else if (pos === 'side-menu') {
-      if (settingsConfig.value.currentNavigationMode.mode !== 'mixed')
-        tabMenu = menu;
+      // if (settingsConfig.value.currentNavigationMode.mode !== 'mixed')
+      tabMenu = menu;
     }
     else if (pos === 'sub-side-menu')
       tabMenu = menu;
@@ -582,10 +581,24 @@ const layoutFixedLeftMenuRightRegionStyle = computed(() => {
 })
 
 const tabLeft = computed(() => {
-  if (subSiderMenus.value.length)
-    return '300px';
-  else
-    return leftMenuSiderExpandWidth.value;
+  if (!state.collapsed) {
+    if (subSiderMenus.value.length) {
+      return '300px';
+    }
+    else {
+      if (settingsConfig.value.currentNavigationMode.mode === 'top-menu') {
+        return 0;
+      } else {
+        return leftMenuSiderExpandWidth.value;
+      }
+    }
+  }else{
+    if (subSiderMenus.value.length) {
+      return '210px';
+    }else{
+      return '48px';
+    }
+  }
 })
 
 const multipleTag = reactive<{
@@ -1053,7 +1066,7 @@ if (scstr) {
               <a-tabs :class="{ 'mutiltab': true, 'mutiltab-fixed': settingsConfig.isFixedMultipleTags }"
                 v-if="settingsConfig.isMultipleTags && multipleTag.tabs?.length"
                 v-model:activeKey="multipleTag.activeKey" hide-add type="editable-card" @edit="onTabEdit"
-                :style="{ left: isMobile ? 0 : (state.collapsed ? '48px' : tabLeft), paddingRight: isMobile ? 0 : (settingsConfig.isFixedMultipleTags ? (state.collapsed ? '48px' : tabLeft) : '0') }">
+                :style="{ left: isMobile ? 0 : tabLeft, paddingRight: isMobile ? 0 : (settingsConfig.isFixedMultipleTags ? (state.collapsed ? '48px' : tabLeft) : '0') }">
                 <a-tab-pane v-for="tab in multipleTag.tabs" :key="tab.key" :closable="tab.closable">
                   <template #tab>
                     {{ tab.title }}
