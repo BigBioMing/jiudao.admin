@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Rule } from 'ant-design-vue/es/form';
 import { reactive, ref, toRaw, watch, type UnwrapRef } from 'vue'
-import { getUserApi, saveUserApi } from '@/apis/sys/userinfo'
+import { getEntityApi, saveUserApi } from '@/apis/sys/userinfo'
 import { useSysDic } from '@/hooks'
 import { onMounted } from 'vue';
 defineOptions({
@@ -47,7 +47,7 @@ let model = reactive({
 // 表单验证规则
 const rules: Record<string, Rule[]> = {
     code: [
-        { required: true, message: '请输入账号名称', trigger: 'change' },
+        { required: true, message: '请输入编码', trigger: 'change' },
         { min: 3, max: 20, message: '长度应该是3-20', trigger: 'blur' },
     ],
     name: [
@@ -59,7 +59,7 @@ const rules: Record<string, Rule[]> = {
 const onGetUser = async () => {
     if (props.id && props.id > 0) {
         //根据id获取用户信息
-        const res = await getUserApi(props.id!);
+        const res = await getEntityApi(props.id!);
         Object.assign(model, res);
     }
 }
@@ -85,16 +85,18 @@ const closeModal = () => {
     createConfirmLoading.value = false;
     emits('update:openCreateModal', false);
 }
+console.log(formRef);
+window.a=formRef;
 </script>
 <template>
     <!-- <jda-modal :width="800" v-model:open="openCreateModal" title="新建" :confirm-loading="createConfirmLoading"
         @ok="handleOk" @cancel="closeModal"> -->
-    <a-card>
-        <a-form ref="formRef" :model="model" layout="horizontal" labelAlign="left" :rules="rules"
-            :label-col="{ style: { width: '60px' } }">
+    <jda-edit-card>
+        <jda-form ref="formRef" :model="model" :rules="rules"
+            :label-col="{ style: { width: '80px' } }">
             <a-row :gutter="48">
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="编码" name="account">
+                    <a-form-item label="编码" name="code">
                         <a-input v-model:value="model.code" placeholder="请输入编码" />
                     </a-form-item>
                 </a-col>
@@ -105,12 +107,12 @@ const closeModal = () => {
                 </a-col>
                 <a-col :md="24" :sm="24" :xs="24" :lg="24">
                     <a-form-item label="描述" name="description">
-                        <a-input v-model:value="model.description" placeholder="描述" />
+                        <a-textarea :rows="3" v-model:value="model.description" placeholder="描述" />
                     </a-form-item>
                 </a-col>
             </a-row>
-        </a-form>
-    </a-card>
+        </jda-form>
+    </jda-edit-card>
 
     <jda-modal-footer :confirmLoading="createConfirmLoading" @ok="handleOk" @cancel="closeModal"></jda-modal-footer>
     <!-- </jda-modal> -->

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Rule } from 'ant-design-vue/es/form';
 import { reactive, ref, toRaw, watch, type UnwrapRef } from 'vue'
-import { getUserApi, saveUserApi } from '@/apis/sys/userinfo'
+import { getEntityApi, saveUserApi } from '@/apis/sys/userinfo'
 import { useSysDic } from '@/hooks'
 import { onMounted } from 'vue';
 defineOptions({
@@ -66,7 +66,7 @@ const rules: Record<string, Rule[]> = {
 const onGetUser = async () => {
     if (props.id && props.id > 0) {
         //根据id获取用户信息
-        const res = await getUserApi(props.id!);
+        const res = await getEntityApi(props.id!);
         Object.assign(model, res);
     }
 }
@@ -97,7 +97,7 @@ const closeModal = () => {
     <!-- <jda-modal :width="800" v-model:open="openCreateModal" title="新建" :confirm-loading="createConfirmLoading"
         @ok="handleOk" @cancel="closeModal"> -->
     <a-card>
-        <a-form ref="formRef" :model="model" layout="horizontal" labelAlign="left" :rules="rules"
+        <jda-form ref="formRef" :model="model" layout="horizontal" labelAlign="right" :rules="rules"
             :label-col="{ style: { width: '60px' } }">
             <a-row :gutter="48">
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
@@ -135,7 +135,7 @@ const closeModal = () => {
                     </a-form-item>
                 </a-col>
             </a-row>
-        </a-form>
+        </jda-form>
     </a-card>
 
     <jda-modal-footer :confirmLoading="createConfirmLoading" @ok="handleOk" @cancel="closeModal"></jda-modal-footer>

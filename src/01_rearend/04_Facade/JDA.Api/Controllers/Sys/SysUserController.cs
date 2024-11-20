@@ -90,14 +90,14 @@ namespace JDA.Api.Controllers.Sys
         }
 
         /// <summary>
-        /// 根据id获取用户信息
+        /// 根据id获取单条数据
         /// </summary>
         /// <param name="id">用户id</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetUserById")]
+        [Route("GetEntityById")]
         //[ApiExplorerSettings(GroupName = "V2")]
-        public virtual async Task<IActionResult> GetUserById([FromQuery] long id)
+        public virtual async Task<IActionResult> GetEntityById([FromQuery] long id)
         {
             var entity = await base.GetEntityByIdAsync(id);
 
