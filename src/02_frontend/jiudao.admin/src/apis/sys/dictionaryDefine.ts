@@ -1,9 +1,9 @@
 import type { Paging, TablePageResult } from "@/types/global";
-import type { SysRoleGetPageEntitiesInputParams } from "@/types/sys/role";
+import type { SysDictionaryDefineGetPageEntitiesInputParams } from "@/types/sys/dictionaryDefine";
 import request from "@/utils/http";
 import qs from "qs";
 
-const URL_PREFIX = "/api/Sys/SysRole/";
+const URL_PREFIX = "/api/Sys/SysDictionaryDefine/";
 
 /**
  * 获取用户分页数据
@@ -11,7 +11,7 @@ const URL_PREFIX = "/api/Sys/SysRole/";
  * @returns
  */
 export const getPageEntitiesApi = async (
-  params: Paging<SysRoleGetPageEntitiesInputParams>
+  params: Paging<SysDictionaryDefineGetPageEntitiesInputParams>
 ): Promise<TablePageResult<any>> => {
   return await request({
     url: URL_PREFIX + "GetPageEntities",

@@ -49,6 +49,51 @@ export const asyncRouterMap = [
           },
         ],
       },
+      {
+        path: "/sys/organization",
+        name: "sys.organization",
+        redirect: "/sys/organization/index",
+        meta: { title: "menu.sys.organization" },
+        children: [
+          {
+            path: "/sys/organization/index",
+            name: "sys.organization.index",
+            meta: { title: "menu.sys.organization.index" },
+            icon: 'far fa-square-caret-right',
+            component:() => import("@/views/pages/sys/organization/index.vue")
+          },
+        ],
+      },
+      {
+        path: "/sys/routeResource",
+        name: "sys.routeResource",
+        redirect: "/sys/routeResource/index",
+        meta: { title: "menu.sys.routeResource" },
+        children: [
+          {
+            path: "/sys/routeResource/index",
+            name: "sys.routeResource.index",
+            meta: { title: "menu.sys.routeResource.index" },
+            icon: 'far fa-square-caret-right',
+            component:() => import("@/views/pages/sys/routeResource/index.vue")
+          },
+        ],
+      },
+      {
+        path: "/sys/dictionaryDefine",
+        name: "sys.dictionaryDefine",
+        redirect: "/sys/dictionaryDefine/index",
+        meta: { title: "menu.sys.dictionaryDefine" },
+        children: [
+          {
+            path: "/sys/dictionaryDefine/index",
+            name: "sys.dictionaryDefine.index",
+            meta: { title: "menu.sys.dictionaryDefine.index" },
+            icon: 'far fa-square-caret-right',
+            component:() => import("@/views/pages/sys/dictionaryDefine/index.vue")
+          },
+        ],
+      },
     ],
   },
   {

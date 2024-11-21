@@ -1,9 +1,9 @@
 import type { Paging, TablePageResult } from "@/types/global";
-import type { SysRoleGetPageEntitiesInputParams } from "@/types/sys/role";
+import type { SysRouteResourceGetPageEntitiesInputParams } from "@/types/sys/routeResource";
 import request from "@/utils/http";
 import qs from "qs";
 
-const URL_PREFIX = "/api/Sys/SysRole/";
+const URL_PREFIX = "/api/Sys/SysRouteResource/";
 
 /**
  * 获取用户分页数据
@@ -11,7 +11,7 @@ const URL_PREFIX = "/api/Sys/SysRole/";
  * @returns
  */
 export const getPageEntitiesApi = async (
-  params: Paging<SysRoleGetPageEntitiesInputParams>
+  params: Paging<SysRouteResourceGetPageEntitiesInputParams>
 ): Promise<TablePageResult<any>> => {
   return await request({
     url: URL_PREFIX + "GetPageEntities",
@@ -46,7 +46,7 @@ export const getEntityApi = async (id: number): Promise<TablePageResult<any>> =>
  * @param params 用户信息
  * @returns
  */
-export const saveRoleApi = async (params: any) => {
+export const saveRouteResourceApi = async (params: any) => {
   return await request({
     url: URL_PREFIX + "Save",
     method: "post",
@@ -59,7 +59,7 @@ export const saveRoleApi = async (params: any) => {
  * @param id 角色Id
  * @returns
  */
-export const delRoleApi = async (id: number) => {
+export const delRouteResourceApi = async (id: number) => {
   return await request({
     url: URL_PREFIX + "Delete",
     method: "post",
