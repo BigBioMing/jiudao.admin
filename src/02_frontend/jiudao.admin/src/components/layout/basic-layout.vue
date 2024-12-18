@@ -824,6 +824,7 @@ const providerTheme = computed(() => {
       colorLink: settingsConfig.value.currentThemeStyle.colorPrimary.value,
       colorLinkActive: cl.active,
       colorLinkHover: cl.hover,
+      colorIconHover: cl.hover,
     }
   };
 
@@ -1239,7 +1240,7 @@ if (scstr) {
 }
 
 .trigger:hover {
-  color: #1890ff;
+  // color: #1890ff;
 }
 
 .sider-logo {

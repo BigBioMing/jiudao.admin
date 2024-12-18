@@ -66,12 +66,12 @@ const onGetTableDataSource = async (opts?: PaginationChangeEvent) => {
   var res = await getPageEntitiesApi({ pageIndex: pageIndex, pageSize: pageSize });
   tableDataSource.value = res?.items || [];
 }
-const onGetTableDataSource2=async()=>{
-try{
-  await onGetTableDataSource();
-}catch(err){
-  console.log('ccccccccccccc',err)
-}
+const onGetTableDataSource2 = async () => {
+  try {
+    await onGetTableDataSource();
+  } catch (err) {
+    console.log('ccccccccccccc', err)
+  }
 }
 //导出
 const onTableImportClick = (columns: any[]) => {
@@ -83,7 +83,7 @@ const onSelectChange = (selectedKeys: (string | number)[], selectedRows: any[]) 
   selectedRowKeys.value = selectedRows.map(n => n.id);
 };
 
-onMounted(async() => {
+onMounted(async () => {
   onGetTableDataSource2()
   // messageApi.error("网络暂时不可用，请检查下哦~11");
 })

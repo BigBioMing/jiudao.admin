@@ -58,7 +58,7 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpPost]
         [Route("Save")]
-        public virtual async Task<UnifyResponse<object>> Save([FromBody] SysRole model)
+        public virtual async Task<UnifyResponse<object>> Save([FromBody] SysRoleSaveVO model)
         {
             return await base.SaveAsync(model);
         }
