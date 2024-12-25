@@ -16,21 +16,21 @@ export const asyncRouterMap = [
     path: "/sys",
     name: "sys",
     //   component: BasicLayout,
-    meta: { title: "系统管理" },
+    meta: { title: "系统管理", name: "系统管理" },
     component: BasicLayout,
     children: [
       {
         path: "/sys/userinfo",
         name: "sys.userinfo",
         redirect: "/sys/userinfo/index",
-        meta: { title: "menu.sys.userinfo" },
+        meta: { title: "menu.sys.userinfo", name: "用户管理" },
         children: [
           {
             path: "/sys/userinfo/index",
             name: "sys.userinfo.index",
-            meta: { title: "menu.sys.userinfo.index" },
-            icon: 'far fa-square-caret-right',
-            component:() => import("@/views/pages/sys/userInfo/index.vue")
+            meta: { title: "menu.sys.userinfo.index", name: "用户管理" },
+            icon: "far fa-square-caret-right",
+            component: () => import("@/views/pages/sys/userInfo/index.vue"),
           },
         ],
       },
@@ -44,8 +44,8 @@ export const asyncRouterMap = [
             path: "/sys/role/index",
             name: "sys.role.index",
             meta: { title: "menu.sys.role.index" },
-            icon: 'far fa-square-caret-right',
-            component:() => import("@/views/pages/sys/role/index.vue")
+            icon: "far fa-square-caret-right",
+            component: () => import("@/views/pages/sys/role/index.vue"),
           },
         ],
       },
@@ -59,8 +59,8 @@ export const asyncRouterMap = [
             path: "/sys/organization/index",
             name: "sys.organization.index",
             meta: { title: "menu.sys.organization.index" },
-            icon: 'far fa-square-caret-right',
-            component:() => import("@/views/pages/sys/organization/index.vue")
+            icon: "far fa-square-caret-right",
+            component: () => import("@/views/pages/sys/organization/index.vue"),
           },
         ],
       },
@@ -74,8 +74,9 @@ export const asyncRouterMap = [
             path: "/sys/routeResource/index",
             name: "sys.routeResource.index",
             meta: { title: "menu.sys.routeResource.index" },
-            icon: 'far fa-square-caret-right',
-            component:() => import("@/views/pages/sys/routeResource/index.vue")
+            icon: "far fa-square-caret-right",
+            component: () =>
+              import("@/views/pages/sys/routeResource/index.vue"),
           },
         ],
       },
@@ -89,8 +90,9 @@ export const asyncRouterMap = [
             path: "/sys/dictionaryDefine/index",
             name: "sys.dictionaryDefine.index",
             meta: { title: "menu.sys.dictionaryDefine.index" },
-            icon: 'far fa-square-caret-right',
-            component:() => import("@/views/pages/sys/dictionaryDefine/index.vue")
+            icon: "far fa-square-caret-right",
+            component: () =>
+              import("@/views/pages/sys/dictionaryDefine/index.vue"),
           },
         ],
       },
