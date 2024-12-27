@@ -12,6 +12,7 @@ import pinia from "@/stores";
 
 import { router } from "@/router";
 
+
 import {
   JdaMenu,
   JdaTable,
@@ -46,6 +47,8 @@ app.component("VueDraggable", VueDraggable);
 app.use(pinia);
 app.use(router);
 app.use(Antd);
+
+import '@/router/permission'
 
 let a: {
   [key in keyof typeof app]: any;

@@ -2,8 +2,9 @@ import { defineStore } from "pinia";
 
 export const useGlobalStore = defineStore("global", {
   state: () => {
-    return <{ dics: any[] }>{
+    return <{ dics: any[]; token: string | null }>{
       dics: [],
+      token: null,
     };
   },
   //类似computed，修饰一些值
@@ -15,6 +16,12 @@ export const useGlobalStore = defineStore("global", {
     },
     getDics() {
       return this.dics;
+    },
+    getToken() {
+      return this.token;
+    },
+    setToken(_token: string | null) {
+      this.token = _token;
     },
   },
 });

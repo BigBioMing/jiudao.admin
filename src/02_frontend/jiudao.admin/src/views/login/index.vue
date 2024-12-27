@@ -56,12 +56,14 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { router } from '@/router';
+import { useGlobalStore } from "@/stores";
 // import { useStore } from "vuex";
 // import { login } from "@/api/entry/entry";
 // import { PageStyleUtils } from "@/core/index";
 
 export default defineComponent({
   setup() {
+    const globalStore=useGlobalStore();
     let form = reactive({
       name: "",
       pwd: "",
@@ -80,6 +82,8 @@ export default defineComponent({
       loading,
       onSubmit: () => {
         loading.value = true;
+        globalStore.setToken('123456');
+        router.push("/");
         // login({
         //   account: form.name,
         //   password: form.pwd,
