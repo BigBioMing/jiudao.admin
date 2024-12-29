@@ -1,0 +1,49 @@
+export default class localStorageUtils {
+  /**
+   * 设置带有过期时间的键值对到localStorage中
+   * @param key
+   * @param value
+   * @param expireTime 过期时间（毫秒）
+   */
+  static setItemWithExpire(key, value, expireTime) {
+    // 获取当前时间的时间戳
+    const now = new Date().getTime();
+    const expires = now + expireTime;
+    // 计算过期时间的时间戳
+    const item = {
+      value: value,
+      // 存储过期时间
+      expires: expires,
+    };
+    // 将对象转换为JSON字符串并存储
+    localStorage.setItem(key, JSON.stringify(item));
+  }
+
+  /**
+   * 从localStorage中获取带有过期时间的键值对
+   * @param key
+   * @returns
+   */
+  static getItemWithExpire(key) {
+    // 从localStorage中获取JSON字符串
+    const itemStr = localStorage.getItem(key);
+    // 如果不存在，返回null
+    if (!itemStr) {
+      return null;
+    }
+    // 将JSON字符串解析为对象
+    const item = JSON.parse(itemStr);
+    // 获取当前时间的时间戳，并与储存的过期时间戳进行对比
+    const now = new Date().getTime();
+    if (now > item.expires) {
+      // 如果已过期，则删除该值并返回null
+      localStorage.removeItem(key);
+      return null;
+    }
+    return item.value;
+  }
+
+  static removeItem(key) {
+    localStorage.removeItem(key);
+  }
+}

@@ -34,6 +34,7 @@
     <ProjectReference Include="..\..\02_Repository\JDA.Repository\JDA.Repository.csproj" />
     <ProjectReference Include="..\..\03_Service\JDA.IService\JDA.IService.csproj" />
     <ProjectReference Include="..\..\03_Service\JDA.Service\JDA.Service.csproj" />
+    <ProjectReference Include="..\..\05_Model\JDA.DTO\JDA.DTO.csproj" />
     <ProjectReference Include="..\..\05_Model\JDA.Model\JDA.Model.csproj" />
   </ItemGroup>
 

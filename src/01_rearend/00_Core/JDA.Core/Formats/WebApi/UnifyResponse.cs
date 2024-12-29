@@ -50,12 +50,20 @@ namespace JDA.Core.Formats.WebApi
             this.Data = data;
         }
 
-        public static UnifyResponse<TData> Success(string? message = null, TData? data = default)
+        public static UnifyResponse<TData> Success(string? message, TData? data = default)
         {
             return new UnifyResponse<TData>()
             {
                 Code = UnifyResponse.SuccessCode,
                 Message = message,
+                Data = data
+            };
+        }
+        public static UnifyResponse<TData> Success(TData? data = default)
+        {
+            return new UnifyResponse<TData>()
+            {
+                Code = UnifyResponse.SuccessCode,
                 Data = data
             };
         }

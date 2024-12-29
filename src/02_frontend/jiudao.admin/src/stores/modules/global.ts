@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import localStorageUtils from "@/utils/localStorageUtils";
 
 export const useGlobalStore = defineStore("global", {
   state: () => {
@@ -17,11 +18,30 @@ export const useGlobalStore = defineStore("global", {
     getDics() {
       return this.dics;
     },
+    isLogin() {
+      let tk = this.getToken();
+      return tk != null && tk != undefined;
+    },
     getToken() {
+      if (!this.token) {
+        this.token = localStorageUtils.getItemWithExpire("token");
+      }
       return this.token;
     },
-    setToken(_token: string | null) {
+    setToken(_token: string | null, expireTime: number) {
       this.token = _token;
+      localStorageUtils.setItemWithExpire(
+        "token",
+        _token,
+        expireTime * 60 * 1000
+      );
+    },
+    /**
+     * 删除token
+     */
+    clearToken() {
+      this.token = null;
+      localStorageUtils.removeItem("token");
     },
   },
 });

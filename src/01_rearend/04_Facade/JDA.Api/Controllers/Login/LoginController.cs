@@ -14,7 +14,7 @@ using System.Security.Principal;
 
 namespace JDA.Api.Controllers.Login
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class LoginController : ControllerBase
     {
@@ -56,10 +56,6 @@ namespace JDA.Api.Controllers.Login
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role.Code));
                 }
-            }
-            for (int i = 0; i < 5; i++)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, $"role{i}"));
             }
             var token = TokenHelper.GetToken(claims);
 

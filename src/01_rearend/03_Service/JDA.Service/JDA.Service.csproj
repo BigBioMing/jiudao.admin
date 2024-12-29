@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\00_Core\JDA.Core\JDA.Core.csproj" />
     <ProjectReference Include="..\..\02_Repository\JDA.IRepository\JDA.IRepository.csproj" />
+    <ProjectReference Include="..\..\05_Model\JDA.DTO\JDA.DTO.csproj" />
     <ProjectReference Include="..\..\05_Model\JDA.Model\JDA.Model.csproj" />
     <ProjectReference Include="..\JDA.IService\JDA.IService.csproj" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { message } from "ant-design-vue";
+import { useGlobalStore } from "@/stores";
 const instance = axios.create({
   baseURL: "https://localhost:7256",
   timeout: 20000,
@@ -21,6 +22,13 @@ instance.interceptors.request.use(
     //     store.state.Roles
     //     config.headers.Authorization = storage.get(store.state.Roles);
     //   }
+
+    const globalStore = useGlobalStore();
+    const token = globalStore.getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
     return config;
   },
   (error) => {

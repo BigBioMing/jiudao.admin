@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS `sys_role_action_resource`;
+CREATE TABLE `sys_role_action_resource`(
+	`Id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+	`RoleId` bigint NOT NULL COMMENT '角色ID',
+	`ActionResourceId` bigint NOT NULL COMMENT '操作资源表ID',
+	`IsDeleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除 0-正常 1-已删除',
+	`CreateId` bigint NOT NULL COMMENT '创建人Id',
+	`CreateSource` varchar(30) NOT NULL COMMENT '创建人',
+	`CreateDate` datetime NOT NULL COMMENT '创建时间',
+	`UpdateId` bigint NOT NULL COMMENT '修改人Id',
+	`UpdateSource` varchar(30) NOT NULL COMMENT '修改人',
+	`UpdateDate` datetime NOT NULL COMMENT '修改时间',
+	PRIMARY KEY (`Id`) USING BTREE,
+	KEY `idx_RoleId`(`RoleId`) USING BTREE,
+	KEY `idx_ActionResourceId`(`ActionResourceId`) USING BTREE
+) COMMENT '角色表与操作资源表的关系表';

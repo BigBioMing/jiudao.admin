@@ -3,10 +3,15 @@ import { computed, reactive, ref, watch, h, createVNode, markRaw, toRaw, onMount
 import { ConfigProvider, theme } from 'ant-design-vue';
 import { routeMenus } from '@/mock/menus';
 import { useRouter, useRoute } from "vue-router";
+import { useMenuStore,useGlobalStore } from "@/stores";
+import router from "@/router";
 
 defineOptions({
   name: 'basic-layout'
 })
+
+const menuStore = useMenuStore();
+const globalStore = useGlobalStore();
 
 import {
   MenuFoldOutlined,
@@ -83,7 +88,7 @@ const onBreakpoint = (broken: boolean) => {
 };
 let vn1 = createVNode('PieChartOutlined');
 
-const menus = routeMenus;
+const menus = menuStore.getMenus();
 // const menus = ref(noRefMenus);
 // const subMenus = ref([]);
 watch(
@@ -211,9 +216,14 @@ const onMenuItemClick = (pos: 'top-menu' | 'side-menu' | 'sub-side-menu', menu: 
       tabMenu = menu;
 
     if (tabMenu) {
-      if (isLeaf)
+      if (isLeaf) {
         addTab({ key: menu.key, title: menu.title });
+      }
     }
+  }
+
+  if (isLeaf) {
+    router.push({ path: menu.path });
   }
 }
 
@@ -666,7 +676,11 @@ if (scstr) {
 }
 // });
 
-
+const onLogout=()=>{
+  globalStore.clearToken();
+  menuStore.reset();
+  router.push('/login')
+}
 
 </script>
 
@@ -759,7 +773,7 @@ if (scstr) {
                           </div>
                         </a-menu-item>
                         <a-menu-divider />
-                        <a-menu-item key="3">
+                        <a-menu-item key="3" @click="onLogout">
                           <LogoutOutlined />
                           <span style="margin-left: 15px;">退出登录</span>
                         </a-menu-item>
@@ -834,7 +848,7 @@ if (scstr) {
                       </div>
                     </a-menu-item>
                     <a-menu-divider />
-                    <a-menu-item key="3">
+                    <a-menu-item key="3" @click="onLogout">
                       <LogoutOutlined />
                       <span style="margin-left: 15px;">退出登录</span>
                     </a-menu-item>

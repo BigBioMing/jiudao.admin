@@ -31,11 +31,11 @@ namespace JDA.Entity.Maps
             builder.ToTable("sys_route_resource");
         }
     }
-    public partial class SysOrganizationEntityTypeConfiguration : SuperMapping<SysOrganization>
+    public partial class SysActionResourceEntityTypeConfiguration : SuperMapping<SysActionResource>
     {
-        public override void Configure(EntityTypeBuilder<SysOrganization> builder)
+        public override void Configure(EntityTypeBuilder<SysActionResource> builder)
         {
-            builder.ToTable("sys_organization");
+            builder.ToTable("sys_action_resource");
         }
     }
     public partial class SysRoleRouteResourceEntityTypeConfiguration : SuperMapping<SysRoleRouteResource>
@@ -43,6 +43,20 @@ namespace JDA.Entity.Maps
         public override void Configure(EntityTypeBuilder<SysRoleRouteResource> builder)
         {
             builder.ToTable("sys_role_route_resource");
+        }
+    }
+    public partial class SysRoleActionResourceEntityTypeConfiguration : SuperMapping<SysRoleActionResource>
+    {
+        public override void Configure(EntityTypeBuilder<SysRoleActionResource> builder)
+        {
+            builder.ToTable("sys_role_action_resource");
+        }
+    }
+    public partial class SysOrganizationEntityTypeConfiguration : SuperMapping<SysOrganization>
+    {
+        public override void Configure(EntityTypeBuilder<SysOrganization> builder)
+        {
+            builder.ToTable("sys_organization");
         }
     }
     public partial class SysUserRoleEntityTypeConfiguration : SuperMapping<SysUserRole>

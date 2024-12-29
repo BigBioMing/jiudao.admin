@@ -7,13 +7,16 @@ using JDA.Core.Models.Operations;
 using JDA.Core.Models.Tables;
 using JDA.Core.Persistence.Repositories.Abstractions.Default;
 using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.Core.Users.Abstractions;
 using JDA.Core.Utilities;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ApiDocs;
 using JDA.Core.WebApi.ControllerBases;
+using JDA.DTO.SysUsers;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
 using JDA.Model.Sys.SysUsers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,9 +38,12 @@ namespace JDA.Api.Controllers.Sys
     public partial class SysUserController : BaseApiController<SysUser>
     {
         protected readonly ISysUserService _sysUserService;
-        public SysUserController(ISysUserService sysUserService) : base(sysUserService)
+        protected readonly ICurrentRunningContext _currentRunningContext;
+
+        public SysUserController(ICurrentRunningContext currentRunningContext, ISysUserService sysUserService) : base(sysUserService)
         {
             this._sysUserService = sysUserService;
+            _currentRunningContext = currentRunningContext;
         }
         /// <summary>
         /// 获取分页数据
@@ -165,6 +171,20 @@ namespace JDA.Api.Controllers.Sys
             var list = await this._currentService.GetEntitiesAsync(predicate);
             string fileName = $"用户_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
             return await base.ExportAsync(fileName, list);
+        }
+
+        /// <summary>
+        /// 获取登录用户拥有的按钮和菜单权限
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        //[Authorize(Policy = "Permission")]
+        [Route("GetRouteAndOptions")]
+        public virtual async Task<UnifyResponse<UserMenuAndActionDto>> GetRouteAndOptions()
+        {
+            long userId = _currentRunningContext.UserId;
+            var model = await _sysUserService.GetMenuAndActions(userId);
+            return UnifyResponse<UserMenuAndActionDto>.Success(model);
         }
     }
 }

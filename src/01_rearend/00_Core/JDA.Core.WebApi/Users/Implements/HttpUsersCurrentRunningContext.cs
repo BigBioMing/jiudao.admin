@@ -16,7 +16,7 @@ namespace JDA.Core.WebApi.Users.Implements
         }
 
         /// <summary>
-        /// 当前操作人ID
+        /// 当前操作人ID（当前登陆人）
         /// </summary>
         public long UserId
         {
@@ -28,7 +28,7 @@ namespace JDA.Core.WebApi.Users.Implements
         }
 
         /// <summary>
-        /// 当前操作人名称
+        /// 当前操作人名称（当前登陆人）
         /// </summary>
         public string UserName
         {

@@ -1,5 +1,6 @@
 ﻿using JDA.Core.Models.Operations;
 using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.DTO.SysUsers;
 using JDA.Entity.Entities.Sys;
 using JDA.Model.Sys.SysUsers;
 using System;
@@ -28,5 +29,12 @@ namespace JDA.IService.Sys
         /// <param name="model"></param>
         /// <returns></returns>
         Task<OperationResult<SysUser>> SaveAsync(SysUserSaveVO model);
+
+        /// <summary>
+        /// 获取用户拥有的按钮和菜单权限
+        /// </summary>
+        /// <param name="userId">用户Id</param>
+        /// <returns></returns>
+        Task<UserMenuAndActionDto> GetMenuAndActions(long userId);
     }
 }

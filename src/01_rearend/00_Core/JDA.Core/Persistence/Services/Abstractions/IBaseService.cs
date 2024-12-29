@@ -20,6 +20,13 @@ namespace JDA.Core.Persistence.Services.Abstractions
     /// </summary>
     public interface IBaseService<TEntity> where TEntity : class, ISuperEntity
     {
+
+        IQueryable<TEntity> Queryable { get; }
+        IQueryable<TEntity> QueryableNoTracking { get; }
+        IQueryable<TEntity> QueryableAll { get; }
+        IQueryable<TEntity> QueryableAllNoTracking { get; }
+
+
         #region 同步方法
         #region 查询单条数据
         /// <summary>

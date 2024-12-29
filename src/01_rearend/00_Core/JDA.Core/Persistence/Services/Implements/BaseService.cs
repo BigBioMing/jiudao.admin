@@ -39,6 +39,11 @@ namespace JDA.Core.Persistence.Services.Implements
             this._currentRepository = currentRepository;
         }
 
+        public virtual IQueryable<TEntity> Queryable => this._currentRepository.Queryable;
+        public virtual IQueryable<TEntity> QueryableNoTracking => this._currentRepository.QueryableNoTracking;
+        public virtual IQueryable<TEntity> QueryableAll => this._currentRepository.QueryableAll;
+        public virtual IQueryable<TEntity> QueryableAllNoTracking => this._currentRepository.QueryableAllNoTracking;
+
         #region 同步方法
         #region 查询单条数据
         /// <summary>

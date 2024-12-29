@@ -10,7 +10,7 @@ import "@/style/global.scss";
 
 import pinia from "@/stores";
 
-import { router } from "@/router";
+import router from "@/router";
 
 
 import {

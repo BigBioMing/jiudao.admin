@@ -6,14 +6,19 @@ using JDA.Core.Models.Operations;
 using JDA.Core.Persistence.Repositories.Abstractions.Default;
 using JDA.Core.Persistence.Services.Abstractions.Default;
 using JDA.Core.Persistence.Services.Implements.Default;
+using JDA.DTO.SysActionResources;
+using JDA.DTO.SysUsers;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
+using JDA.Model.Sys.SysDictionaryDatas;
 using JDA.Model.Sys.SysUsers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -28,19 +33,31 @@ namespace JDA.Service.Sys
     {
         protected readonly IRepository<SysUserRole> _sysUserRoleRepository;
         protected readonly IRepository<SysUserOrganization> _sysUserOrganizationRepository;
+        protected readonly IRepository<SysRoleActionResource> _sysRoleActionResourceRepository;
+        protected readonly IRepository<SysRoleRouteResource> _sysRoleRouteResourceRepository;
+        protected readonly IRepository<SysActionResource> _sysActionResourceRepository;
+        protected readonly IRepository<SysRouteResource> _sysRouteResourceRepository;
         protected readonly ISysRoleService _sysRoleService;
+
         public SysUserService(
             IShapeMapper mapper
             , IRepository<SysUser> currentRepository
             , IRepository<SysUserRole> sysUserRoleRepository
             , IRepository<SysUserOrganization> sysUserOrganizationRepository
+            , IRepository<SysRoleActionResource> sysRoleActionResourceRepository
+            , IRepository<SysRoleRouteResource> sysRoleRouteResourceRepository
+            , IRepository<SysActionResource> sysActionResourceRepository
+            , IRepository<SysRouteResource> sysRouteResourceRepository
             , ISysRoleService sysRoleService
-
             ) : base(mapper, currentRepository)
         {
-            this._sysUserRoleRepository = sysUserRoleRepository;
-            this._sysUserOrganizationRepository = sysUserOrganizationRepository;
-            this._sysRoleService = sysRoleService;
+            _sysUserRoleRepository = sysUserRoleRepository;
+            _sysUserOrganizationRepository = sysUserOrganizationRepository;
+            _sysRoleActionResourceRepository = sysRoleActionResourceRepository;
+            _sysRoleRouteResourceRepository = sysRoleRouteResourceRepository;
+            _sysActionResourceRepository = sysActionResourceRepository;
+            _sysRouteResourceRepository = sysRouteResourceRepository;
+            _sysRoleService = sysRoleService;
         }
 
         /// <summary>
@@ -145,6 +162,66 @@ namespace JDA.Service.Sys
             #endregion
 
             return OperationResult<SysUser>.Success();
+        }
+
+
+        /// <summary>
+        /// 获取用户拥有的按钮和菜单权限
+        /// </summary>
+        /// <param name="userId">用户Id</param>
+        /// <returns></returns>
+        public virtual async Task<UserMenuAndActionDto> GetMenuAndActions(long userId)
+        {
+            //获取该用户的角色sql
+            var roleQuery = from a in _sysUserRoleRepository.QueryableNoTracking.Where(n => n.UserId == userId)
+                            join b in _sysRoleService.QueryableNoTracking on a.RoleId equals b.Id
+                            select b;
+
+            //获取该用户的菜单sql
+            var menuQuery = from a in roleQuery
+                            join b in _sysRoleRouteResourceRepository.QueryableNoTracking on a.Id equals b.RoleId
+                            join c in _sysRouteResourceRepository.QueryableNoTracking on b.RouteResourceId equals c.Id
+                            select c;
+
+            //获取该用户的按钮sql
+            var actionQuery = from a in roleQuery
+                              join b in _sysRoleActionResourceRepository.QueryableNoTracking on a.Id equals b.RoleId
+                              join c in _sysActionResourceRepository.QueryableNoTracking on b.ActionResourceId equals c.Id
+                              select c;
+
+            var menus = await menuQuery.ToListAsync();
+            var actions = await actionQuery.ToListAsync();
+            var actions2 = _mapper.Map<List<SysActionResourceDto>>(actions);
+
+            //获取菜单树
+            var topMenuTreeNodes = LoopMenus(menus, null);
+
+            return new UserMenuAndActionDto() { MenuTreeNodes = topMenuTreeNodes, Actions = actions2 };
+        }
+
+        /// <summary>
+        /// 获取菜单树
+        /// </summary>
+        /// <param name="allMenus">所有菜单</param>
+        /// <param name="parentMenu">父级菜单（为null时表示从1级菜单开始获取</param>
+        /// <returns></returns>
+        private List<MenuTreeDto> LoopMenus(List<SysRouteResource> allMenus, SysRouteResource? parentMenu)
+        {
+            List<MenuTreeDto> childMenuTreeNodes = new List<MenuTreeDto>();
+            //根据ParentId获取下级菜单，然后组装数据
+            long parentId = parentMenu?.Id ?? 0;
+            var currentMenus = allMenus.Where(n => n.ParentId == parentId).ToList();
+            foreach (var currentMenu in currentMenus)
+            {
+                //组装子级节点数据
+                MenuTreeDto childMenuTreeNode = this._mapper.Map<MenuTreeDto>(currentMenu);
+                childMenuTreeNodes.Add(childMenuTreeNode);
+                //获取下下级菜单
+                var grandsonMenuTreeNodes = LoopMenus(allMenus, currentMenu);
+                childMenuTreeNode.Childrens = grandsonMenuTreeNodes;
+            }
+
+            return childMenuTreeNodes;
         }
     }
 }

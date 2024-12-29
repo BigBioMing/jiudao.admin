@@ -33,7 +33,7 @@
           <DownOutlined />
         </a>
         <template #overlay>
-          <a-menu >
+          <a-menu>
             <a-menu-item key="0">
               <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
                 1st menu item
@@ -55,18 +55,20 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
-import { router } from '@/router';
+import router from '@/router';
 import { useGlobalStore } from "@/stores";
+import { loginApi } from '@/apis/login/login'
 // import { useStore } from "vuex";
 // import { login } from "@/api/entry/entry";
 // import { PageStyleUtils } from "@/core/index";
 
 export default defineComponent({
   setup() {
-    const globalStore=useGlobalStore();
+
+    const globalStore = useGlobalStore();
     let form = reactive({
-      name: "",
-      pwd: "",
+      name: "admin",
+      pwd: "123456",
     });
     let loading = ref<Boolean>(false);
 
@@ -82,20 +84,12 @@ export default defineComponent({
       loading,
       onSubmit: () => {
         loading.value = true;
-        globalStore.setToken('123456');
-        router.push("/");
-        // login({
-        //   account: form.name,
-        //   password: form.pwd,
-        // })
-        //   .then((res: any) => {
-        //     store.dispatch("setToken", res.data).then((res) => {
-        //       router.push("/");
-        //     });
-        //   })
-        //   .finally(() => {
-        //     loading.value = false;
-        //   });
+        loginApi({ UserName: form.name, Password: form.pwd }).then((res: any) => {
+          globalStore.setToken(res.token, res.expireTime);
+          router.push("/");
+        }).finally(() => {
+          loading.value = false;
+        })
       },
     };
   },

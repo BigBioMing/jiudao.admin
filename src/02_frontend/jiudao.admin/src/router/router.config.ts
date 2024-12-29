@@ -109,11 +109,10 @@ export const asyncRouterMap = [
  * 基础路由
  */
 // export const constantRouterMap: RouteRecordRaw[] = [
-export const constantRouterMap = [
+export const constantRouterMap: RouteRecordRaw[] = [
   {
     path: "/basic",
     name: "登录页",
-    code: "login",
     component: BlankLayout,
     meta: { title: "登录页", code: "login" },
     redirect: "/login",
@@ -144,7 +143,6 @@ export const constantRouterMap = [
   {
     path: "/err",
     name: "错误信息",
-    code: "err",
     component: BlankLayout,
     meta: { title: "错误信息", code: "err" },
     children: [
@@ -152,35 +150,34 @@ export const constantRouterMap = [
         name: "error.403",
         path: "/403",
         component: Error403,
-        hidden: true,
         meta: { title: "403" },
       },
       {
         name: "error.404",
         path: "/404",
         component: Error404,
-        hidden: true,
         meta: { title: "404" },
       },
       {
         name: "error.500",
         path: "/500",
         component: Error500,
-        hidden: true,
         meta: { title: "500" },
       },
       {
         name: "error",
         path: "/error",
         component: Error,
-        hidden: true,
         meta: { title: "error" },
       },
     ],
   },
   {
-    path: "/:catchAll(.*)",
+    path: '/404',
     redirect: "/404",
-    hidden: true,
   },
+  // {
+  //   path: "/:catchAll(.*)",
+  //   redirect: "/404",
+  // },
 ];

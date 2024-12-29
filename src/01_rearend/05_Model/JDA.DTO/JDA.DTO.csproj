@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,8 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\00_Core\JDA.Core\JDA.Core.csproj" />
     <ProjectReference Include="..\..\01_Entity\JDA.Entity\JDA.Entity.csproj" />
-    <ProjectReference Include="..\..\05_Model\JDA.DTO\JDA.DTO.csproj" />
-    <ProjectReference Include="..\..\05_Model\JDA.Model\JDA.Model.csproj" />
   </ItemGroup>
 
 </Project>

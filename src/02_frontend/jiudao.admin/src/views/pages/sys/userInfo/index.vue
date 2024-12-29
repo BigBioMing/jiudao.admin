@@ -11,6 +11,11 @@ import { getPageEntitiesApi, delUserApi } from '@/apis/sys/userinfo';
 import type { PaginationChangeEvent } from '@/types/global';
 
 
+defineOptions({
+    name: 'sysuserinfoindex'
+})
+
+
 const [messageApi, contextHolder] = message.useMessage();
 const { dicItemName } = useSysDic();
 
