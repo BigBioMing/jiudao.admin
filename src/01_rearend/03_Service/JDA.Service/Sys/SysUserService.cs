@@ -189,7 +189,7 @@ namespace JDA.Service.Sys
                               join c in _sysActionResourceRepository.QueryableNoTracking on b.ActionResourceId equals c.Id
                               select c;
 
-            var menus = await menuQuery.ToListAsync();
+            var menus = await menuQuery.OrderBy(n => n.Sort).ToListAsync();
             var actions = await actionQuery.ToListAsync();
             var actions2 = _mapper.Map<List<SysActionResourceDto>>(actions);
 
@@ -210,7 +210,7 @@ namespace JDA.Service.Sys
             List<MenuTreeDto> childMenuTreeNodes = new List<MenuTreeDto>();
             //根据ParentId获取下级菜单，然后组装数据
             long parentId = parentMenu?.Id ?? 0;
-            var currentMenus = allMenus.Where(n => n.ParentId == parentId).ToList();
+            var currentMenus = allMenus.Where(n => n.ParentId == parentId).OrderBy(n => n.Sort).ToList();
             foreach (var currentMenu in currentMenus)
             {
                 //组装子级节点数据

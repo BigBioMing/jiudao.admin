@@ -14,8 +14,7 @@ const defaultRoutePath = "/home";
  * to: 即将要进入的目标
  * from: 当前导航正要离开的路由
  */
-router.beforeEach((to, from, next) => {
-  console.log(to, from, next);
+router.beforeEach((to, from, next) => {console.log(to, from, next);
   const globalStore = useGlobalStore();
   const menuStore = useMenuStore();
   const token = globalStore.getToken();
@@ -51,7 +50,7 @@ router.beforeEach((to, from, next) => {
             if (to.path === redirect) {
               // 设置replace:true，这样导航就不会留下历史记录
               // next();
-              next({ ...to, replace: true })
+              next({ ...to, replace: true });
             } else {
               // 跳转到目的路由
               next({ path: redirect });
@@ -94,10 +93,12 @@ const loopAddRouters = function (menuTreeNodes: any[]): RouteRecordRaw[] {
       if (menu.component === "BasicLayout") addRouter.component = BasicLayout;
       else if (menu.component === "BlankLayout")
         addRouter.component = BlankLayout;
+      // addRouter.component = defineAsyncComponent(
+      //   () => import(`..${menu.component}`)
+      // );
       else
-        addRouter.component = defineAsyncComponent(
-          () => import(`..${menu.component}`)
-        );
+        addRouter.component = () =>
+          import(/* @vite-ignore */ `..${menu.component}`);
     }
     if (menu.childrens && menu.childrens.length > 0) {
       addRouter.children = loopAddRouters(menu.childrens);
@@ -123,7 +124,9 @@ const loopAddMenus = function (menuTreeNodes: any[]): any[] {
       icon: menu.icon,
       path: menu.url,
     };
-    addMenus.push(addMenu);
+    if (menu.showInMenu) {
+      addMenus.push(addMenu);
+    }
     if (menu.childrens && menu.childrens.length > 0) {
       addMenu.children = loopAddMenus(menu.childrens);
     }

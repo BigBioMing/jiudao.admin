@@ -3,7 +3,7 @@ import { computed, reactive, ref, watch, h, createVNode, markRaw, toRaw, onMount
 import { ConfigProvider, theme } from 'ant-design-vue';
 import { routeMenus } from '@/mock/menus';
 import { useRouter, useRoute } from "vue-router";
-import { useMenuStore,useGlobalStore } from "@/stores";
+import { useMenuStore, useGlobalStore } from "@/stores";
 import router from "@/router";
 
 defineOptions({
@@ -62,14 +62,22 @@ window.addEventListener('resize', () => {
 
 //获取路由信息
 const route = useRoute();
-//面包屑数组
-let crumbs = ref<{ name: string, path: string }[]>([]);
-const routeMatched = route.matched || [];
-for (let i = 0; i < routeMatched.length; i++) {
-  let rmItem = routeMatched[i];
-  crumbs.value.push({ name: rmItem.meta.name || '', path: rmItem.path });
+let crumbsComputed = computed(() => {
+  //面包屑数组
+  // let crumbs = ref<{ name: string, path: string }[]>([]);
+  let crumbs = <{ name: string, path: string }[]>[];
+  const routeMatched = route.matched || [];
+  for (let i = 0; i < routeMatched.length; i++) {
+    let rmItem = routeMatched[i];
+    // crumbs.value.push({ name: rmItem.meta.name || '', path: rmItem.path });
+    crumbs.push({ name: rmItem.meta.name || '', path: rmItem.path });
+  }
+
+  return crumbs;
+});
+const onCrumbClick = (crumb: any) => {
+  router.push({ path: crumb.path })
 }
-console.log(crumbs)
 
 const selectedKeys = ref<string[]>(['1']);
 
@@ -676,7 +684,7 @@ if (scstr) {
 }
 // });
 
-const onLogout=()=>{
+const onLogout = () => {
   globalStore.clearToken();
   menuStore.reset();
   router.push('/login')
@@ -912,9 +920,11 @@ const onLogout=()=>{
               <!-- 面包屑 -->
               <div class="jda-container">
                 <a-breadcrumb>
-                  <template v-for="(crumb, index) in crumbs">
+                  <template v-for="(crumb, index) in crumbsComputed">
                     <a-breadcrumb-item v-if="!crumb.path">{{ crumb.name }}</a-breadcrumb-item>
-                    <a-breadcrumb-item v-else><a :href="crumb.path">{{ crumb.name }}</a></a-breadcrumb-item>
+                    <!-- <a-breadcrumb-item v-else><a :href="crumb.path">{{ crumb.name }}</a></a-breadcrumb-item> -->
+                    <a-breadcrumb-item v-else><span @click="onCrumbClick(crumb)">{{ crumb.name
+                        }}</span></a-breadcrumb-item>
                   </template>
                 </a-breadcrumb>
               </div>

@@ -74,5 +74,11 @@ namespace JDA.Entity.Entities.Sys
         [Display(Name = "是否是外部网页（true-是 false-不是）", Order = 2)]
         [ColumnMetadata(Name = "是否是外部网页（true-是 false-不是）", Order = 2)]
         public bool IsThird { get; set; }
+        /// <summary>
+        /// 顺序（正序排序）
+        /// </summary>
+        [Display(Name = "顺序（正序排序）", Order = 2)]
+        [ColumnMetadata(Name = "顺序（正序排序）", Order = 2)]
+        public short Sort { get; set; }
     }
 }

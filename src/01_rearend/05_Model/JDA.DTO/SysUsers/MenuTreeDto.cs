@@ -45,6 +45,12 @@ namespace JDA.DTO.SysUsers
         [ColumnMetadata(Name = "Url", Order = 2)]
         public string Url { get; set; }
         /// <summary>
+        /// 重定向地址
+        /// </summary>
+        [Display(Name = "重定向地址", Order = 2)]
+        [ColumnMetadata(Name = "重定向地址", Order = 2)]
+        public string? Redirect { get; set; }
+        /// <summary>
         /// 组件路径（当前路径对应的组件，或者默认组件：BasicLayout）
         /// </summary>
         [Display(Name = "组件路径", Order = 2)]

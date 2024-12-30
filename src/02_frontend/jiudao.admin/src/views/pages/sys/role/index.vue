@@ -9,6 +9,7 @@ import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { getPageEntitiesApi, delRoleApi } from '@/apis/sys/role';
 import type { PaginationChangeEvent } from '@/types/global';
+import router from '@/router'
 
 
 const [messageApi, contextHolder] = message.useMessage();
@@ -101,6 +102,12 @@ const onDelete = (row: any) => {
     }
   });
 }
+/**
+ * 打开授权页面
+ */
+const onOpenAuth = (row: any): void => {
+  router.push('/sys/role/auth');
+}
 </script>
 <template>
   <context-holder />
@@ -187,6 +194,13 @@ const onDelete = (row: any) => {
               <span class="jda-table-action-btn-text">修改</span>
               <template #icon>
                 <font-awesome-icon icon="fas fa-edit" />
+              </template>
+            </a-button>
+            <a-divider type="vertical" />
+            <a-button danger type="link" @click="onOpenAuth(record)">
+              <span class="jda-table-action-btn-text">授权</span>
+              <template #icon>
+                <font-awesome-icon icon="fas fa-trash-alt" />
               </template>
             </a-button>
             <a-divider type="vertical" />

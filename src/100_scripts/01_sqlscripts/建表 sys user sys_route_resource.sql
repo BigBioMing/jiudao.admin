@@ -11,6 +11,7 @@ CREATE TABLE `sys_route_resource`(
   `Icon` varchar(120) DEFAULT NULL COMMENT '图标',
   `ShowInMenu` tinyint(1) NOT NULL COMMENT '是否在菜单中显示（true-显示 false-不显示）',
   `IsThird` tinyint(1) NOT NULL COMMENT '是否是外部网页（true-是 false-不是）',
+  `Sort` tinyint(2) NOT NULL DEFAULT 0 COMMENT '顺序（正序排序）',
 	`Enabled` bigint NOT NULL DEFAULT 0 COMMENT '是否启用（关联字段表）',
 	`IsDeleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除 0-正常 1-已删除',
 	`CreateId` bigint NOT NULL COMMENT '创建人Id',
