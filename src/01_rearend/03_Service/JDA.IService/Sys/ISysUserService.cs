@@ -35,6 +35,6 @@ namespace JDA.IService.Sys
         /// </summary>
         /// <param name="userId">用户Id</param>
         /// <returns></returns>
-        Task<UserMenuAndActionDto> GetMenuAndActions(long userId);
+        Task<UserMenuAndActionDto> GetUserMenuAndActions(long userId);
     }
 }

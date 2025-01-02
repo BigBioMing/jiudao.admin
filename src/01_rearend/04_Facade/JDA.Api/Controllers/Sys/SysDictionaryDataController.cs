@@ -1,6 +1,7 @@
 ﻿using JDA.Core.Formats.WebApi;
 using JDA.Core.Models.Operations;
 using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.Core.Users.Abstractions;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
@@ -21,7 +22,7 @@ namespace JDA.Api.Controllers.Sys
     [Area("Sys")]
     public partial class SysDictionaryDataController : BaseApiController<SysDictionaryData>
     {
-        public SysDictionaryDataController(IService<SysDictionaryData> currentService) : base(currentService)
+        public SysDictionaryDataController(ICurrentRunningContext currentRunningContext, IService<SysDictionaryData> currentService) : base(currentRunningContext, currentService)
         {
         }
 

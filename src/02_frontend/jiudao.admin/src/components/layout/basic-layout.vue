@@ -922,9 +922,7 @@ const onLogout = () => {
                 <a-breadcrumb>
                   <template v-for="(crumb, index) in crumbsComputed">
                     <a-breadcrumb-item v-if="!crumb.path">{{ crumb.name }}</a-breadcrumb-item>
-                    <!-- <a-breadcrumb-item v-else><a :href="crumb.path">{{ crumb.name }}</a></a-breadcrumb-item> -->
-                    <a-breadcrumb-item v-else><span @click="onCrumbClick(crumb)">{{ crumb.name
-                        }}</span></a-breadcrumb-item>
+                    <a-breadcrumb-item v-else><a  @click="onCrumbClick(crumb)">{{ crumb.name }}</a></a-breadcrumb-item>
                   </template>
                 </a-breadcrumb>
               </div>

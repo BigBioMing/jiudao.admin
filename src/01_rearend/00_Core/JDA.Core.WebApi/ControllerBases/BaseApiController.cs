@@ -5,6 +5,7 @@ using JDA.Core.Models.Tables;
 using JDA.Core.Persistence.Entities;
 using JDA.Core.Persistence.Entities.Abstractions;
 using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.Core.Users.Abstractions;
 using JDA.Core.Utilities;
 using JDA.Core.Views.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +25,11 @@ namespace JDA.Core.WebApi.ControllerBases
     public abstract class BaseApiController<TEntity> : ControllerBase where TEntity : class, ISuperEntity
     {
         protected readonly IService<TEntity> _currentService;
-        public BaseApiController(IService<TEntity> currentService)
+        protected readonly ICurrentRunningContext _currentRunningContext;
+        public BaseApiController(ICurrentRunningContext currentRunningContext, IService<TEntity> currentService)
         {
             this._currentService = currentService;
+            this._currentRunningContext = currentRunningContext;
         }
 
         #region 分页

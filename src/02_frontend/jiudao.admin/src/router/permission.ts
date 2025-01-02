@@ -1,6 +1,6 @@
 import router, { resetRouter } from "./index";
 import { useGlobalStore, useMenuStore } from "@/stores";
-import { getRouteAndOptionsApi } from "@/apis/resource/route";
+import { getUserRouteAndOptionsApi } from "@/apis/resource/route";
 import BlankLayout from "@/components/layout/blank-layout.vue";
 import BasicLayout from "@/components/layout/basic-layout.vue";
 import type { RouteRecordRaw } from "vue-router";
@@ -25,7 +25,7 @@ router.beforeEach((to, from, next) => {console.log(to, from, next);
     } else {
       //如果未登录，则查询权限
       if (!menuStore.isAddRouter) {
-        getRouteAndOptionsApi({})
+        getUserRouteAndOptionsApi({})
           .then((res) => {
             console.log("菜单、按钮：res", res);
             let addRouters: RouteRecordRaw[] = loopAddRouters(

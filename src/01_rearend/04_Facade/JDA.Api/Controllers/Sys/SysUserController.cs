@@ -38,12 +38,10 @@ namespace JDA.Api.Controllers.Sys
     public partial class SysUserController : BaseApiController<SysUser>
     {
         protected readonly ISysUserService _sysUserService;
-        protected readonly ICurrentRunningContext _currentRunningContext;
 
-        public SysUserController(ICurrentRunningContext currentRunningContext, ISysUserService sysUserService) : base(sysUserService)
+        public SysUserController(ICurrentRunningContext currentRunningContext, ISysUserService sysUserService) : base(currentRunningContext, sysUserService)
         {
             this._sysUserService = sysUserService;
-            _currentRunningContext = currentRunningContext;
         }
         /// <summary>
         /// 获取分页数据
@@ -179,11 +177,11 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         //[Authorize(Policy = "Permission")]
-        [Route("GetRouteAndOptions")]
-        public virtual async Task<UnifyResponse<UserMenuAndActionDto>> GetRouteAndOptions()
+        [Route("GetUserRouteAndOptions")]
+        public virtual async Task<UnifyResponse<UserMenuAndActionDto>> GetUserRouteAndOptions()
         {
             long userId = _currentRunningContext.UserId;
-            var model = await _sysUserService.GetMenuAndActions(userId);
+            var model = await _sysUserService.GetUserMenuAndActions(userId);
             return UnifyResponse<UserMenuAndActionDto>.Success(model);
         }
     }

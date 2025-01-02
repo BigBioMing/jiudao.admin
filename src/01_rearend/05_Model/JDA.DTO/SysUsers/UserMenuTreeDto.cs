@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace JDA.DTO.SysUsers
 {
     /// <summary>
-    /// 菜单树节点dto
+    /// 用户菜单树节点dto
     /// </summary>
-    public class MenuTreeDto : BaseTreeNodeDto<MenuTreeDto>
+    public class UserMenuTreeDto : BaseTreeNodeDto<UserMenuTreeDto>
     {
         /// <summary>
         /// 主键

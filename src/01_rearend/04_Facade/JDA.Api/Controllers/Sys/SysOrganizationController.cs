@@ -1,5 +1,6 @@
 ﻿using JDA.Core.Formats.WebApi;
 using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.Core.Users.Abstractions;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
@@ -21,7 +22,7 @@ namespace JDA.Api.Controllers.Sys
     public partial class SysOrganizationController : BaseApiController<SysOrganization>
     {
         protected readonly ISysOrganizationService _sysOrganizationService;
-        public SysOrganizationController(ISysOrganizationService sysOrganizationService) : base(sysOrganizationService)
+        public SysOrganizationController(ICurrentRunningContext currentRunningContext, ISysOrganizationService sysOrganizationService) : base(currentRunningContext, sysOrganizationService)
         {
             this._sysOrganizationService = sysOrganizationService;
         }

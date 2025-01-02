@@ -170,7 +170,7 @@ namespace JDA.Service.Sys
         /// </summary>
         /// <param name="userId">用户Id</param>
         /// <returns></returns>
-        public virtual async Task<UserMenuAndActionDto> GetMenuAndActions(long userId)
+        public virtual async Task<UserMenuAndActionDto> GetUserMenuAndActions(long userId)
         {
             //获取该用户的角色sql
             var roleQuery = from a in _sysUserRoleRepository.QueryableNoTracking.Where(n => n.UserId == userId)
@@ -205,16 +205,16 @@ namespace JDA.Service.Sys
         /// <param name="allMenus">所有菜单</param>
         /// <param name="parentMenu">父级菜单（为null时表示从1级菜单开始获取</param>
         /// <returns></returns>
-        private List<MenuTreeDto> LoopMenus(List<SysRouteResource> allMenus, SysRouteResource? parentMenu)
+        private List<UserMenuTreeDto> LoopMenus(List<SysRouteResource> allMenus, SysRouteResource? parentMenu)
         {
-            List<MenuTreeDto> childMenuTreeNodes = new List<MenuTreeDto>();
+            List<UserMenuTreeDto> childMenuTreeNodes = new List<UserMenuTreeDto>();
             //根据ParentId获取下级菜单，然后组装数据
             long parentId = parentMenu?.Id ?? 0;
             var currentMenus = allMenus.Where(n => n.ParentId == parentId).OrderBy(n => n.Sort).ToList();
             foreach (var currentMenu in currentMenus)
             {
                 //组装子级节点数据
-                MenuTreeDto childMenuTreeNode = this._mapper.Map<MenuTreeDto>(currentMenu);
+                UserMenuTreeDto childMenuTreeNode = this._mapper.Map<UserMenuTreeDto>(currentMenu);
                 childMenuTreeNodes.Add(childMenuTreeNode);
                 //获取下下级菜单
                 var grandsonMenuTreeNodes = LoopMenus(allMenus, currentMenu);

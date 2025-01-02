@@ -1,5 +1,6 @@
 ﻿using JDA.Core.Formats.WebApi;
 using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.Core.Users.Abstractions;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ApiDocs;
 using JDA.Core.WebApi.ControllerBases;
@@ -21,7 +22,7 @@ namespace JDA.Api.Controllers.Sys
     [ApiVersion(Version = ApiVersionDefine.V2)]
     public partial class SysRouteResourceController : BaseApiController<SysRouteResource>
     {
-        public SysRouteResourceController(IService<SysRouteResource> currentService) : base(currentService)
+        public SysRouteResourceController(ICurrentRunningContext currentRunningContext, IService<SysRouteResource> currentService) : base(currentRunningContext, currentService)
         {
         }
 

@@ -1,7 +1,10 @@
 ﻿using JDA.Core.Formats.WebApi;
 using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.Core.Users.Abstractions;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
+using JDA.DTO.SysRoles;
+using JDA.DTO.SysUsers;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
 using JDA.Model.Sys.SysRoles;
@@ -24,7 +27,7 @@ namespace JDA.Api.Controllers.Sys
     public partial class SysRoleController : BaseApiController<SysRole>
     {
         protected readonly ISysRoleService _sysRoleService;
-        public SysRoleController(ISysRoleService sysRoleService) : base(sysRoleService)
+        public SysRoleController(ICurrentRunningContext currentRunningContext, ISysRoleService sysRoleService) : base(currentRunningContext, sysRoleService)
         {
             this._sysRoleService = sysRoleService;
         }
@@ -124,6 +127,19 @@ namespace JDA.Api.Controllers.Sys
             var list = await this._currentService.GetEntitiesAsync(predicate);
             string fileName = $"角色_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
             return await base.ExportAsync(fileName, list);
+        }
+
+        /// <summary>
+        /// 获取按钮和菜单权限
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        //[Authorize(Policy = "Permission")]
+        [Route("GetRouteAndOptions")]
+        public virtual async Task<UnifyResponse<MenuAndActionDto>> GetRouteAndOptions([FromQuery]long roleId)
+        {
+            var model = await _sysRoleService.GetMenuAndActions(roleId);
+            return UnifyResponse<MenuAndActionDto>.Success(model);
         }
     }
 }

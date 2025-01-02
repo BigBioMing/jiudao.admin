@@ -1,5 +1,5 @@
 ﻿using JDA.Core.Attributes;
-using JDA.Core.Persistence.Entities;
+using JDA.Core.Dtos.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,13 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JDA.Entity.Entities.Sys
+namespace JDA.DTO.SysRoles
 {
-    /// <summary>
-    /// 操作（按钮）资源表
-    /// </summary>
-    public partial class SysActionResource : EnableSuperEntity
+    public class ActionTreeDto : BaseTreeNodeDto<ActionTreeDto>
     {
+        /// <summary>
+        /// 主键
+        /// </summary>
+        [Display(Name = "主键", Order = 1000)]
+        [ColumnMetadata(Name = "主键", Order = 1000, Hidden = true)]
+        public long Id { get; set; }
         /// <summary>
         /// 编码
         /// </summary>
@@ -27,11 +30,11 @@ namespace JDA.Entity.Entities.Sys
         [ColumnMetadata(Name = "名称", Order = 2)]
         public string Name { get; set; }
         /// <summary>
-        /// 路由资源表ID
+        /// 是否选中（true-是 false-不是）
         /// </summary>
-        [Display(Name = "路由资源表ID", Order = 2)]
-        [ColumnMetadata(Name = "路由资源表ID", Order = 2)]
-        public long RouteResourceId { get; set; }
+        [Display(Name = "是否选中（true-是 false-不是）", Order = 2)]
+        [ColumnMetadata(Name = "是否选中（true-是 false-不是）", Order = 2)]
+        public bool IsCheck { get; set; }
         /// <summary>
         /// 顺序（正序排序）
         /// </summary>

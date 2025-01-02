@@ -38,8 +38,8 @@ export const useMenuStore = defineStore("menu", {
     setActions(_actions: any[]) {
       this.actions = _actions;
     },
-    getActions() {
-      return this.actions;
+    getActions(): string[] {
+      return this.actions.map((n) => n.code);
     },
     /**
      * 将路由和菜单重置成初始状态

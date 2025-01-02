@@ -1,5 +1,6 @@
 ﻿using JDA.Core.Mappers.Abstractions;
 using JDA.DTO.SysActionResources;
+using JDA.DTO.SysRoles;
 using JDA.DTO.SysUsers;
 using JDA.Entity.Entities.Sys;
 using System;
@@ -14,7 +15,10 @@ namespace JDA.DTO
     {
         public DtoProfile()
         {
-            CreateMap<SysRouteResource, MenuTreeDto>().ReverseMap(); 
+            CreateMap<SysRouteResource, UserMenuTreeDto>().ReverseMap();
+            CreateMap<SysRouteResource, MenuTreeDto>().ReverseMap();
+            CreateMap<SysActionResource, ActionTreeDto>().ReverseMap();
+            CreateMap<SysActionResource, SysActionResourceDto>().ReverseMap(); 
             CreateMap<SysActionResource, SysActionResourceDto>().ReverseMap(); 
         }
     }

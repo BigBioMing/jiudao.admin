@@ -1,5 +1,6 @@
 ﻿using JDA.Core.Models.Operations;
 using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.DTO.SysRoles;
 using JDA.Entity.Entities.Sys;
 using JDA.Model.Sys.SysRoles;
 using System;
@@ -21,5 +22,11 @@ namespace JDA.IService.Sys
         /// <param name="model"></param>
         /// <returns></returns>
         Task<OperationResult> Empower(SysRoleEmpowerVO model);
+        /// <summary>
+        /// 获取菜单和按钮
+        /// </summary>
+        /// <param name="roleId">角色Id</param>
+        /// <returns></returns>
+        Task<MenuAndActionDto> GetMenuAndActions(long roleId);
     }
 }

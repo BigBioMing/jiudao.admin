@@ -1,6 +1,7 @@
 ﻿using JDA.Core.Formats.WebApi;
 using JDA.Core.Models.Operations;
 using JDA.Core.Persistence.Services.Abstractions.Default;
+using JDA.Core.Users.Abstractions;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
@@ -23,7 +24,7 @@ namespace JDA.Api.Controllers.Sys
     public partial class SysDictionaryDefineController : BaseApiController<SysDictionaryDefine>
     {
         protected readonly ISysDictionaryDefineService _sysDictionaryDefineService;
-        public SysDictionaryDefineController(ISysDictionaryDefineService sysDictionaryDefineService) : base(sysDictionaryDefineService)
+        public SysDictionaryDefineController(ICurrentRunningContext currentRunningContext, ISysDictionaryDefineService sysDictionaryDefineService) : base(currentRunningContext, sysDictionaryDefineService)
         {
             this._sysDictionaryDefineService = sysDictionaryDefineService;
         }

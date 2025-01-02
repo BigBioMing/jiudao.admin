@@ -1,24 +1,25 @@
 ﻿using JDA.DTO.SysActionResources;
+using JDA.DTO.SysUsers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JDA.DTO.SysUsers
+namespace JDA.DTO.SysRoles
 {
     /// <summary>
-    /// 用户拥有的菜单及按钮权限dto
+    /// 菜单及按钮权限dto
     /// </summary>
-    public class UserMenuAndActionDto
+    public class MenuAndActionDto
     {
         /// <summary>
         /// 菜单树节点集合
         /// </summary>
-        public List<UserMenuTreeDto> MenuTreeNodes { get; set; }
+        public List<MenuTreeDto> MenuTreeNodes { get; set; }
         /// <summary>
-        /// 操作（按钮）集合
+        /// 选中的菜单Id集合
         /// </summary>
-        public List<SysActionResourceDto> Actions { get; set; }
+        public List<long> SelectMenuIds { get; set; }
     }
 }

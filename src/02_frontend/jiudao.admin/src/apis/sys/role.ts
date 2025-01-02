@@ -29,7 +29,9 @@ export const getPageEntitiesApi = async (
  * @param params
  * @returns
  */
-export const getEntityApi = async (id: number): Promise<TablePageResult<any>> => {
+export const getEntityApi = async (
+  id: number
+): Promise<TablePageResult<any>> => {
   return await request({
     url: URL_PREFIX + "GetEntityById",
     method: "get",
@@ -78,5 +80,23 @@ export const enableApi = async (id: number, value: boolean) => {
     url: URL_PREFIX + "Enable",
     method: "post",
     data: { Id: id, SetEnableValue: value },
+  });
+};
+
+/**
+ * 获取按钮和菜单权限
+ * @param params
+ * @returns
+ */
+export const getRouteAndOptionsApi = async (params: any) => {
+  return await request({
+    url: URL_PREFIX + "GetRouteAndOptions",
+    method: "get",
+    // params: params,
+    params: params,
+    paramsSerializer: (params) => {
+      // return qs.stringify(params, { indices: false,allowDots: true })
+      return qs.stringify(params, { allowDots: true });
+    },
   });
 };

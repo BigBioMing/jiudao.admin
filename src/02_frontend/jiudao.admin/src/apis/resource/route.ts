@@ -6,9 +6,9 @@ import qs from "qs";
  * @param params
  * @returns
  */
-export const getRouteAndOptionsApi = async (params: any): Promise<any> => {
+export const getUserRouteAndOptionsApi = async (params: any): Promise<any> => {
   return await request({
-    url: "/api/Sys/SysUser/GetRouteAndOptions",
+    url: "/api/Sys/SysUser/GetUserRouteAndOptions",
     method: "get",
     // params: params,
     params: params,

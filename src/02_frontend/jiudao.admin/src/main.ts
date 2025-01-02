@@ -11,7 +11,7 @@ import "@/style/global.scss";
 import pinia from "@/stores";
 
 import router from "@/router";
-
+import permissionDirective from '@/directives/permission';
 
 import {
   JdaMenu,
@@ -47,8 +47,9 @@ app.component("VueDraggable", VueDraggable);
 app.use(pinia);
 app.use(router);
 app.use(Antd);
+app.use(permissionDirective); // 注册自定义指令
 
-import '@/router/permission'
+import "@/router/permission";
 
 let a: {
   [key in keyof typeof app]: any;
