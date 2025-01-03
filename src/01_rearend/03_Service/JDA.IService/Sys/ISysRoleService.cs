@@ -19,9 +19,11 @@ namespace JDA.IService.Sys
         /// <summary>
         /// 给角色授权
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="roleId">角色ID</param>
+        /// <param name="routeResourceIds">路由资源Id集合（菜单Id）</param>
+        /// <param name="actionResourceIds">操作资源Id集合（按钮Id）</param>
         /// <returns></returns>
-        Task<OperationResult> Empower(SysRoleEmpowerVO model);
+        Task<OperationResult> Empower(long roleId, List<long> routeResourceIds, List<long> actionResourceIds);
         /// <summary>
         /// 获取菜单和按钮
         /// </summary>

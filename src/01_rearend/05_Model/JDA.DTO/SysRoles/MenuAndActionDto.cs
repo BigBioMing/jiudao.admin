@@ -21,5 +21,9 @@ namespace JDA.DTO.SysRoles
         /// 选中的菜单Id集合
         /// </summary>
         public List<long> SelectMenuIds { get; set; }
+        /// <summary>
+        /// 选中的按钮Id集合
+        /// </summary>
+        public List<long> SelectActionIds { get; set; }
     }
 }

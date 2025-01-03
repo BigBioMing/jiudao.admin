@@ -31,6 +31,13 @@ namespace JDA.Model.Sys.SysRoles
         [Display(Name = "需要给指定角色添加的路由资源ID集合", Order = 2)]
         [Description("需要给指定角色添加的路由资源ID集合")]
         [ColumnMetadata(Name = "需要给指定角色添加的路由资源ID集合", Order = 2)]
-        public List<long> RoleRouteResourceIds { get; set; }
+        public List<long> RouteResourceIds { get; set; }
+        /// <summary>
+        /// 需要给指定角色添加的路由资源ID集合
+        /// </summary>
+        [Display(Name = "需要给指定角色添加的操作资源ID集合", Order = 2)]
+        [Description("需要给指定角色添加的操作资源ID集合")]
+        [ColumnMetadata(Name = "需要给指定角色添加的操作资源ID集合", Order = 2)]
+        public List<long> ActionResourceIds { get; set; }
     }
 }

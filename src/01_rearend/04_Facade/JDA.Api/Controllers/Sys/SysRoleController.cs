@@ -88,7 +88,7 @@ namespace JDA.Api.Controllers.Sys
         [Route("Empower")]
         public virtual async Task<UnifyResponse<object>> Empower([FromBody] SysRoleEmpowerVO model)
         {
-            var operationResult = await _sysRoleService.Empower( model);
+            var operationResult = await _sysRoleService.Empower(model.RoleId, model.RouteResourceIds, model.ActionResourceIds);
             if (operationResult.Status != JDA.Core.Models.Operations.OperationResultStatus.Success)
                 return UnifyResponse<object>.Error(operationResult.Message);
 

@@ -100,3 +100,22 @@ export const getRouteAndOptionsApi = async (params: any) => {
     },
   });
 };
+
+/**
+ * 授权
+ * @param params
+ * @returns
+ */
+export const empowerApi = async (data: any) => {
+  return await request({
+    url: URL_PREFIX + "Empower",
+    method: "post",
+    // params: params,
+    data: data,
+    paramsSerializer: (params) => {
+      console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
+      // return qs.stringify(params, { indices: false,allowDots: true })
+      return qs.stringify(params, { allowDots: true });
+    },
+  });
+};

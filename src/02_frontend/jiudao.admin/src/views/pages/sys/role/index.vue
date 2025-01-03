@@ -106,7 +106,8 @@ const onDelete = (row: any) => {
  * 打开授权页面
  */
 const onOpenAuth = (row: any): void => {
-  router.push('/sys/role/auth');
+  // router.push({name:'sys.role.auth', params: { id: row.id }});
+  router.push({path:'/sys/role/auth', query: { id: row.id }});
 }
 </script>
 <template>
