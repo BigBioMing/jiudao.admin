@@ -31,6 +31,8 @@ namespace JDA.Service.DI
             serviceCollection.AddScoped<ISysOrganizationService, SysOrganizationService>();
             serviceCollection.AddScoped<ISysDictionaryDefineService, SysDictionaryDefineService>();
             serviceCollection.AddScoped<ISysLogService, SysLogService>();
+            serviceCollection.AddScoped<ISysRouteResourceService, SysRouteResourceService>();
+            serviceCollection.AddScoped<ISysActionResourceService, SysActionResourceService>();
             serviceCollection.AddScoped<IHttpLoggingStorage, SysLogService>();
         }
     }

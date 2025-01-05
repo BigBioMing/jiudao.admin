@@ -1,54 +1,20 @@
 import type { Paging, TablePageResult } from "@/types/global";
-import type { SysRouteResourceGetPageEntitiesInputParams } from "@/types/sys/routeResource";
+import type { SysActionResourceGetPageEntitiesInputParams } from "@/types/sys/actionResource";
 import request from "@/utils/http";
 import qs from "qs";
 
-const URL_PREFIX = "/api/Sys/SysRouteResource/";
+const URL_PREFIX = "/api/Sys/SysActionResource/";
 
 /**
- * 获取分页数据
+ * 获取用户分页数据
  * @param params
  * @returns
  */
 export const getPageEntitiesApi = async (
-  params: Paging<SysRouteResourceGetPageEntitiesInputParams>
+  params: Paging<SysActionResourceGetPageEntitiesInputParams>
 ): Promise<TablePageResult<any>> => {
   return await request({
     url: URL_PREFIX + "GetPageEntities",
-    method: "get",
-    // params: params,
-    params: params,
-    paramsSerializer: (params) => {
-      // return qs.stringify(params, { indices: false,allowDots: true })
-      return qs.stringify(params, { allowDots: true });
-    },
-  });
-};
-/**
- * 获取全部数据
- * @param params
- * @returns
- */
-export const getEntitiesApi = async (params:any) => {
-  return await request({
-    url: URL_PREFIX + "GetEntities",
-    method: "get",
-    // params: params,
-    params: params,
-    paramsSerializer: (params) => {
-      // return qs.stringify(params, { indices: false,allowDots: true })
-      return qs.stringify(params, { allowDots: true });
-    },
-  });
-};
-/**
- * 获取路由资源树
- * @param params
- * @returns
- */
-export const getRouteTreeApi = async (params:any) => {
-  return await request({
-    url: URL_PREFIX + "GetRouteTree",
     method: "get",
     // params: params,
     params: params,
@@ -63,9 +29,7 @@ export const getRouteTreeApi = async (params:any) => {
  * @param params
  * @returns
  */
-export const getEntityApi = async (
-  id: number
-): Promise<TablePageResult<any>> => {
+export const getEntityApi = async (id: number): Promise<TablePageResult<any>> => {
   return await request({
     url: URL_PREFIX + "GetEntityById",
     method: "get",
@@ -82,7 +46,7 @@ export const getEntityApi = async (
  * @param params 用户信息
  * @returns
  */
-export const saveRouteResourceApi = async (params: any) => {
+export const saveActionResourceApi = async (params: any) => {
   return await request({
     url: URL_PREFIX + "Save",
     method: "post",
@@ -95,7 +59,7 @@ export const saveRouteResourceApi = async (params: any) => {
  * @param id 角色Id
  * @returns
  */
-export const delRouteResourceApi = async (id: number) => {
+export const delActionResourceApi = async (id: number) => {
   return await request({
     url: URL_PREFIX + "Delete",
     method: "post",

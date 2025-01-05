@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JDA.Core.Formats.WebApi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,18 +56,40 @@ namespace JDA.Core.Models.Operations
             };
         }
 
-        public static OperationResult Error(string code, string? msg = null)
+        public static OperationResult Error(string? msg)
+        {
+            return new OperationResult()
+            {
+                Status = OperationResultStatus.Failed,
+                Code = "fail",
+                Message = msg,
+            };
+        }
+
+        public static OperationResult ErrorCustomCode(string code, string? msg = null)
         {
             return new OperationResult()
             {
                 Status = OperationResultStatus.Failed,
                 Code = code,
-                Message = msg,
+                Message = msg
             };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public UnifyResponse ToResponse()
+        {
+            if (this.Status != JDA.Core.Models.Operations.OperationResultStatus.Success)
+                return UnifyResponse.Error(this.Message);
+
+            return UnifyResponse.Success(this.Message);
         }
         #endregion
     }
-    public class OperationResult<TData>: OperationResult
+    public class OperationResult<TData> : OperationResult
     {
         /// <summary>
         /// 返回数据
@@ -104,7 +127,18 @@ namespace JDA.Core.Models.Operations
             };
         }
 
-        public static OperationResult<TData> Error(string code, string? msg = null, TData? data = default(TData))
+        public static OperationResult<TData> Error(string? msg = null, TData? data = default(TData))
+        {
+            return new OperationResult<TData>()
+            {
+                Status = OperationResultStatus.Failed,
+                Code = "fail",
+                Message = msg,
+                Data = data
+            };
+        }
+
+        public static OperationResult<TData> ErrorCustomCode(string code, string? msg = null, TData? data = default(TData))
         {
             return new OperationResult<TData>()
             {
@@ -113,6 +147,18 @@ namespace JDA.Core.Models.Operations
                 Message = msg,
                 Data = data
             };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public new UnifyResponse<TData> ToResponse()
+        {
+            if (this.Status != JDA.Core.Models.Operations.OperationResultStatus.Success)
+                return UnifyResponse<TData>.Error(this.Message);
+
+            return UnifyResponse<TData>.Success(this.Message);
         }
         #endregion
     }

@@ -16,9 +16,11 @@ defineOptions({
 })
 
 const props = withDefaults(defineProps<{
-    labelAlign: 'left' | 'right'
+    labelAlign: 'left' | 'right',
+    labelCol:any
 }>(), {
-    labelAlign: 'right'
+    labelAlign: 'right',
+    labelCol:{ style: { width: '60px' } }
 })
 
 const myFormRef = ref();
@@ -40,7 +42,8 @@ defineExpose({
 
 </script>
 <template>
-    <a-form ref="myFormRef" layout="horizontal" v-bind="$attrs" :labelAlign="props.labelAlign">
+    <a-form ref="myFormRef" layout="horizontal" v-bind="$attrs" :labelAlign="props.labelAlign"
+        :label-col="props.labelCol">
         <!-- 通过遍历实现插槽透传 -->
         <template v-for="(item, key, index) in $slots" :key="index" v-slot:[key]="scopeData">
             <slot :name="key" v-bind="scopeData || {}"></slot>

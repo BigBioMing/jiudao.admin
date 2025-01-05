@@ -13,6 +13,7 @@ namespace JDA.Core.Formats.WebApi
         /// 成功码
         /// </summary>
         public const string SuccessCode = "0";
+        public const string ErrorCode = "500";
     }
     public partial class UnifyResponse
     {
@@ -28,6 +29,45 @@ namespace JDA.Core.Formats.WebApi
         /// 返回值
         /// </summary>
         public object? Data { get; set; } = null;
+
+
+        public static UnifyResponse Success(string? message)
+        {
+            return new UnifyResponse()
+            {
+                Code = UnifyResponse.SuccessCode,
+                Message = message,
+                Data = null
+            };
+        }
+        public static UnifyResponse Success()
+        {
+            return new UnifyResponse()
+            {
+                Code = UnifyResponse.SuccessCode,
+                Data = null
+            };
+        }
+
+        public static UnifyResponse Error(string? message = null)
+        {
+            return new UnifyResponse()
+            {
+                Code = UnifyResponse.ErrorCode,
+                Message = message,
+                Data = null
+            };
+        }
+
+        public static UnifyResponse ErrorCustomCode(string code, string? message = null)
+        {
+            return new UnifyResponse()
+            {
+                Code = code,
+                Message = message,
+                Data = null
+            };
+        }
     }
     /// <summary>
     /// 统一响应格式
@@ -72,7 +112,7 @@ namespace JDA.Core.Formats.WebApi
         {
             return new UnifyResponse<TData>()
             {
-                Code = "500",
+                Code = UnifyResponse.ErrorCode,
                 Message = message,
                 Data = data
             };

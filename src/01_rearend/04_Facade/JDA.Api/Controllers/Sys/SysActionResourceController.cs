@@ -7,13 +7,9 @@ using JDA.Core.WebApi.ControllerBases;
 using JDA.DTO.SysActionResources;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JDA.Api.Controllers.Sys
 {
@@ -21,13 +17,13 @@ namespace JDA.Api.Controllers.Sys
     /// 路由资源
     /// </summary>
     [Area("Sys")]
-    [ApiVersion(Version = ApiVersionDefine.V2)]
-    public partial class SysRouteResourceController : BaseApiController<SysRouteResource>
+    //[ApiVersion(Version = ApiVersionDefine.V2)]
+    public class SysActionResourceController : BaseApiController<SysActionResource>
     {
-        private readonly ISysRouteResourceService _sysRouteResourceService;
-        public SysRouteResourceController(ICurrentRunningContext currentRunningContext, IService<SysRouteResource> currentService, ISysRouteResourceService sysRouteResourceService) : base(currentRunningContext, currentService)
+        private readonly ISysActionResourceService _sysActionResourceService;
+        public SysActionResourceController(ICurrentRunningContext currentRunningContext, IService<SysActionResource> currentService, ISysActionResourceService sysActionResourceService) : base(currentRunningContext, currentService)
         {
-            _sysRouteResourceService = sysRouteResourceService;
+            _sysActionResourceService = sysActionResourceService;
         }
 
         /// <summary>
@@ -39,7 +35,7 @@ namespace JDA.Api.Controllers.Sys
         [Route("GetPageEntities")]
         public virtual async Task<IActionResult> GetPageEntities([FromQuery] PageViewModel filterParams)
         {
-            Expression<Func<SysRouteResource, bool>>? predicate = null;
+            Expression<Func<SysActionResource, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
@@ -53,31 +49,18 @@ namespace JDA.Api.Controllers.Sys
         }
 
         /// <summary>
-        /// 获取全部路由资源
+        /// 根据id获取单条数据
         /// </summary>
-        /// <param name="filterParams">查询条件</param>
+        /// <param name="id">用户id</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetEntities")]
-        public virtual async Task<IActionResult> GetEntities([FromQuery] PageViewModel filterParams)
+        [Route("GetEntityById")]
+        //[ApiExplorerSettings(GroupName = "V2")]
+        public virtual async Task<IActionResult> GetEntityById([FromQuery] long id)
         {
-            var result = await base.GetEntitiesAsync(null);
+            var entity = await base.GetEntityByIdAsync(id);
 
-            return new JsonResult(result);
-        }
-
-        /// <summary>
-        /// 获取路由资源树
-        /// </summary>
-        /// <param name="filterParams">查询条件</param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("GetRouteTree")]
-        public virtual async Task<IActionResult> GetRouteTree([FromQuery] PageViewModel filterParams)
-        {
-            var result = await _sysRouteResourceService.GetRouteTreeAsync();
-
-            return new JsonResult(result);
+            return new JsonResult(entity);
         }
 
         /// <summary>
@@ -87,9 +70,10 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpPost]
         [Route("Save")]
-        public virtual async Task<UnifyResponse<object>> Save([FromBody] SysRouteResource model)
+        public virtual async Task<UnifyResponse<SysActionResource>> Save([FromBody] SysActionResourceSaveInputDto model)
         {
-            return await base.SaveAsync(model);
+            var operationResult = await _sysActionResourceService.SaveAsync(model);
+            return operationResult.ToResponse();
         }
 
         /// <summary>
@@ -101,7 +85,7 @@ namespace JDA.Api.Controllers.Sys
         [Route("Enable")]
         public virtual async Task<UnifyResponse<object>> Enable([FromBody] EnableListViewModel model)
         {
-            return await base.EnableAsync<SysRouteResource>(model);
+            return await base.EnableAsync<SysActionResource>(model);
         }
 
         /// <summary>
@@ -125,7 +109,7 @@ namespace JDA.Api.Controllers.Sys
         [Route("Export")]
         public virtual async Task<IActionResult> Export([FromQuery] NoPageViewModel filterParams)
         {
-            Expression<Func<SysRouteResource, bool>>? predicate = null;
+            Expression<Func<SysActionResource, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
@@ -134,7 +118,7 @@ namespace JDA.Api.Controllers.Sys
                 predicate = n => n.Code == code;
 
             var list = await this._currentService.GetEntitiesAsync(predicate);
-            string fileName = $"路由资源_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
+            string fileName = $"操作资源_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
             return await base.ExportAsync(fileName, list);
         }
     }

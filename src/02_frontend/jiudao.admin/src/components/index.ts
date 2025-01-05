@@ -6,6 +6,7 @@ import JdaTableSearch from "./jda-table-search/index.vue";
 import JdaCard from "./jda-card/index.vue";
 import JdaEditCard from "./jda-card/edit.vue";
 import JdaForm from "./jda-form/index.vue";
+import JdaTreeSelect from "./jda-tree-select/index.vue";
 
 export {
   JdaMenu,
@@ -16,4 +17,5 @@ export {
   JdaCard,
   JdaEditCard,
   JdaForm,
+  JdaTreeSelect,
 };

@@ -45,6 +45,19 @@ namespace JDA.Core.WebApi.ControllerBases
         }
         #endregion
 
+        #region 获取全部数据
+        /// <summary>
+        /// 获取全部数据
+        /// </summary>
+        /// <param name="filterParams">查询条件</param>
+        /// <returns></returns>
+        protected virtual async Task<List<TEntity>> GetEntitiesAsync(Expression<Func<TEntity, bool>>? predicate)
+        {
+            var result = await this._currentService.GetEntitiesAsync(predicate);
+            return result;
+        }
+        #endregion
+
         #region 获取单条数据
         /// <summary>
         /// 获取单条数据

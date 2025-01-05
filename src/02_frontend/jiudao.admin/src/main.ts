@@ -22,6 +22,7 @@ import {
   JdaCard,
   JdaEditCard,
   JdaForm,
+  JdaTreeSelect,
 } from "@/components";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -43,6 +44,7 @@ app.component("JdaModalFooter", JdaModalFooter);
 app.component("JdaCard", JdaCard);
 app.component("JdaEditCard", JdaEditCard);
 app.component("JdaForm", JdaForm);
+app.component("JdaTreeSelect", JdaTreeSelect);
 app.component("VueDraggable", VueDraggable);
 app.use(pinia);
 app.use(router);
