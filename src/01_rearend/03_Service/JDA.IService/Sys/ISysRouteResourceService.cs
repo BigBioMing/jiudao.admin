@@ -1,4 +1,5 @@
-﻿using JDA.Core.Persistence.Services.Abstractions.Default;
+﻿using JDA.Core.Models.Operations;
+using JDA.Core.Persistence.Services.Abstractions.Default;
 using JDA.DTO.SysRouteResources;
 using JDA.Entity.Entities.Sys;
 using System;
@@ -14,6 +15,12 @@ namespace JDA.IService.Sys
     /// </summary>
     public interface ISysRouteResourceService : IService<SysRouteResource>
     {
+        /// <summary>
+        /// 保存路由资源
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        Task<OperationResult<SysRouteResource>> SaveAsync(SysRouteResourceSaveInputDto model);
         /// <summary>
         /// 获取路由资源树
         /// </summary>

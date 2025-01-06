@@ -7,6 +7,7 @@ using JDA.Core.WebApi.ControllerBases;
 using JDA.DTO.SysActionResources;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
+using JDA.Model.Sys.SysActionResources;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
@@ -33,15 +34,18 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("GetPageEntities")]
-        public virtual async Task<IActionResult> GetPageEntities([FromQuery] PageViewModel filterParams)
+        public virtual async Task<IActionResult> GetPageEntities([FromQuery] SysActionResourceGetListVO filterParams)
         {
             Expression<Func<SysActionResource, bool>>? predicate = null;
-            string? name = filterParams?.Params?.Name;
-            if (!string.IsNullOrWhiteSpace(name))
-                predicate = n => n.Name.Contains(name);
-            string? code = filterParams?.Params?.Code;
+            string? code = filterParams?.Code;
             if (!string.IsNullOrWhiteSpace(code))
                 predicate = n => n.Code == code;
+            string? name = filterParams?.Name;
+            if (!string.IsNullOrWhiteSpace(name))
+                predicate = n => n.Name.Contains(name);
+            long? routeResourceId = filterParams?.RouteResourceId;
+            if (routeResourceId != null)
+                predicate = n => n.RouteResourceId == routeResourceId;
 
             var pageResult = await base.GetPageEntitiesAsync(filterParams, predicate);
 

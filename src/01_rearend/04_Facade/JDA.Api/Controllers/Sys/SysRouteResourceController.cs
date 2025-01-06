@@ -5,6 +5,7 @@ using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ApiDocs;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.DTO.SysActionResources;
+using JDA.DTO.SysRouteResources;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
 using Microsoft.AspNetCore.Mvc;
@@ -87,9 +88,10 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpPost]
         [Route("Save")]
-        public virtual async Task<UnifyResponse<object>> Save([FromBody] SysRouteResource model)
+        public virtual async Task<UnifyResponse<SysRouteResource>> Save([FromBody] SysRouteResourceSaveInputDto model)
         {
-            return await base.SaveAsync(model);
+            var operationResult = await _sysRouteResourceService.SaveAsync(model);
+            return operationResult.ToResponse();
         }
 
         /// <summary>

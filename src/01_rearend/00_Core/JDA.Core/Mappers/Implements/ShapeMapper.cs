@@ -19,6 +19,7 @@ namespace JDA.Core.Mappers.Implements
             this._mapper = mapper;
         }
 
+        public TDestination Map<TSource, TDestination>(TSource source, TDestination destination) => this._mapper.Map(source, destination);
         public TDestination Map<TDestination>(object source) => this._mapper.Map(source, default(TDestination));
 
         public TDestination Map<TSource, TDestination>(TSource source)

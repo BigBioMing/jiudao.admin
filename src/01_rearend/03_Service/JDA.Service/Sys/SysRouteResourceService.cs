@@ -25,6 +25,28 @@ namespace JDA.Service.Sys
         {
         }
 
+        /// <summary>
+        /// 保存路由资源
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<OperationResult<SysRouteResource>> SaveAsync(SysRouteResourceSaveInputDto model)
+        {
+            if (model.Id > 0)
+            {
+                var entity = await _currentRepository.FirstOrDefaultAsync(n => n.Id == model.Id);
+                if (entity is null) return OperationResult<SysRouteResource>.Error("数据不存在");
+
+                entity = _mapper.Map<SysRouteResourceSaveInputDto, SysRouteResource>(model, entity);
+                return await _currentRepository.UpdateAsync(entity);
+            }
+            else
+            {
+                var entity = _mapper.Map<SysRouteResource>(model);
+                return await _currentRepository.InsertAsync(entity);
+            }
+        }
+
         #region 获取路由资源树
         /// <summary>
         /// 获取路由资源树

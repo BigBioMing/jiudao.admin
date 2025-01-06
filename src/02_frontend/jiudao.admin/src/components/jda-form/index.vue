@@ -17,10 +17,10 @@ defineOptions({
 
 const props = withDefaults(defineProps<{
     labelAlign: 'left' | 'right',
-    labelCol:any
+    labelCol?:any
 }>(), {
     labelAlign: 'right',
-    labelCol:{ style: { width: '60px' } }
+    labelCol:{ style: { width: '80px' } }
 })
 
 const myFormRef = ref();

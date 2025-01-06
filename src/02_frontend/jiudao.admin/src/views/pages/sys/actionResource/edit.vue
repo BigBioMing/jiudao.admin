@@ -57,8 +57,8 @@ const rules: Record<string, Rule[]> = {
     ]
 };
 
-//获取操作资源信息
-const onGetUser = async () => {
+//获取当前操作资源信息
+const onGetCurrentModel = async () => {
     if (props.id && props.id > 0) {
         //根据id获取用户信息
         const res = await getEntityApi(props.id!);
@@ -73,8 +73,8 @@ const onGetRouteTree = async () => {
     console.log(menuTreeNodes)
 }
 
-//获取用户信息
-onGetUser();
+//获取当前操作资源信息
+onGetCurrentModel();
 onGetRouteTree();
 
 let createConfirmLoading = ref<boolean>(false);

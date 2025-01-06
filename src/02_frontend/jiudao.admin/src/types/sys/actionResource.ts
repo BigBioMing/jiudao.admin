@@ -5,5 +5,6 @@ import type { Paging } from "../global";
  */
 export interface SysActionResourceGetPageEntitiesInputParams {
   name?: string;
-  account?: string;
+  code?: string;
+  routeResourceId?: number;
 }

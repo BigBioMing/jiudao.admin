@@ -2,6 +2,7 @@
 import type { Rule } from 'ant-design-vue/es/form';
 import { reactive, ref, toRaw, watch, type UnwrapRef } from 'vue'
 import { getEntityApi, saveRouteResourceApi } from '@/apis/sys/routeResource'
+import { getRouteTreeApi } from '@/apis/sys/routeResource'
 import { useSysDic } from '@/hooks'
 import { onMounted } from 'vue';
 defineOptions({
@@ -36,43 +37,52 @@ const sexDicItems = getDicItems('Sex');
 
 
 const formRef = ref();
-//表单对象-用户信息
+//表单对象
 let model = reactive({
-    account: null,
-    password: null,
+    id: null,
+    code: null,
     name: null,
-    mobile: null,
-    email: null,
-    gender: null
+    title: null,
+    url: null,
+    redirect: null,
+    component: null,
+    icon: null,
+    showInMenu: true,
+    isThird: false,
+    parentId: null,
+    childrens: null
 })
 
 
 // 表单验证规则
 const rules: Record<string, Rule[]> = {
-    account: [
-        { required: true, message: '请输入账号名称', trigger: 'change' },
-        { min: 3, max: 20, message: '长度应该是3-20', trigger: 'blur' },
-    ],
-    password: [
-        { required: true, message: '请输入密码', trigger: 'change' },
-        { min: 6, max: 20, message: '长度应该是6-20', trigger: 'blur' }
+    code: [
+        { required: true, message: '请输入路由编码', trigger: 'change' },
     ],
     name: [
-        { required: true, message: '请输入姓名', trigger: 'change' }
+        { required: true, message: '请输入路由名称', trigger: 'change' }
     ]
 };
 
-//获取用户信息
-const onGetUser = async () => {
+//获取当前路由资源信息
+const onGetCurrentModel = async () => {
     if (props.id && props.id > 0) {
         //根据id获取用户信息
         const res = await getEntityApi(props.id!);
         Object.assign(model, res);
     }
 }
+const menuTreeNodes = ref<any[]>([]);
+//获取路由树
+const onGetRouteTree = async () => {
+    const res = await getRouteTreeApi({});
+    menuTreeNodes.value = res as any;
+    console.log(menuTreeNodes)
+}
 
-//获取用户信息
-onGetUser();
+//获取当前路由资源信息
+onGetCurrentModel();
+onGetRouteTree();
 
 let createConfirmLoading = ref<boolean>(false);
 const handleOk = () => {
@@ -97,41 +107,58 @@ const closeModal = () => {
     <!-- <jda-modal :width="800" v-model:open="openCreateModal" title="新建" :confirm-loading="createConfirmLoading"
         @ok="handleOk" @cancel="closeModal"> -->
     <a-card>
-        <jda-form ref="formRef" :model="model" layout="horizontal" labelAlign="right" :rules="rules"
-            :label-col="{ style: { width: '60px' } }">
+        <jda-form ref="formRef" :model="model" layout="horizontal" labelAlign="right" :rules="rules">
             <a-row :gutter="48">
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="账号" name="account">
-                        <a-input v-model:value="model.account" placeholder="请输入账号" />
-                    </a-form-item>
-                </a-col>
-                <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="密码" name="password">
-                        <a-input v-model:value="model.password" placeholder="请输入密码" />
+                    <a-form-item label="编码" name="code">
+                        <a-input v-model:value="model.code" placeholder="请输入路由编码" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
                     <a-form-item label="名称" name="name">
-                        <a-input v-model:value="model.name" placeholder="请输入姓名" />
+                        <a-input v-model:value="model.name" placeholder="请输入路由名称" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="手机号" name="mobile">
-                        <a-input v-model:value="model.mobile" placeholder="请输入手机号码" />
+                    <a-form-item label="标题" name="title">
+                        <a-input v-model:value="model.title" placeholder="请输入路由标题" />
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="性别" name="gender">
-                        <!-- <a-input v-model:value="model.gender" placeholder="请输入性别" /> -->
-                        <a-select v-model:value="model.gender" allowClear>
-                            <a-select-option v-for="(item, index) in sexDicItems" :value="item.id">{{ item.name
-                                }}</a-select-option>
-                        </a-select>
+                    <a-form-item label="上级路由" name="parentId">
+                        <jda-tree-select v-model:value="model.parentId" placeholder="请选择上级路由资源"
+                            :tree-data="menuTreeNodes" tree-node-filter-prop="name">
+                        </jda-tree-select>
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="邮箱" name="email">
-                        <a-input v-model:value="model.email" placeholder="请输入邮箱" />
+                    <a-form-item label="Url" name="url">
+                        <a-input v-model:value="model.url" placeholder="请输入路由路径" />
+                    </a-form-item>
+                </a-col>
+                <a-col :md="12" :sm="24" :xs="24" :lg="12">
+                    <a-form-item label="重定向路径" name="redirect">
+                        <a-input v-model:value="model.redirect" placeholder="请输入重定向路径" />
+                    </a-form-item>
+                </a-col>
+                <a-col :md="12" :sm="24" :xs="24" :lg="12">
+                    <a-form-item label="组件路径" name="component">
+                        <a-input v-model:value="model.component" placeholder="请输入组件路径" />
+                    </a-form-item>
+                </a-col>
+                <a-col :md="12" :sm="24" :xs="24" :lg="12">
+                    <a-form-item label="菜单图标" name="icon">
+                        <a-input v-model:value="model.icon" placeholder="请输入菜单图标" />
+                    </a-form-item>
+                </a-col>
+                <a-col :md="12" :sm="24" :xs="24" :lg="12">
+                    <a-form-item label="是否在菜单栏展示" name="showInMenu" :label-col="{ style: { width: '130px' } }">
+                        <a-switch v-model:checked="model.showInMenu" />
+                    </a-form-item>
+                </a-col>
+                <a-col :md="12" :sm="24" :xs="24" :lg="12">
+                    <a-form-item label="是否第三方路由" name="isThird" :label-col="{ style: { width: '130px' } }">
+                        <a-switch v-model:checked="model.isThird" />
                     </a-form-item>
                 </a-col>
             </a-row>

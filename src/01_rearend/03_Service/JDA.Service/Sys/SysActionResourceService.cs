@@ -6,6 +6,7 @@ using JDA.DTO.SysActionResources;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace JDA.Service.Sys
                 var entity = await _currentRepository.FirstOrDefaultAsync(n => n.Id == model.Id);
                 if (entity is null) return OperationResult<SysActionResource>.Error("数据不存在");
 
-                entity = _mapper.Map<SysActionResource>(model);
+                entity = _mapper.Map<SysActionResourceSaveInputDto, SysActionResource>(model, entity);
                 return await _currentRepository.UpdateAsync(entity);
             }
             else

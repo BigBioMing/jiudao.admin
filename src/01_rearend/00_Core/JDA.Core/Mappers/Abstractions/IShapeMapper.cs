@@ -11,6 +11,7 @@ namespace JDA.Core.Mappers.Abstractions
     /// </summary>
     public interface IShapeMapper
     {
+        TDestination Map<TSource, TDestination>(TSource source, TDestination destination);
         TDestination Map<TDestination>(object source);
         TDestination Map<TSource, TDestination>(TSource source);
     }

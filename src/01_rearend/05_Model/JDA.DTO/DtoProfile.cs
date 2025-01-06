@@ -22,7 +22,8 @@ namespace JDA.DTO
             CreateMap<SysRouteResource, RouteTreeDto>().ReverseMap();
             CreateMap<SysActionResource, SysActionResourceDto>().ReverseMap(); 
             CreateMap<SysActionResource, SysActionResourceDto>().ReverseMap(); 
-            CreateMap<SysActionResource, SysActionResourceSaveInputDto>().ReverseMap();
+            CreateMap<SysActionResource, SysActionResourceSaveInputDto>().ReverseMap(); 
+            CreateMap<SysRouteResource, SysRouteResourceSaveInputDto>().ReverseMap(); 
         }
     }
 }
