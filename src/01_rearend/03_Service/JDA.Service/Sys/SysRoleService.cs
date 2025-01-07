@@ -156,7 +156,7 @@ namespace JDA.Service.Sys
         {
             List<MenuTreeDto> childMenuTreeNodes = new List<MenuTreeDto>();
             //根据ParentId获取下级菜单，然后组装数据
-            long parentId = parentMenu?.Id ?? 0;
+            long? parentId = parentMenu?.Id ?? null;
             var currentMenus = allMenus.Where(n => n.ParentId == parentId).OrderBy(n => n.Sort).ToList();
             foreach (var currentMenu in currentMenus)
             {

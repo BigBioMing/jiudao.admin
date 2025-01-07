@@ -29,7 +29,7 @@ export const getPageEntitiesApi = async (
  * @param params
  * @returns
  */
-export const getEntitiesApi = async (params:any) => {
+export const getEntitiesApi = async (params: any) => {
   return await request({
     url: URL_PREFIX + "GetEntities",
     method: "get",
@@ -46,7 +46,7 @@ export const getEntitiesApi = async (params:any) => {
  * @param params
  * @returns
  */
-export const getRouteTreeApi = async (params:any) => {
+export const getRouteTreeApi = async (params: any) => {
   return await request({
     url: URL_PREFIX + "GetRouteTree",
     method: "get",
@@ -114,5 +114,57 @@ export const enableApi = async (id: number, value: boolean) => {
     url: URL_PREFIX + "Enable",
     method: "post",
     data: { Id: id, SetEnableValue: value },
+  });
+};
+
+/**
+ * 获取按钮和菜单权限
+ * @param params
+ * @returns
+ */
+export const getRouteAndActionsApi = async (params: any) => {
+  return await request({
+    url: URL_PREFIX + "GetRouteAndActions",
+    method: "get",
+    // params: params,
+    params: params,
+    paramsSerializer: (params) => {
+      // return qs.stringify(params, { indices: false,allowDots: true })
+      return qs.stringify(params, { allowDots: true });
+    },
+  });
+};
+/**
+ * 获取指定菜单下的按钮集合
+ * @param params
+ * @returns
+ */
+export const getActionsApi = async (params: any) => {
+  return await request({
+    url: URL_PREFIX + "GetActions",
+    method: "get",
+    // params: params,
+    params: params,
+    paramsSerializer: (params) => {
+      // return qs.stringify(params, { indices: false,allowDots: true })
+      return qs.stringify(params, { allowDots: true });
+    },
+  });
+};
+/**
+ * 保存指定菜单下的按钮集合
+ * @param params
+ * @returns
+ */
+export const saveActionsApi = async (data: any) => {
+  return await request({
+    url: URL_PREFIX + "SaveActions",
+    method: "post",
+    // params: params,
+    data: data,
+    paramsSerializer: (params) => {
+      // return qs.stringify(params, { indices: false,allowDots: true })
+      return qs.stringify(params, { allowDots: true });
+    },
   });
 };

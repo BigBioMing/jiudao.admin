@@ -70,6 +70,8 @@ const onGetCurrentModel = async () => {
         //根据id获取用户信息
         const res = await getEntityApi(props.id!);
         Object.assign(model, res);
+        if (model.parentId == 0)
+            model.parentId = null;
     }
 }
 const menuTreeNodes = ref<any[]>([]);

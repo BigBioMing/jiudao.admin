@@ -21,8 +21,12 @@ namespace JDA.Service.Sys
     /// </summary>
     public class SysRouteResourceService : Service<SysRouteResource>, ISysRouteResourceService
     {
-        public SysRouteResourceService(IShapeMapper mapper, IRepository<SysRouteResource> currentRepository) : base(mapper, currentRepository)
+        protected readonly IRepository<SysActionResource> _sysActionResourceRepository;
+        protected readonly IRepository<SysRouteResource> _sysRouteResourceRepository;
+        public SysRouteResourceService(IShapeMapper mapper, IRepository<SysRouteResource> currentRepository, IRepository<SysActionResource> sysActionResourceRepository, IRepository<SysRouteResource> sysRouteResourceRepository) : base(mapper, currentRepository)
         {
+            _sysActionResourceRepository = sysActionResourceRepository;
+            _sysRouteResourceRepository = sysRouteResourceRepository;
         }
 
         /// <summary>
@@ -71,7 +75,7 @@ namespace JDA.Service.Sys
         {
             List<RouteTreeDto> childMenuTreeNodes = new List<RouteTreeDto>();
             //根据ParentId获取下级菜单，然后组装数据
-            long parentId = parentMenu?.Id ?? 0;
+            long? parentId = parentMenu?.Id ?? null;
             var currentMenus = allMenus.Where(n => n.ParentId == parentId).OrderBy(n => n.Sort).ToList();
             foreach (var currentMenu in currentMenus)
             {
@@ -88,5 +92,112 @@ namespace JDA.Service.Sys
             return childMenuTreeNodes;
         }
         #endregion
+
+
+        #region 获取菜单和按钮
+        /// <summary>
+        /// 获取菜单和按钮
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<List<MenuTreeDto>> GetMenuAndActionsAsync()
+        {
+            var allMenus = await _sysRouteResourceRepository.QueryableNoTracking.OrderBy(n => n.Sort).ToListAsync();
+            var allActions = await _sysActionResourceRepository.QueryableNoTracking.OrderBy(n => n.Sort).ToListAsync();
+
+            //获取菜单树
+            var topMenuTreeNodes = LoopMenus(allMenus, allActions, null);
+
+            return topMenuTreeNodes;
+        }
+
+        /// <summary>
+        /// 获取菜单树
+        /// </summary>
+        /// <param name="allMenus">所有菜单</param>
+        /// <param name="allActions">所有按钮</param>
+        /// <param name="roleRouteIds">该角色拥有的菜单权限</param>
+        /// <param name="roleActionIds">该角色拥有的按钮权限</param>
+        /// <param name="parentMenu">父级菜单（为null时表示从1级菜单开始获取</param>
+        /// <returns></returns>
+        private List<MenuTreeDto> LoopMenus(List<SysRouteResource> allMenus, List<SysActionResource> allActions, SysRouteResource? parentMenu)
+        {
+            List<MenuTreeDto> childMenuTreeNodes = new List<MenuTreeDto>();
+            //根据ParentId获取下级菜单，然后组装数据
+            long? parentId = parentMenu?.Id ?? null;
+            var currentMenus = allMenus.Where(n => n.ParentId == parentId).OrderBy(n => n.Sort).ToList();
+            foreach (var currentMenu in currentMenus)
+            {
+                //组装子级节点数据
+                MenuTreeDto childMenuTreeNode = this._mapper.Map<MenuTreeDto>(currentMenu);
+                childMenuTreeNodes.Add(childMenuTreeNode);
+                //获取该菜单下的按钮
+                var currrentMenusActions = allActions.Where(n => n.RouteResourceId == currentMenu.Id).ToList();
+                childMenuTreeNode.Actions = new List<ActionTreeDto>();
+
+                foreach (var currrentMenusAction in currrentMenusActions)
+                {
+                    var currrentMenusActionTreeNode = _mapper.Map<ActionTreeDto>(currrentMenusAction);
+                    childMenuTreeNode.Actions.Add(currrentMenusActionTreeNode);
+                }
+
+                //获取下下级菜单
+                var grandsonMenuTreeNodes = LoopMenus(allMenus, allActions, currentMenu);
+                childMenuTreeNode.Childrens = grandsonMenuTreeNodes;
+                if (childMenuTreeNode.Childrens?.Count == 0) childMenuTreeNode.Childrens = null;
+            }
+
+            return childMenuTreeNodes;
+        }
+        #endregion
+
+
+        /// <summary>
+        /// 获取指定菜单拥有的按钮集合
+        /// </summary>
+        /// <param name="routeResourceId"></param>
+        /// <returns></returns>
+        public async Task<List<SysActionResourceDto>> GetActionsAsync(long routeResourceId)
+        {
+            var actions = await _sysActionResourceRepository.GetEntitiesAsync(n => n.RouteResourceId == routeResourceId);
+            var list = _mapper.Map<List<SysActionResourceDto>>(actions);
+            return list;
+        }
+        /// <summary>
+        /// 保存指定菜单下的按钮集合
+        /// </summary>
+        /// <param name="routeResourceId">路由资源Id</param>
+        /// <param name="actions">该菜单要保存的按钮集合</param>
+        /// <returns></returns>
+        public async Task SaveActionsAsync(long routeResourceId, List<SysActionResourceDto> actions)
+        {
+            var newActionCodes = actions.Select(n => n.Code).ToList();
+            //现有的菜单集合
+            var oldActions = await _sysActionResourceRepository.GetEntitiesAsync(n => n.RouteResourceId == routeResourceId);
+            //筛选出要删除的，新增的，和修改的
+            //待删除的
+            var deleteActions = oldActions.Where(n => !newActionCodes.Contains(n.Code)).ToList();
+            //待新增的
+            var addActions = actions.Where(n => oldActions.Count(c => c.Code == n.Code) == 0).Select(n => new SysActionResource() { Code = n.Code, Name = n.Name, Sort = n.Sort ?? 0, RouteResourceId = routeResourceId }).ToList();
+            //待修改的
+            List<SysActionResource> updateActions = new List<SysActionResource>();
+            foreach (var upAction in oldActions)
+            {
+                var newAction = actions.FirstOrDefault(n => n.Code == upAction.Code);
+                if (newAction is null) continue;
+
+                if (upAction.Name != newAction.Name || upAction.Code != newAction.Code || upAction.Sort != newAction.Sort)
+                {
+                    upAction.Name = newAction.Name;
+                    upAction.Code = newAction.Code;
+                    upAction.Sort = newAction.Sort ?? 0;
+                    updateActions.Add(upAction);
+                }
+            }
+
+
+            if (deleteActions.Count > 0) await _sysActionResourceRepository.DeleteAsync(deleteActions);
+            if (addActions.Count > 0) await _sysActionResourceRepository.InsertAsync(addActions);
+            if (updateActions.Count > 0) await _sysActionResourceRepository.UpdateAsync(updateActions);
+        }
     }
 }

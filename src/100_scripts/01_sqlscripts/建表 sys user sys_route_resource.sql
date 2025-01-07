@@ -7,7 +7,7 @@ CREATE TABLE `sys_route_resource`(
   `Url` varchar(120) DEFAULT NULL COMMENT 'Url',
   `Redirect` varchar(120) DEFAULT NULL COMMENT '重定向地址',
   `Component` varchar(120) DEFAULT NULL COMMENT '组件路径（当前路径对应的组件，或者默认组件：BasicLayout）',
-  `ParentId` bigint(20) NOT NULL COMMENT '父级菜单Id',
+  `ParentId` bigint(20) NULL DEFAULT NULL COMMENT '父级菜单Id',
   `Icon` varchar(120) DEFAULT NULL COMMENT '图标',
   `ShowInMenu` tinyint(1) NOT NULL COMMENT '是否在菜单中显示（true-显示 false-不显示）',
   `IsThird` tinyint(1) NOT NULL COMMENT '是否是外部网页（true-是 false-不是）',

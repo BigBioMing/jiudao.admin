@@ -31,13 +31,13 @@ namespace JDA.Entity.Entities.Sys
         /// </summary>
         [Display(Name = "标题", Order = 2)]
         [ColumnMetadata(Name = "标题", Order = 2)]
-        public string Title { get; set; }
+        public string? Title { get; set; }
         /// <summary>
         /// Url
         /// </summary>
         [Display(Name = "Url", Order = 2)]
         [ColumnMetadata(Name = "Url", Order = 2)]
-        public string Url { get; set; }
+        public string? Url { get; set; }
         /// <summary>
         /// 重定向地址
         /// </summary>
@@ -55,13 +55,13 @@ namespace JDA.Entity.Entities.Sys
         /// </summary>
         [Display(Name = "父级菜单Id", Order = 2)]
         [ColumnMetadata(Name = "父级菜单Id", Order = 2)]
-        public long ParentId { get; set; }
+        public long? ParentId { get; set; }
         /// <summary>
         /// 图标
         /// </summary>
         [Display(Name = "图标", Order = 2)]
         [ColumnMetadata(Name = "图标", Order = 2)]
-        public string Icon { get; set; }
+        public string? Icon { get; set; }
         /// <summary>
         /// 是否在菜单中显示（true-显示 false-不显示）
         /// </summary>

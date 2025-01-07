@@ -15,6 +15,7 @@
     <ProjectReference Include="..\..\00_Core\JDA.Core.WebApi\JDA.Core.WebApi.csproj" />
     <ProjectReference Include="..\..\00_Core\JDA.Core\JDA.Core.csproj" />
     <ProjectReference Include="..\..\01_Entity\JDA.Entity\JDA.Entity.csproj" />
+    <ProjectReference Include="..\JDA.DTO\JDA.DTO.csproj" />
   </ItemGroup>
 
 </Project>

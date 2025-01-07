@@ -32,7 +32,7 @@ defineOptions({
 
 </script>
 <template>
-    <a-card v-bind="$attrs">
+    <a-card v-bind="$attrs" style="overflow: hidden;">
         <!-- 通过遍历实现插槽透传 -->
         <template v-for="(item, key, index) in $slots" :key="index" v-slot:[key]="scopeData">
             <slot :name="key" v-bind="scopeData || {}"></slot>

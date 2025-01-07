@@ -132,3 +132,8 @@ body {
   background-color: rgba(0, 0, 0, 0.04);
   box-shadow: none;
 }
+
+/* 表格表头不换行 */
+.ant-table-thead > tr > th {
+  white-space: nowrap;
+}
