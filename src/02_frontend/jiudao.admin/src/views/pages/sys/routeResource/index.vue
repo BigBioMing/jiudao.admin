@@ -185,7 +185,7 @@ const onDelete = (row: any) => {
   </jda-table-search>
   <jda-card >
     <a-table :columns="columns" :data-source="tableDataSource" rowKey="id" :row-selection="rowSelection"
-      childrenColumnName="childrens" bordered :scroll="{ x: true }">
+      childrenColumnName="childrens" bordered :scroll="{ x: true }" :pagination="false">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'icon'">
           <font-awesome-icon v-if="record.icon" :icon="record.icon" />
@@ -227,10 +227,10 @@ const onDelete = (row: any) => {
     </a-table>
   </jda-card>
   <jda-modal :width="800" v-model:open="openCreateModal.isOpen" title="新建" v-if="openCreateModal.isOpen">
-    <Edit v-model:openCreateModal="openCreateModal.isOpen" :id="openCreateModal.id"></Edit>
+    <Edit v-model:openCreateModal="openCreateModal.isOpen" :id="openCreateModal.id" @ok="onGetRouteAndActions"></Edit>
   </jda-modal>
   <jda-modal :width="800" v-model:open="openActionModal.isOpen" title="配置按钮功能" v-if="openActionModal.isOpen">
-    <EditAction v-model:openActionModal="openActionModal.isOpen" :routeResourceId="openActionModal.id"></EditAction>
+    <EditAction v-model:openActionModal="openActionModal.isOpen" :routeResourceId="openActionModal.id" @ok="onGetRouteAndActions"></EditAction>
   </jda-modal>
 </template>
 <style lang="scss" scoped></style>

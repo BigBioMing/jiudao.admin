@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<{
     id: null
 })
 
-const emits = defineEmits(['update:openCreateModal'])
+const emits = defineEmits(['update:openCreateModal','ok'])
 
 const { getDicItems } = useSysDic();
 //性别字典
@@ -95,6 +95,7 @@ const handleOk = () => {
             await saveRouteResourceApi(sendData);
             createConfirmLoading.value = false;
             closeModal();
+            emits('ok');
         })
         .catch((error: any) => {
             console.log('error', error);

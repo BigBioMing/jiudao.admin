@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<{
     routeResourceId: null
 })
 
-const emits = defineEmits(['update:openActionModal'])
+const emits = defineEmits(['update:openActionModal','ok'])
 
 
 const formRef = ref();
@@ -63,6 +63,7 @@ const handleOk = () => {
             await saveActionsApi({ routeResourceId: props.routeResourceId, actions: sendData.actions });
             createConfirmLoading.value = false;
             closeModal();
+            emits('ok');
         })
         .catch((error: any) => {
             console.log('error', error);
