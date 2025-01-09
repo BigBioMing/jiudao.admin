@@ -922,13 +922,18 @@ const onLogout = () => {
                 <a-breadcrumb>
                   <template v-for="(crumb, index) in crumbsComputed">
                     <a-breadcrumb-item v-if="!crumb.path">{{ crumb.name }}</a-breadcrumb-item>
-                    <a-breadcrumb-item v-else><a  @click="onCrumbClick(crumb)">{{ crumb.name }}</a></a-breadcrumb-item>
+                    <a-breadcrumb-item v-else><a @click="onCrumbClick(crumb)">{{ crumb.name }}</a></a-breadcrumb-item>
                   </template>
                 </a-breadcrumb>
               </div>
-              <a-layout-content :style="{ margin: '24px' }">
-                <router-view />
-              </a-layout-content class="full-screen">
+
+              <a-layout-content :style="{ margin: '24px', position: 'relative' }">
+                <a-spin tip="数据加载中..." :spinning="true" class="loading-wrap">
+                </a-spin>
+                <a-layout-content>
+                  <router-view />
+                </a-layout-content>
+              </a-layout-content>
               <!-- <a-layout-footer style="text-align: center;z-index:10">
               Copyright ©2024 Created by JiuDao
             </a-layout-footer> -->
@@ -1059,6 +1064,24 @@ const onLogout = () => {
 </template>
 
 <style lang="scss" scoped>
+.loading-wrap {
+  z-index: 9999999999;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  bottom: 0;
+  right: 0;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color:rgba(255,255,255,0.3);
+}
+
+
 .trigger {
   font-size: 18px;
   line-height: 54px;

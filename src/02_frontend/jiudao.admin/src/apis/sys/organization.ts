@@ -6,7 +6,7 @@ import qs from "qs";
 const URL_PREFIX = "/api/Sys/SysOrganization/";
 
 /**
- * 获取用户分页数据
+ * 获取组织机构分页数据
  * @param params
  * @returns
  */
@@ -25,7 +25,7 @@ export const getPageEntitiesApi = async (
   });
 };
 /**
- * 获取用户信息
+ * 获取组织机构信息
  * @param params
  * @returns
  */
@@ -42,11 +42,11 @@ export const getEntityApi = async (id: number): Promise<TablePageResult<any>> =>
   });
 };
 /**
- * 保存用户信息
- * @param params 用户信息
+ * 保存组织机构信息
+ * @param params 组织机构信息
  * @returns
  */
-export const saveRoleApi = async (params: any) => {
+export const saveApi = async (params: any) => {
   return await request({
     url: URL_PREFIX + "Save",
     method: "post",
@@ -59,7 +59,7 @@ export const saveRoleApi = async (params: any) => {
  * @param id 角色Id
  * @returns
  */
-export const delRoleApi = async (id: number) => {
+export const delApi = async (id: number) => {
   return await request({
     url: URL_PREFIX + "Delete",
     method: "post",

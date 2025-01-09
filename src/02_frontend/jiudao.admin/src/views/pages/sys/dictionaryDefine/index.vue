@@ -7,7 +7,7 @@ import { useSysDic } from '@/hooks'
 import Edit from './edit.vue'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { getPageEntitiesApi, delUserApi } from '@/apis/sys/userinfo';
+import { getPageEntitiesApi, delDictionaryDefineApi } from '@/apis/sys/dictionaryDefine';
 import type { PaginationChangeEvent } from '@/types/global';
 
 
@@ -15,18 +15,16 @@ const [messageApi, contextHolder] = message.useMessage();
 const { dicItemName } = useSysDic();
 
 const searchForm = ref({
-  userName: null,
-  account: null,
-  mobile: null,
-  email: null
+  code: null,
+  name: null
 });
 
 // table配置&数据
 const columns = reactive([
   {
-    title: '账号',
-    dataIndex: 'account',
-    key: 'account',
+    title: '编码',
+    dataIndex: 'code',
+    key: 'code',
   },
   {
     title: '名称',
@@ -34,19 +32,14 @@ const columns = reactive([
     key: 'name',
   },
   {
-    title: '手机号码',
-    dataIndex: 'mobile',
-    key: 'mobile',
+    title: '描述',
+    dataIndex: 'description',
+    key: 'description',
   },
   {
-    title: '性别',
-    key: 'gender',
-    dataIndex: 'gender',
-  },
-  {
-    title: '邮箱',
-    key: 'email',
-    dataIndex: 'email',
+    title: '启用/禁用',
+    key: 'enabled',
+    dataIndex: 'enabled',
   },
   {
     title: '操作',
@@ -90,7 +83,7 @@ onMounted(async() => {
 //控制是否展开高级搜索
 // let advanced = ref<boolean>(false)
 
-//创建用户-打开创建用户弹窗
+//创建-打开创建弹窗
 let openCreateModal = reactive({ isOpen: false, id: null })
 // let isOpenCreateModal = ref<boolean>(false);
 const onEdit = (row?: any) => {
@@ -99,17 +92,17 @@ const onEdit = (row?: any) => {
   openCreateModal.id = row?.id;
 }
 
-//删除用户
+//删除
 const onDelete = (row: any) => {
   Modal.confirm({
     title: '删除提示',
     icon: createVNode(ExclamationCircleOutlined),
-    content: `确定要删除用户【${row.name}】吗？`,
+    content: `确定要删除字典定义【${row.name}】吗？`,
     okText: '确认',
     cancelText: '取消',
     async onOk(e) {
       console.log(e)
-      let res = await delUserApi(row.id);
+      let res = await delDictionaryDefineApi(row.id);
       console.log(res)
     }
   });
@@ -117,70 +110,18 @@ const onDelete = (row: any) => {
 </script>
 <template>
   <context-holder />
-  <jda-table-search :model="searchForm" @search="onGetTableDataSource">
-    <template v-slot="{ advanced }">
+  <jda-table-search :model="searchForm" @search="onGetTableDataSource" :advancedControl="false">
       <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-        <a-form-item label="用户名">
-          <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" />
+        <a-form-item label="编码">
+          <a-input v-model:value="searchForm.code" placeholder="请输入编码" />
         </a-form-item>
       </a-col>
       <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-        <a-form-item label="账号">
-          <a-input v-model:value="searchForm.account" placeholder="请输入账号" />
+        <a-form-item label="名称">
+          <a-input v-model:value="searchForm.name" placeholder="请输入名称" />
         </a-form-item>
       </a-col>
-      <template v-if="advanced">
-        <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-          <a-form-item label="手机号码">
-            <a-input v-model:value="searchForm.mobile" placeholder="请输入手机号码" />
-          </a-form-item>
-        </a-col>
-        <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-          <a-form-item label="邮箱">
-            <a-input v-model:value="searchForm.email" placeholder="请输入邮箱" />
-          </a-form-item>
-        </a-col>
-      </template>
-    </template>
   </jda-table-search>
-  <!-- <div class="jda-search-container">
-    <a-form :model="searchForm" layout="horizontal" labelAlign="left" :label-col="{ style: { width: '70px' } }">
-      <a-row :gutter="48">
-        <a-col :md="12" :sm="24" :xs="24" :lg="8">
-          <a-form-item label="用户名">
-            <a-input v-model:value="searchForm.UserName" placeholder="请输入用户名" />
-          </a-form-item>
-        </a-col>
-        <a-col :md="12" :sm="24" :xs="24" :lg="8">
-          <a-form-item label="账号">
-            <a-input v-model:value="searchForm.Account" placeholder="请输入账号" />
-          </a-form-item>
-        </a-col>
-        <template v-if="advanced">
-          <a-col :md="12" :sm="24" :xs="24" :lg="8">
-            <a-form-item label="手机号码">
-              <a-input v-model:value="searchForm.Mobile" placeholder="请输入手机号码" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="12" :sm="24" :xs="24" :lg="8">
-            <a-form-item label="邮箱">
-              <a-input v-model:value="searchForm.Email" placeholder="请输入邮箱" />
-            </a-form-item>
-          </a-col>
-        </template>
-        <a-col :md="12" :sm="24" :xs="24" :lg="8">
-          <a-form-item>
-            <a-button type="primary">查询</a-button>
-            <a @click="advanced = !advanced" style="margin-left: 8px">
-              {{ advanced ? '收起' : '展开' }}
-              <font-awesome-icon v-if="advanced" icon="fas fa-angle-up" />
-              <font-awesome-icon v-else icon="fas fa-angle-down" />
-            </a>
-          </a-form-item>
-        </a-col>
-      </a-row>
-    </a-form>
-  </div> -->
   <a-card class="j-card-table-wrapper">
     <jda-table class="ant-table-striped" rowKey="id" :columns="columns" :data-source="tableDataSource"
       :scroll="{ x: true }" bordered :total="100" :pagination="{

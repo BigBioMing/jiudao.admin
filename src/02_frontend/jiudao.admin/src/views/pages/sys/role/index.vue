@@ -190,14 +190,14 @@ const onOpenAuth = (row: any): void => {
           </span>
         </template>
         <template v-else-if="column.key === 'action'">
-            <a-button type="link" @click="onEdit(record)" v-permission.disabled="'modify'">
+            <a-button type="link" @click="onEdit(record)" >
               <span class="jda-table-action-btn-text">修改</span>
               <template #icon>
                 <font-awesome-icon icon="fas fa-edit" />
               </template>
             </a-button>
             <a-divider type="vertical" />
-            <a-button danger type="link" v-permission="'6666'" @click="onOpenAuth(record)">
+            <a-button danger type="link" @click="onOpenAuth(record)">
               <span class="jda-table-action-btn-text">授权</span>
               <template #icon>
                 <font-awesome-icon icon="fas fa-trash-alt" />

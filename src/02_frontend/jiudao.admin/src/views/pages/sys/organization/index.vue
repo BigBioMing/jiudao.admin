@@ -7,7 +7,7 @@ import { useSysDic } from '@/hooks'
 import Edit from './edit.vue'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { getPageEntitiesApi, delUserApi } from '@/apis/sys/userinfo';
+import { getPageEntitiesApi, delApi } from '@/apis/sys/organization';
 import type { PaginationChangeEvent } from '@/types/global';
 
 
@@ -15,10 +15,8 @@ const [messageApi, contextHolder] = message.useMessage();
 const { dicItemName } = useSysDic();
 
 const searchForm = ref({
-  userName: null,
-  account: null,
-  mobile: null,
-  email: null
+  code: null,
+  name: null,
 });
 
 // table配置&数据
@@ -116,7 +114,6 @@ const onDelete = (row: any) => {
 }
 </script>
 <template>
-  <context-holder />
   <jda-table-search :model="searchForm" @search="onGetTableDataSource">
     <template v-slot="{ advanced }">
       <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
@@ -143,44 +140,6 @@ const onDelete = (row: any) => {
       </template>
     </template>
   </jda-table-search>
-  <!-- <div class="jda-search-container">
-    <a-form :model="searchForm" layout="horizontal" labelAlign="left" :label-col="{ style: { width: '70px' } }">
-      <a-row :gutter="48">
-        <a-col :md="12" :sm="24" :xs="24" :lg="8">
-          <a-form-item label="用户名">
-            <a-input v-model:value="searchForm.UserName" placeholder="请输入用户名" />
-          </a-form-item>
-        </a-col>
-        <a-col :md="12" :sm="24" :xs="24" :lg="8">
-          <a-form-item label="账号">
-            <a-input v-model:value="searchForm.Account" placeholder="请输入账号" />
-          </a-form-item>
-        </a-col>
-        <template v-if="advanced">
-          <a-col :md="12" :sm="24" :xs="24" :lg="8">
-            <a-form-item label="手机号码">
-              <a-input v-model:value="searchForm.Mobile" placeholder="请输入手机号码" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="12" :sm="24" :xs="24" :lg="8">
-            <a-form-item label="邮箱">
-              <a-input v-model:value="searchForm.Email" placeholder="请输入邮箱" />
-            </a-form-item>
-          </a-col>
-        </template>
-        <a-col :md="12" :sm="24" :xs="24" :lg="8">
-          <a-form-item>
-            <a-button type="primary">查询</a-button>
-            <a @click="advanced = !advanced" style="margin-left: 8px">
-              {{ advanced ? '收起' : '展开' }}
-              <font-awesome-icon v-if="advanced" icon="fas fa-angle-up" />
-              <font-awesome-icon v-else icon="fas fa-angle-down" />
-            </a>
-          </a-form-item>
-        </a-col>
-      </a-row>
-    </a-form>
-  </div> -->
   <a-card class="j-card-table-wrapper">
     <jda-table class="ant-table-striped" rowKey="id" :columns="columns" :data-source="tableDataSource"
       :scroll="{ x: true }" bordered :total="100" :pagination="{

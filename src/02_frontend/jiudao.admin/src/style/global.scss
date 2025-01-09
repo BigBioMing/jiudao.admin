@@ -25,6 +25,11 @@ body {
   @include full-screen;
 }
 
+.full-view {
+  display: flex;
+  flex: 1;
+}
+
 .jda-container {
   width: 100%;
   box-sizing: border-box;

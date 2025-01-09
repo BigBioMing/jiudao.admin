@@ -6,7 +6,7 @@ import qs from "qs";
 const URL_PREFIX = "/api/Sys/SysDictionaryDefine/";
 
 /**
- * 获取用户分页数据
+ * 获取分页数据
  * @param params
  * @returns
  */
@@ -25,7 +25,7 @@ export const getPageEntitiesApi = async (
   });
 };
 /**
- * 获取用户信息
+ * 获取信息
  * @param params
  * @returns
  */
@@ -42,11 +42,11 @@ export const getEntityApi = async (id: number): Promise<TablePageResult<any>> =>
   });
 };
 /**
- * 保存用户信息
- * @param params 用户信息
+ * 保存信息
+ * @param params 信息
  * @returns
  */
-export const saveRoleApi = async (params: any) => {
+export const saveApi = async (params: any) => {
   return await request({
     url: URL_PREFIX + "Save",
     method: "post",
@@ -55,11 +55,11 @@ export const saveRoleApi = async (params: any) => {
 };
 
 /**
- * 删除角色
- * @param id 角色Id
+ * 删除字典定义
+ * @param id 字典定义Id
  * @returns
  */
-export const delRoleApi = async (id: number) => {
+export const delDictionaryDefineApi = async (id: number) => {
   return await request({
     url: URL_PREFIX + "Delete",
     method: "post",

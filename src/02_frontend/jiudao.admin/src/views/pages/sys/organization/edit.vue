@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Rule } from 'ant-design-vue/es/form';
 import { reactive, ref, toRaw, watch, type UnwrapRef } from 'vue'
-import { getEntityApi, saveUserApi } from '@/apis/sys/userinfo'
+import { getEntityApi, saveApi } from '@/apis/sys/organization'
 import { useSysDic } from '@/hooks'
 import { onMounted } from 'vue';
 defineOptions({

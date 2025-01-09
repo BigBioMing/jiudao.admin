@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<{
     id: null
 })
 
-const emits = defineEmits(['update:openCreateModal','ok'])
+const emits = defineEmits(['update:openCreateModal', 'ok'])
 
 const { getDicItems } = useSysDic();
 //性别字典
@@ -151,7 +151,12 @@ const closeModal = () => {
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">
                     <a-form-item label="菜单图标" name="icon">
-                        <a-input v-model:value="model.icon" placeholder="请输入菜单图标" />
+                        <!-- <a-input v-model:value="model.icon" placeholder="请输入菜单图标" /> -->
+                        <a-input v-model:value="model.icon">
+                            <template #addonAfter>
+                                <font-awesome-icon v-if="model.icon" :icon="model.icon"></font-awesome-icon>
+                            </template>
+                        </a-input>
                     </a-form-item>
                 </a-col>
                 <a-col :md="12" :sm="24" :xs="24" :lg="12">

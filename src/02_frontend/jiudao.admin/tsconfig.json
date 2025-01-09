@@ -1,4 +1,5 @@
 {
+  "include": ["axios.d.ts"],
   "compilerOptions": {
     "jsx": "preserve",
     "jsxImportSource": "vue"

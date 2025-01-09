@@ -47,8 +47,7 @@ let model = reactive({
 // 表单验证规则
 const rules: Record<string, Rule[]> = {
     code: [
-        { required: true, message: '请输入编码', trigger: 'change' },
-        { min: 3, max: 20, message: '长度应该是3-20', trigger: 'blur' },
+        { required: true, message: '请输入编码', trigger: 'change' }
     ],
     name: [
         { required: true, message: '请输入角色名称', trigger: 'change' }

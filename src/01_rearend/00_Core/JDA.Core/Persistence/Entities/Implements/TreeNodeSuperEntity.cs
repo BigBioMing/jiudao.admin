@@ -41,7 +41,7 @@ namespace JDA.Core.Persistence.Entities
         [ColumnMetadata(Name = "Path", Order = 4, Hidden = true)]
         public string Path { get; set; }
         /// <summary>
-        /// Path
+        /// 序号
         /// </summary>
         [Display(Name = "Sort", Order = 5)]
         [ColumnMetadata(Name = "Sort", Order = 5, Hidden = true)]

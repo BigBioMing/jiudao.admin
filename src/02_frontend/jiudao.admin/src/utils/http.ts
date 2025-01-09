@@ -1,11 +1,13 @@
-import axios from "axios";
+import axios, { type AxiosRequestConfig }  from "axios";
 import { message } from "ant-design-vue";
 import { useGlobalStore } from "@/stores";
+
 const instance = axios.create({
   baseURL: "https://localhost:7256",
   timeout: 20000,
   headers: { "X-Custom-Header": "foobar" },
 });
+
 instance.interceptors.request.use(
   function (config) {
     // console.log("config.data:", config.data);

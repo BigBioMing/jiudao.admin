@@ -12,6 +12,7 @@ export const getPageEntitiesApi = async (
   params: Paging<SysUserInfoGetPageEntitiesInputParams>
 ): Promise<TablePageResult<any>> => {
   return await request({
+    isLoading:true,
     url: "/api/Sys/SysUser/GetPageEntities",
     method: "get",
     // params: params,
