@@ -1,15 +1,22 @@
-import axios, { type AxiosRequestConfig }  from "axios";
+import axios, { type AxiosRequestConfig } from "axios";
 import { message } from "ant-design-vue";
-import { useGlobalStore } from "@/stores";
+import { useGlobalStore, useLoadingStore } from "@/stores";
 
 const instance = axios.create({
   baseURL: "https://localhost:7256",
-  timeout: 20000,
+  // timeout: 20000,
   headers: { "X-Custom-Header": "foobar" },
 });
 
 instance.interceptors.request.use(
   function (config) {
+    //判断该请求是否需要展示loading（默认展示）
+    const isLoading = config.isLoading;
+    if (isLoading || isLoading === null || isLoading === undefined) {
+      const loadingStore = useLoadingStore();
+      loadingStore.start();
+    }
+    
     // console.log("config.data:", config.data);
     // if (
     //   config.method === "post" ||
@@ -41,6 +48,13 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   function (config) {
+    //关闭loading
+    const isLoading = config.config.isLoading;
+    if (isLoading || isLoading === null || isLoading === undefined) {
+      const loadingStore = useLoadingStore();
+      loadingStore.end();
+    }
+
     //   dataList.show = true
     if (config.status === 200 || config.status === 204) {
       setTimeout(() => {

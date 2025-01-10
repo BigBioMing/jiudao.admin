@@ -1,5 +1,5 @@
 import router, { resetRouter } from "./index";
-import { useGlobalStore, useMenuStore } from "@/stores";
+import { useGlobalStore, useMenuStore,useLoadingStore } from "@/stores";
 import { getUserRouteAndOptionsApi } from "@/apis/resource/route";
 import BlankLayout from "@/components/layout/blank-layout.vue";
 import BasicLayout from "@/components/layout/basic-layout.vue";
@@ -18,6 +18,8 @@ router.beforeEach((to, from, next) => {
   console.log(to, from, next);
   const globalStore = useGlobalStore();
   const menuStore = useMenuStore();
+  const loadingStore = useLoadingStore();
+  loadingStore.close();
   const token = globalStore.getToken();
   //登录与未登录的逻辑不同，登录后不能再跳转到登录页，并需要获取当前登录用户拥有的菜单和按钮权限
   if (token) {

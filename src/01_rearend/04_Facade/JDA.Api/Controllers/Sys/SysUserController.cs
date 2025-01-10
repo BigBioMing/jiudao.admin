@@ -54,6 +54,7 @@ namespace JDA.Api.Controllers.Sys
         //[ApiExplorerSettings(GroupName = "V2")]
         public virtual async Task<IActionResult> GetPageEntities([FromQuery] SysUserGetListVO? filterParams)
         {
+            Thread.Sleep(2000);
             Expression<Func<SysUser, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;
             if (!string.IsNullOrWhiteSpace(name))
@@ -77,6 +78,7 @@ namespace JDA.Api.Controllers.Sys
         //[ApiExplorerSettings(GroupName = "V2")]
         public virtual async Task<IActionResult> GetEntityById([FromQuery] long id)
         {
+            Thread.Sleep(6000);
             var entity = await base.GetEntityByIdAsync(id);
 
             return new JsonResult(entity);

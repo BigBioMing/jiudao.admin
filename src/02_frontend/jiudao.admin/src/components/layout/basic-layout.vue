@@ -3,7 +3,7 @@ import { computed, reactive, ref, watch, h, createVNode, markRaw, toRaw, onMount
 import { ConfigProvider, theme } from 'ant-design-vue';
 import { routeMenus } from '@/mock/menus';
 import { useRouter, useRoute } from "vue-router";
-import { useMenuStore, useGlobalStore } from "@/stores";
+import { useMenuStore, useGlobalStore, useLoadingStore } from "@/stores";
 import router from "@/router";
 
 defineOptions({
@@ -12,6 +12,7 @@ defineOptions({
 
 const menuStore = useMenuStore();
 const globalStore = useGlobalStore();
+const loadingStore = useLoadingStore();
 
 import {
   MenuFoldOutlined,
@@ -917,21 +918,29 @@ const onLogout = () => {
                   </a-dropdown>
                 </template>
               </a-tabs>
-              <!-- 面包屑 -->
-              <div class="jda-container">
-                <a-breadcrumb>
-                  <template v-for="(crumb, index) in crumbsComputed">
-                    <a-breadcrumb-item v-if="!crumb.path">{{ crumb.name }}</a-breadcrumb-item>
-                    <a-breadcrumb-item v-else><a @click="onCrumbClick(crumb)">{{ crumb.name }}</a></a-breadcrumb-item>
-                  </template>
-                </a-breadcrumb>
-              </div>
 
-              <a-layout-content :style="{ margin: '24px', position: 'relative' }">
-                <a-spin tip="数据加载中..." :spinning="true" class="loading-wrap">
+              <a-layout-content :style="{ position: 'relative' }">
+                <a-spin tip="数据加载中..." :spinning="loadingStore.isLoading" class="loading-wrap" :delay="300"
+                  :style="{ zIndex: loadingStore.isLoading ? 9999999999 : -999 }">
                 </a-spin>
                 <a-layout-content>
-                  <router-view />
+
+                  <!-- 面包屑 -->
+                  <div class="jda-container">
+                    <a-breadcrumb>
+                      <template v-for="(crumb, index) in crumbsComputed">
+                        <a-breadcrumb-item v-if="!crumb.path">{{ crumb.name }}</a-breadcrumb-item>
+                        <a-breadcrumb-item v-else><a @click="onCrumbClick(crumb)">{{ crumb.name
+                            }}</a></a-breadcrumb-item>
+                      </template>
+                    </a-breadcrumb>
+                  </div>
+
+                  <a-layout-content style="margin:24px;">
+                    <a-layout-content>
+                      <router-view />
+                    </a-layout-content>
+                  </a-layout-content>
                 </a-layout-content>
               </a-layout-content>
               <!-- <a-layout-footer style="text-align: center;z-index:10">
@@ -1078,7 +1087,8 @@ const onLogout = () => {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color:rgba(255,255,255,0.3);
+  background-color: rgba(255, 255, 255, 0.5);
+  // background-color: rgba(0, 0, 0, 0.1);
 }
 
 
