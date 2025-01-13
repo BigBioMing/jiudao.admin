@@ -94,6 +94,7 @@ const closeModal = () => {
 }
 </script>
 <template>
+    <div class="page-wrap page-wrap-slave">
     <!-- <jda-modal :width="800" v-model:open="openCreateModal" title="新建" :confirm-loading="createConfirmLoading"
         @ok="handleOk" @cancel="closeModal"> -->
     <a-card>
@@ -140,5 +141,6 @@ const closeModal = () => {
 
     <jda-modal-footer :confirmLoading="createConfirmLoading" @ok="handleOk" @cancel="closeModal"></jda-modal-footer>
     <!-- </jda-modal> -->
+    </div>
 </template>
 <style lang="scss" scoped></style>

@@ -91,6 +91,7 @@ const onRemoveAction = (action: any) => {
 }
 </script>
 <template>
+    <div class="page-wrap page-wrap-slave">
     <a-card>
         <jda-form ref="formRef" :model="model" layout="horizontal" labelAlign="right">
             <a-row :gutter="48" v-for="(action, index) in model.actions" :key="index">
@@ -125,6 +126,7 @@ const onRemoveAction = (action: any) => {
     </a-card>
 
     <jda-modal-footer :confirmLoading="createConfirmLoading" @ok="handleOk" @cancel="closeModal"></jda-modal-footer>
+    </div>
 </template>
 <style lang="scss" scoped>
 .dynamic-delete-button {

@@ -6,9 +6,18 @@ import { useRouter, useRoute } from "vue-router";
 import { useMenuStore, useGlobalStore, useLoadingStore } from "@/stores";
 import router from "@/router";
 
+import { LoadingOutlined, Loading3QuartersOutlined, PoweroffOutlined, ReloadOutlined, RotateRightOutlined, SyncOutlined } from '@ant-design/icons-vue';
+
 defineOptions({
   name: 'basic-layout'
 })
+
+const indicator = h(SyncOutlined, {
+  style: {
+    fontSize: '24px',
+  },
+  spin: true,
+});
 
 const menuStore = useMenuStore();
 const globalStore = useGlobalStore();
@@ -62,12 +71,12 @@ window.addEventListener('resize', () => {
 
 
 //获取路由信息
-const route = useRoute();
+const curRoute = useRoute();
 let crumbsComputed = computed(() => {
   //面包屑数组
   // let crumbs = ref<{ name: string, path: string }[]>([]);
   let crumbs = <{ name: string, path: string }[]>[];
-  const routeMatched = route.matched || [];
+  const routeMatched = curRoute.matched || [];
   for (let i = 0; i < routeMatched.length; i++) {
     let rmItem = routeMatched[i];
     // crumbs.value.push({ name: rmItem.meta.name || '', path: rmItem.path });
@@ -697,7 +706,10 @@ const onLogout = () => {
   <a-config-provider :theme="providerTheme">
     <a-watermark content="JiuDao Admin" style="height:100%;width:100%;"
       :font="{ color: 'rgba(0,0,0,.3)', fontSize: 14 }">
-      <a-layout style="height: 100%;" :class="themeStyleClass">
+      <a-layout style="height: 100%;" :class="themeStyleClass" :style="{ position: 'relative' }">
+        <a-spin tip="数据加载中..." size="large" :indicator="indicator" :spinning="loadingStore.isLoading"
+          class="loading-wrap" :delay="300" :style="{ zIndex: loadingStore.isLoading ? 9999999 : -999 }">
+        </a-spin>
         <a-layout-sider v-if="!isMobile && settingsConfig.currentNavigationMode.mode !== 'top-menu'"
           @collapse="onCollapse" @breakpoint="onBreakpoint" v-model:collapsed="state.collapsed" :trigger="null"
           :class="{ 'sider-collapsed': state.collapsed }" collapsible :style="layoutFixedLeftMenuStyle"
@@ -920,9 +932,9 @@ const onLogout = () => {
               </a-tabs>
 
               <a-layout-content :style="{ position: 'relative' }">
-                <a-spin tip="数据加载中..." :spinning="loadingStore.isLoading" class="loading-wrap" :delay="300"
-                  :style="{ zIndex: loadingStore.isLoading ? 9999999999 : -999 }">
-                </a-spin>
+                <!-- <a-spin tip="数据加载中..." :spinning="loadingStore.isLoading" class="loading-wrap" :delay="300"
+                  :style="{ zIndex: loadingStore.isLoading ? 9999999 : -999 }">
+                </a-spin> -->
                 <a-layout-content>
 
                   <!-- 面包屑 -->
@@ -938,7 +950,13 @@ const onLogout = () => {
 
                   <a-layout-content style="margin:24px;">
                     <a-layout-content>
-                      <router-view />
+                      <router-view v-slot="{ Component, route }">
+                        <transition mode="out-in" 
+            enter-active-class="animate__animated animate__fadeIn"
+                        >
+                            <component :is="Component" :key="route.path" />
+                        </transition>
+                      </router-view>
                     </a-layout-content>
                   </a-layout-content>
                 </a-layout-content>
@@ -956,7 +974,8 @@ const onLogout = () => {
       <!-- <div class="settings" @click="onOpenSetting" :class="{ 'settings-open': isOpenSetting }">
       <SettingOutlined />
     </div> -->
-      <a-drawer title="" :open="isOpenSetting" @close="onCloseSetting" width="300" :class="themeStyleClass">
+      <a-drawer title="" :open="isOpenSetting" @close="onCloseSetting" width="300" :class="themeStyleClass"
+        rootClassName="settings-drawer">
         <div class="settings-content">
           <div class="settings-item">
             <h3>整体风格设置</h3>
@@ -1028,7 +1047,7 @@ const onLogout = () => {
               <div class="settings-form-item">
                 <span>路由动画</span>
                 <div>
-                  <a-select size="small" v-model:value="settingsConfig.currentRouteAnimation" style="width: 100px"
+                  <a-select popupClassName="settings-select" size="small" v-model:value="settingsConfig.currentRouteAnimation" style="width: 100px"
                     :options="routeAnimations"></a-select>
                 </div>
               </div>
@@ -1074,21 +1093,22 @@ const onLogout = () => {
 
 <style lang="scss" scoped>
 .loading-wrap {
-  z-index: 9999999999;
+  z-index: 9999999;
+  width: 100%;
+  height: 100%;
   position: absolute;
   left: 50%;
   top: 50%;
   bottom: 0;
   right: 0;
-  transform: translate(-50%, -50%);
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.5);
-  // background-color: rgba(0, 0, 0, 0.1);
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  // background-color: rgba(0, 0, 0, 0.45);
+  // background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 
@@ -1234,11 +1254,12 @@ const onLogout = () => {
   }
 }
 
+
 .settings {
   position: absolute;
   top: 240px;
   right: 0;
-  z-index: 1001;
+  z-index: 99999999;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1719,6 +1740,7 @@ const onLogout = () => {
   }
 
   :deep(.ant-drawer) {
+
     .ant-drawer-content {
       background-image: initial;
       background-color: rgb(36, 37, 37);
@@ -1831,4 +1853,5 @@ const onLogout = () => {
 }
 
 /************ 主题色 end *************/
+
 </style>

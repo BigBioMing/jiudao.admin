@@ -139,39 +139,41 @@ watch(() => treeSelectValue, (newVal, oldVal) => {
 }, { deep: true, immediate: true })
 </script>
 <template>
-    <!-- <jda-modal :width="800" v-model:open="openCreateModal" title="新建" :confirm-loading="createConfirmLoading"
+    <div class="page-wrap page-wrap-slave">
+        <!-- <jda-modal :width="800" v-model:open="openCreateModal" title="新建" :confirm-loading="createConfirmLoading"
         @ok="handleOk" @cancel="closeModal"> -->
-    <a-card>
-        <jda-form ref="formRef" :model="model" layout="horizontal" labelAlign="right" :rules="rules"
-            :label-col="{ style: { width: '80px' } }">
-            <a-row :gutter="48">
-                <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="编码" name="code">
-                        <a-input v-model:value="model.code" placeholder="请输入编码" />
-                    </a-form-item>
-                </a-col>
-                <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="名称" name="name">
-                        <a-input v-model:value="model.name" placeholder="请输入名称" />
-                    </a-form-item>
-                </a-col>
-                <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="序号" name="sort">
-                        <a-input v-model:value="model.sort" placeholder="请输入序号" />
-                    </a-form-item>
-                </a-col>
-                <a-col :md="12" :sm="24" :xs="24" :lg="12">
-                    <a-form-item label="路由资源" name="routeResourceId">
-                        <jda-tree-select v-model:value="model.routeResourceId" placeholder="请选择路由资源"
-                            :tree-data="menuTreeNodes" tree-node-filter-prop="name">
-                        </jda-tree-select>
-                    </a-form-item>
-                </a-col>
-            </a-row>
-        </jda-form>
-    </a-card>
+        <a-card>
+            <jda-form ref="formRef" :model="model" layout="horizontal" labelAlign="right" :rules="rules"
+                :label-col="{ style: { width: '80px' } }">
+                <a-row :gutter="48">
+                    <a-col :md="12" :sm="24" :xs="24" :lg="12">
+                        <a-form-item label="编码" name="code">
+                            <a-input v-model:value="model.code" placeholder="请输入编码" />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :md="12" :sm="24" :xs="24" :lg="12">
+                        <a-form-item label="名称" name="name">
+                            <a-input v-model:value="model.name" placeholder="请输入名称" />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :md="12" :sm="24" :xs="24" :lg="12">
+                        <a-form-item label="序号" name="sort">
+                            <a-input v-model:value="model.sort" placeholder="请输入序号" />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :md="12" :sm="24" :xs="24" :lg="12">
+                        <a-form-item label="路由资源" name="routeResourceId">
+                            <jda-tree-select v-model:value="model.routeResourceId" placeholder="请选择路由资源"
+                                :tree-data="menuTreeNodes" tree-node-filter-prop="name">
+                            </jda-tree-select>
+                        </a-form-item>
+                    </a-col>
+                </a-row>
+            </jda-form>
+        </a-card>
 
-    <jda-modal-footer :confirmLoading="createConfirmLoading" @ok="handleOk" @cancel="closeModal"></jda-modal-footer>
-    <!-- </jda-modal> -->
+        <jda-modal-footer :confirmLoading="createConfirmLoading" @ok="handleOk" @cancel="closeModal"></jda-modal-footer>
+        <!-- </jda-modal> -->
+    </div>
 </template>
 <style lang="scss" scoped></style>

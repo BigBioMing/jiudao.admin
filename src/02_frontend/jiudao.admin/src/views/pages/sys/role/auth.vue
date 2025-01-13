@@ -86,6 +86,7 @@ const onActionSelect = (evt: Event, action: any) => {
 }
 </script>
 <template>
+    <div class="page-wrap page-wrap-slave">
     <jda-card>
         <a-button type="primary" @click="onEmpower()">保存</a-button>
         <a-table :columns="columns" :data-source="data" rowKey="id" :row-selection="rowSelection"
@@ -100,5 +101,6 @@ const onActionSelect = (evt: Event, action: any) => {
             </template>
         </a-table>
     </jda-card>
+    </div>
 </template>
 <style lang="scss" scoped></style>

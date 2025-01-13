@@ -5,6 +5,7 @@ import { VueDraggable } from "vue-draggable-plus";
 
 import { createApp } from "vue";
 import App from "./App.vue";
+import 'animate.css';
 import "ant-design-vue/dist/reset.css";
 import "@/style/global.scss";
 

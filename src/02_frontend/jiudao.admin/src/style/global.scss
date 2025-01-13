@@ -142,3 +142,19 @@ body {
 .ant-table-thead > tr > th {
   white-space: nowrap;
 }
+
+.settings-drawer {
+  z-index: 99999980;
+
+  .ant-drawer-mask {
+    z-index: 99999980;
+  }
+
+  .ant-drawer-content-wrapper {
+    z-index: 99999980;
+  }
+}
+
+.settings-select {
+  z-index: 99999981;
+}

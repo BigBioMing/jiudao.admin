@@ -156,7 +156,7 @@ const onDelete = (row: any) => {
 }
 </script>
 <template>
-  <context-holder />
+  <div class="page-wrap page-wrap-master">
   <jda-table-search :model="searchForm" @search="onGetRouteAndActions">
     <template v-slot="{ advanced }">
       <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
@@ -232,5 +232,6 @@ const onDelete = (row: any) => {
   <jda-modal :width="800" v-model:open="openActionModal.isOpen" title="配置按钮功能" v-if="openActionModal.isOpen">
     <EditAction v-model:openActionModal="openActionModal.isOpen" :routeResourceId="openActionModal.id" @ok="onGetRouteAndActions"></EditAction>
   </jda-modal>
+  </div>
 </template>
 <style lang="scss" scoped></style>

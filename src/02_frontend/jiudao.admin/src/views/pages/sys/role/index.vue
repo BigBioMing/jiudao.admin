@@ -107,90 +107,52 @@ const onDelete = (row: any) => {
  */
 const onOpenAuth = (row: any): void => {
   // router.push({name:'sys.role.auth', params: { id: row.id }});
-  router.push({path:'/sys/role/auth', query: { id: row.id }});
+  router.push({ path: '/sys/role/auth', query: { id: row.id } });
 }
 </script>
 <template>
-  <context-holder />
-  <jda-table-search :model="searchForm" @search="onGetTableDataSource" :advancedControl="false">
-    <template v-slot="{ advanced }">
-      <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-        <a-form-item label="编码">
-          <a-input v-model:value="searchForm.code" placeholder="请输入编码" />
-        </a-form-item>
-      </a-col>
-      <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-        <a-form-item label="角色名称">
-          <a-input v-model:value="searchForm.name" placeholder="请输入角色名称" />
-        </a-form-item>
-      </a-col>
-    </template>
-  </jda-table-search>
-  <!-- <div class="jda-search-container">
-    <a-form :model="searchForm" layout="horizontal" labelAlign="left" :label-col="{ style: { width: '70px' } }">
-      <a-row :gutter="48">
-        <a-col :md="12" :sm="24" :xs="24" :lg="8">
-          <a-form-item label="用户名">
-            <a-input v-model:value="searchForm.UserName" placeholder="请输入用户名" />
+  <div class="page-wrap page-wrap-master">
+    <jda-table-search :model="searchForm" @search="onGetTableDataSource" :advancedControl="false">
+      <template v-slot="{ advanced }">
+        <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
+          <a-form-item label="编码">
+            <a-input v-model:value="searchForm.code" placeholder="请输入编码" />
           </a-form-item>
         </a-col>
-        <a-col :md="12" :sm="24" :xs="24" :lg="8">
-          <a-form-item label="账号">
-            <a-input v-model:value="searchForm.Account" placeholder="请输入账号" />
+        <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
+          <a-form-item label="角色名称">
+            <a-input v-model:value="searchForm.name" placeholder="请输入角色名称" />
           </a-form-item>
         </a-col>
-        <template v-if="advanced">
-          <a-col :md="12" :sm="24" :xs="24" :lg="8">
-            <a-form-item label="手机号码">
-              <a-input v-model:value="searchForm.Mobile" placeholder="请输入手机号码" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="12" :sm="24" :xs="24" :lg="8">
-            <a-form-item label="邮箱">
-              <a-input v-model:value="searchForm.Email" placeholder="请输入邮箱" />
-            </a-form-item>
-          </a-col>
-        </template>
-        <a-col :md="12" :sm="24" :xs="24" :lg="8">
-          <a-form-item>
-            <a-button type="primary">查询</a-button>
-            <a @click="advanced = !advanced" style="margin-left: 8px">
-              {{ advanced ? '收起' : '展开' }}
-              <font-awesome-icon v-if="advanced" icon="fas fa-angle-up" />
-              <font-awesome-icon v-else icon="fas fa-angle-down" />
-            </a>
-          </a-form-item>
-        </a-col>
-      </a-row>
-    </a-form>
-  </div> -->
-  <a-card class="j-card-table-wrapper">
-    <jda-table class="ant-table-striped" rowKey="id" :columns="columns" :data-source="tableDataSource"
-      :scroll="{ x: true }" bordered :total="100" :pagination="{
-    showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'],
-    'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
-  }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
-      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-      @get-table-data-source="onGetTableDataSource" @create="onEdit" @import="onTableImportClick">
+      </template>
+    </jda-table-search>
+    <a-card class="j-card-table-wrapper">
+      <jda-table class="ant-table-striped" rowKey="id" :columns="columns" :data-source="tableDataSource"
+        :scroll="{ x: true }" bordered :total="100" :pagination="{
+      showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'],
+      'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
+    }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
+        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+        @get-table-data-source="onGetTableDataSource" @create="onEdit" @import="onTableImportClick">
 
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'account'">
-          <a>
-            {{ record.account }}
-          </a>
-        </template>
-        <template v-else-if="column.key === 'gender'">
-          <span>
-            <a-tag :key="0" v-if="record.gender === 'Sex_Man'" color="green">
-              {{ dicItemName('Sex', record.gender) }}
-            </a-tag>
-            <a-tag :key="1" v-if="record.gender === 'Sex_Woman'" color="geekblue">
-              {{ dicItemName('Sex', record.gender) }}
-            </a-tag>
-          </span>
-        </template>
-        <template v-else-if="column.key === 'action'">
-            <a-button type="link" @click="onEdit(record)" >
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'account'">
+            <a>
+              {{ record.account }}
+            </a>
+          </template>
+          <template v-else-if="column.key === 'gender'">
+            <span>
+              <a-tag :key="0" v-if="record.gender === 'Sex_Man'" color="green">
+                {{ dicItemName('Sex', record.gender) }}
+              </a-tag>
+              <a-tag :key="1" v-if="record.gender === 'Sex_Woman'" color="geekblue">
+                {{ dicItemName('Sex', record.gender) }}
+              </a-tag>
+            </span>
+          </template>
+          <template v-else-if="column.key === 'action'">
+            <a-button type="link" @click="onEdit(record)">
               <span class="jda-table-action-btn-text">修改</span>
               <template #icon>
                 <font-awesome-icon icon="fas fa-edit" />
@@ -210,12 +172,13 @@ const onOpenAuth = (row: any): void => {
                 <font-awesome-icon icon="fas fa-trash-alt" />
               </template>
             </a-button>
+          </template>
         </template>
-      </template>
-    </jda-table>
-  </a-card>
-  <jda-modal :width="800" v-model:open="openCreateModal.isOpen" title="新建" v-if="openCreateModal.isOpen">
-    <Edit v-model:openCreateModal="openCreateModal.isOpen" :id="openCreateModal.id"></Edit>
-  </jda-modal>
+      </jda-table>
+    </a-card>
+    <jda-modal :width="800" v-model:open="openCreateModal.isOpen" title="新建" v-if="openCreateModal.isOpen">
+      <Edit v-model:openCreateModal="openCreateModal.isOpen" :id="openCreateModal.id"></Edit>
+    </jda-modal>
+  </div>
 </template>
 <style lang="scss" scoped></style>

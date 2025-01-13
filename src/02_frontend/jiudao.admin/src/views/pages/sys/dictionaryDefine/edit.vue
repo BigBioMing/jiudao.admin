@@ -69,6 +69,7 @@ const closeModal = () => {
 }
 </script>
 <template>
+    <div class="page-wrap page-wrap-slave">
     <a-card>
         <jda-form ref="formRef" :model="model" layout="horizontal" labelAlign="right" :rules="rules">
             <a-row :gutter="48">
@@ -98,5 +99,6 @@ const closeModal = () => {
     </a-card>
 
     <jda-modal-footer :confirmLoading="createConfirmLoading" @ok="handleOk" @cancel="closeModal"></jda-modal-footer>
+    </div>
 </template>
 <style lang="scss" scoped></style>

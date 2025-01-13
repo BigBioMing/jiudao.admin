@@ -26,6 +26,9 @@ importers:
       '@fortawesome/vue-fontawesome':
         specifier: ^3.0.8
         version: 3.0.8(@fortawesome/fontawesome-svg-core@6.5.2)(vue@3.4.27(typescript@5.4.5))
+      animate.css:
+        specifier: ^4.1.1
+        version: 4.1.1
       ant-design-vue:
         specifier: 4.x
         version: 4.2.1(vue@3.4.27(typescript@5.4.5))
@@ -621,6 +624,9 @@ packages:
 
   '@vue/tsconfig@0.5.1':
     resolution: {integrity: sha512-VcZK7MvpjuTPx2w6blwnwZAu5/LgBUtejFOi3pPGQFXQN5Ela03FUtd2Qtg4yWGGissVL0dr6Ro1LfOFh+PCuQ==}
+
+  animate.css@4.1.1:
+    resolution: {integrity: sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==}
 
   ansi-styles@3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
@@ -1719,6 +1725,8 @@ snapshots:
   '@vue/shared@3.4.27': {}
 
   '@vue/tsconfig@0.5.1': {}
+
+  animate.css@4.1.1: {}
 
   ansi-styles@3.2.1:
     dependencies:
