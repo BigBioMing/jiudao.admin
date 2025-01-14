@@ -16,7 +16,7 @@ instance.interceptors.request.use(
       const loadingStore = useLoadingStore();
       loadingStore.start();
     }
-    
+
     // console.log("config.data:", config.data);
     // if (
     //   config.method === "post" ||
@@ -76,6 +76,12 @@ instance.interceptors.response.use(
     }
   },
   function (error) {
+    //关闭loading
+    const isLoading = error.config.isLoading;
+    if (isLoading || isLoading === null || isLoading === undefined) {
+      const loadingStore = useLoadingStore();
+      loadingStore.end();
+    }
     if (error.response && error.response.status) {
       switch (error.response.status) {
         case 400:

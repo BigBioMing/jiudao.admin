@@ -4,6 +4,7 @@ import { getRouteAndOptionsApi, empowerApi } from '@/apis/sys/role'
 import { onMounted } from 'vue';
 import type { Ref } from 'vue';
 import { useRoute } from "vue-router";
+import { onActivated } from 'vue';
 
 defineOptions({
     name: 'role-auth'
@@ -18,7 +19,6 @@ defineOptions({
 
 //获取路由信息
 const route = useRoute();
-const roleId = route.query.id;
 
 let actionIds: number[] = [];
 const rowSelection: Ref<any> = ref({
@@ -40,6 +40,7 @@ const rowSelection: Ref<any> = ref({
 
 const data: Ref<any[]> = ref([]);
 const getRouteAndOptions = async () => {
+    const roleId = route.query.id;
     const res: any = await getRouteAndOptionsApi({ roleId: roleId });
     data.value = res?.menuTreeNodes || [];
     rowSelection.value.selectedRowKeys = res?.selectMenuIds || [];
@@ -47,10 +48,14 @@ const getRouteAndOptions = async () => {
 }
 
 const onEmpower = async () => {
+    const roleId = route.query.id;
     await empowerApi({ roleId, routeResourceIds: rowSelection.value.selectedRowKeys, actionResourceIds: actionIds });
 }
 
-onMounted(() => {
+// onMounted(() => {
+//     getRouteAndOptions();
+// })
+onActivated(() => {
     getRouteAndOptions();
 })
 
@@ -87,20 +92,20 @@ const onActionSelect = (evt: Event, action: any) => {
 </script>
 <template>
     <div class="page-wrap page-wrap-slave">
-    <jda-card>
-        <a-button type="primary" @click="onEmpower()">保存</a-button>
-        <a-table :columns="columns" :data-source="data" rowKey="id" :row-selection="rowSelection"
-            childrenColumnName="childrens" bordered>
-            <template #bodyCell="{ column, record }">
-                <template v-if="column.key === 'actions'">
-                    <template v-for="action in record.actions">
-                        <a-checkbox v-model:checked="action.isCheck" @change="onActionSelect($event, action)">{{
-            action.name }}</a-checkbox>
+        <jda-card>
+            <a-button type="primary" @click="onEmpower()">保存</a-button>
+            <a-table :columns="columns" :data-source="data" rowKey="id" :row-selection="rowSelection"
+                childrenColumnName="childrens" bordered>
+                <template #bodyCell="{ column, record }">
+                    <template v-if="column.key === 'actions'">
+                        <template v-for="action in record.actions">
+                            <a-checkbox v-model:checked="action.isCheck" @change="onActionSelect($event, action)">{{
+                action.name }}</a-checkbox>
+                        </template>
                     </template>
                 </template>
-            </template>
-        </a-table>
-    </jda-card>
+            </a-table>
+        </jda-card>
     </div>
 </template>
 <style lang="scss" scoped></style>

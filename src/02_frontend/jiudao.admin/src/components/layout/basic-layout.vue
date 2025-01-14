@@ -236,12 +236,7 @@ const onMenuItemClick = (pos: 'top-menu' | 'side-menu' | 'sub-side-menu', menu: 
 
     if (tabMenu) {
       if (isLeaf) {
-        let exists = multipleTag.tabs.some(n => n.key === menu.key);
-        if (!exists) {
-          addTab({ key: menu.key, title: menu.title, path: menu.path });
-        } else {
-          multipleTag.activeKey = menu.key;
-        }
+        // addTab({ key: menu.key, title: menu.title, path: menu.path });
       }
     }
   }
@@ -351,6 +346,15 @@ let settingsConfig = ref({
   //路由动画
   currentRouteAnimation: routeAnimations[0].value,
 });
+
+// onMounted(() => {
+  let scstr = localStorage.getItem('settings-config');
+if (scstr) {
+  let sc = JSON.parse(scstr);
+  settingsConfig.value = sc;
+  onChangeThemeStyle(settingsConfig.value.currentThemeSkin as any);
+}
+// });
 
 watch(
   () => settingsConfig,
@@ -462,7 +466,7 @@ const tabLeft = computed(() => {
 
 const multipleTag = reactive<{
   activeKey: string,
-  tabs: { title: string; key: string; path: string; closable?: boolean }[]
+  tabs: { title: string; key: string; path: string; closable?: boolean, query?: any, params?: any }[]
 }>({
   activeKey: '',
   tabs: []
@@ -470,11 +474,13 @@ const multipleTag = reactive<{
 const tabMenuOptions = [
   "关闭其他", "刷新当前页"
 ]
-const addTab = (tab: { title: string; key: string; path: string; closable?: boolean }) => {
+const addTab = (tab: { title: string; key: string; path: string; closable?: boolean, query?: any, params?: any }) => {
   let exists = multipleTag.tabs.some(n => n.key === tab.key);
   if (!exists) {
     multipleTag.activeKey = tab.key;
     multipleTag.tabs.push(tab);
+  } else {
+    multipleTag.activeKey = tab.key;
   }
 }
 const removeTab = (targetKey: string) => {
@@ -503,9 +509,16 @@ const onTabEdit = (targetKey: string | MouseEvent, action: string) => {
 const onTabClick = (key: string) => {
   const tab = multipleTag.tabs.find((n: any) => n.key === key);
   if (tab) {
-    router.push({ path: tab.path });
+    router.push({ path: tab.path, query: tab.query });
+    // router.push({ path: tab.path,query:tab.query,params:tab.params });
   }
 }
+watch(() => curRoute, (newVal, oldVal) => {
+  if (settingsConfig.value.isMultipleTags) {
+    addTab({ key: newVal.name, title: newVal.meta.title, path: newVal.path, query: newVal.query, params: newVal.params });
+  }
+}, { deep: true, immediate: true });
+
 // 将16进制颜色字符串转换为RGB对象
 function hexToRgb(hex: any) {
   // 移除开头的#，如果有的话
@@ -720,14 +733,6 @@ let headerMenuControlStyle = computed(() => {
   }
 })
 
-// onMounted(() => {
-let scstr = localStorage.getItem('settings-config');
-if (scstr) {
-  let sc = JSON.parse(scstr);
-  settingsConfig.value = sc;
-  onChangeThemeStyle(settingsConfig.value.currentThemeSkin as any);
-}
-// });
 
 const onLogout = () => {
   globalStore.clearToken();
