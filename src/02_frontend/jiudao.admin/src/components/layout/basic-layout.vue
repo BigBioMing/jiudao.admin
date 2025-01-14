@@ -4,6 +4,7 @@ import { ConfigProvider, theme } from 'ant-design-vue';
 import { routeMenus } from '@/mock/menus';
 import { useRouter, useRoute } from "vue-router";
 import { useMenuStore, useGlobalStore, useLoadingStore } from "@/stores";
+import { type SelectedOptions } from '@/types/global'
 import router from "@/router";
 
 import { LoadingOutlined, Loading3QuartersOutlined, PoweroffOutlined, ReloadOutlined, RotateRightOutlined, SyncOutlined } from '@ant-design/icons-vue';
@@ -235,13 +236,22 @@ const onMenuItemClick = (pos: 'top-menu' | 'side-menu' | 'sub-side-menu', menu: 
 
     if (tabMenu) {
       if (isLeaf) {
-        addTab({ key: menu.key, title: menu.title });
+        let exists = multipleTag.tabs.some(n => n.key === menu.key);
+        if (!exists) {
+          addTab({ key: menu.key, title: menu.title, path: menu.path });
+        } else {
+          multipleTag.activeKey = menu.key;
+        }
       }
     }
   }
 
   if (isLeaf) {
-    router.push({ path: menu.path });
+    try {
+      router.push({ path: menu.path });
+    } catch (err) {
+      debugger
+    }
   }
 }
 
@@ -323,7 +333,7 @@ const subSiderMenus = computed(() => {
 })
 
 //路由动画
-let routeAnimations = [{ value: 'Null', label: 'Null' }, { value: 'Slide Up', label: 'Slide Up' }, { value: 'Slide Right', label: 'Slide Right' }, { value: 'Fade In', label: 'Fade In' }, { value: 'Zoom', label: 'Zoom' }]
+let routeAnimations: SelectedOptions[] = [{ value: 'Fade In', label: 'Fade In' }, { value: 'Roll In', label: 'Roll In' }, { value: 'Flip In X', label: 'Flip In X' }, { value: 'Slide Up', label: 'Slide Up' }, { value: 'Slide Left', label: 'Slide Left' }, { value: 'Slide Right', label: 'Slide Right' }, { value: 'Zoom', label: 'Zoom' }]
 
 
 //设置
@@ -339,7 +349,7 @@ let settingsConfig = ref({
   //固定多标签
   isFixedMultipleTags: false,
   //路由动画
-  currentRouteAnimation: routeAnimations[0]
+  currentRouteAnimation: routeAnimations[0].value,
 });
 
 watch(
@@ -349,6 +359,24 @@ watch(
     localStorage.setItem('settings-config', JSON.stringify(sc));
   }, { deep: true }//,{deep: true,immediate: true}
 );
+
+//路由进入动画（根据 settingsConfig.value.currentRouteAnimation 的值变化）
+let enterActiveClass = ref('');
+//控制当前路由动画
+watch(() => settingsConfig.value.currentRouteAnimation, (_newVal, oldVal) => {
+  if (!_newVal) {
+    enterActiveClass.value = '';
+  } else {
+    if (_newVal == 'Fade In') enterActiveClass.value = 'animate__animated animate__fadeIn';
+    else if (_newVal == 'Roll In') enterActiveClass.value = 'animate__animated animate__rollIn animate__fast';
+    else if (_newVal == 'Flip In X') enterActiveClass.value = 'animate__animated animate__flipInX';
+    else if (_newVal == 'Slide Up') enterActiveClass.value = 'animate__animated animate__slideInUp animate__faster';
+    else if (_newVal == 'Slide Left') enterActiveClass.value = 'animate__animated animate__slideInLeft animate__faster';
+    else if (_newVal == 'Slide Right') enterActiveClass.value = 'animate__animated animate__slideInRight animate__faster';
+    else if (_newVal == 'Zoom') enterActiveClass.value = 'animate__animated animate__zoomIn';
+    else enterActiveClass.value = '';
+  }
+}, { immediate: true })
 
 const onSwitch = (...options: any[]) => {
   console.log('options:', options)
@@ -434,7 +462,7 @@ const tabLeft = computed(() => {
 
 const multipleTag = reactive<{
   activeKey: string,
-  tabs: { title: string; key: string; closable?: boolean }[]
+  tabs: { title: string; key: string; path: string; closable?: boolean }[]
 }>({
   activeKey: '',
   tabs: []
@@ -442,7 +470,7 @@ const multipleTag = reactive<{
 const tabMenuOptions = [
   "关闭其他", "刷新当前页"
 ]
-const addTab = (tab: { title: string; key: string; closable?: boolean }) => {
+const addTab = (tab: { title: string; key: string; path: string; closable?: boolean }) => {
   let exists = multipleTag.tabs.some(n => n.key === tab.key);
   if (!exists) {
     multipleTag.activeKey = tab.key;
@@ -471,6 +499,13 @@ const onTabEdit = (targetKey: string | MouseEvent, action: string) => {
     removeTab(targetKey as string);
   }
 };
+
+const onTabClick = (key: string) => {
+  const tab = multipleTag.tabs.find((n: any) => n.key === key);
+  if (tab) {
+    router.push({ path: tab.path });
+  }
+}
 // 将16进制颜色字符串转换为RGB对象
 function hexToRgb(hex: any) {
   // 移除开头的#，如果有的话
@@ -908,10 +943,11 @@ const onLogout = () => {
               <a-tabs :class="{ 'mutiltab': true, 'mutiltab-fixed': settingsConfig.isFixedMultipleTags }"
                 v-if="settingsConfig.isMultipleTags && multipleTag.tabs?.length"
                 v-model:activeKey="multipleTag.activeKey" hide-add type="editable-card" @edit="onTabEdit"
+                @tabClick="onTabClick"
                 :style="{ left: isMobile ? 0 : tabLeft, paddingRight: isMobile ? 0 : (settingsConfig.isFixedMultipleTags ? (state.collapsed ? '48px' : tabLeft) : '0') }">
                 <a-tab-pane v-for="tab in multipleTag.tabs" :key="tab.key" :closable="tab.closable">
                   <template #tab>
-                    {{ tab.title }}
+                    <span>{{ tab.title }}</span>
                     <!-- <ReloadOutlined class="mutiltab-tab-btn" /> -->
                   </template>
                 </a-tab-pane>
@@ -951,10 +987,10 @@ const onLogout = () => {
                   <a-layout-content style="margin:24px;">
                     <a-layout-content>
                       <router-view v-slot="{ Component, route }">
-                        <transition mode="out-in" 
-            enter-active-class="animate__animated animate__fadeIn"
-                        >
+                        <transition mode="out-in" :enter-active-class="enterActiveClass">
+                          <KeepAlive>
                             <component :is="Component" :key="route.path" />
+                          </KeepAlive>
                         </transition>
                       </router-view>
                     </a-layout-content>
@@ -1047,7 +1083,8 @@ const onLogout = () => {
               <div class="settings-form-item">
                 <span>路由动画</span>
                 <div>
-                  <a-select popupClassName="settings-select" size="small" v-model:value="settingsConfig.currentRouteAnimation" style="width: 100px"
+                  <a-select popupClassName="settings-select" size="small" allowClear
+                    v-model:value="settingsConfig.currentRouteAnimation" style="width: 100px"
                     :options="routeAnimations"></a-select>
                 </div>
               </div>
@@ -1853,5 +1890,4 @@ const onLogout = () => {
 }
 
 /************ 主题色 end *************/
-
 </style>

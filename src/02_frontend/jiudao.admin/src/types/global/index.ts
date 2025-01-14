@@ -42,3 +42,8 @@ export interface TablePageResult<T> {
    */
   items: T[];
 }
+
+export interface SelectedOptions {
+  value: string | number;
+  label: string;
+}
