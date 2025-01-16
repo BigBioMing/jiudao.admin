@@ -69,6 +69,10 @@ namespace JDA.Core.WebApi.Filters
                             actionExecutedContext.Result = new JsonResult(new UnifyResponse() { Message = "success", Code = UnifyResponse.SuccessCode, Data = objectResult.Value });
                         }
                     }
+                    else if (actionExecutedContext.Result is FileResult fileResult)
+                    {
+                        //actionExecutedContext.Result = fileResult;
+                    }
                     else
                     {
                         if (!(actionExecutedContext.Result is UnifyResponse))

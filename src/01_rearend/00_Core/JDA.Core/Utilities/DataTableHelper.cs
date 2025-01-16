@@ -49,8 +49,20 @@ namespace JDA.Core.Utilities
             List<PropertyInfo> properties = new List<PropertyInfo>();
             Array.ForEach<PropertyInfo>(type.GetProperties(), p =>
             {
-                properties.Add(p);
-                dt.Columns.Add(p.Name, p.PropertyType);
+                try
+                {
+                    Type colType = p.PropertyType;
+                    if ((colType.IsGenericType) && (colType.GetGenericTypeDefinition() == typeof(Nullable<>)))
+                    {
+                        colType = colType.GetGenericArguments()[0];
+                    }
+                    properties.Add(p);
+                    dt.Columns.Add(p.Name, colType);
+                }
+                catch (Exception e)
+                {
+                    throw;
+                }
             });
             foreach (var item in list)
             {

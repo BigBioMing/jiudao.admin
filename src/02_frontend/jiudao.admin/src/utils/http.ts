@@ -63,12 +63,17 @@ instance.interceptors.response.use(
       // console.log(config)
       // return Promise.resolve(config);
 
-      const res = config.data;
-      if (res?.code === "0") {
-        return Promise.resolve(config.data.data);
+      let contentType=config.headers?.getContentType();
+      if (contentType == "application/ms-excel") {
+        return Promise.resolve(config);
       } else {
-        messageError(res?.message || "请求错误");
-        return Promise.reject(config);
+        const res = config.data;
+        if (res?.code === "0") {
+          return Promise.resolve(config.data.data);
+        } else {
+          messageError(res?.message || "请求错误");
+          return Promise.reject(config);
+        }
       }
     } else {
       messageError("非正常响应==>" + config.status);

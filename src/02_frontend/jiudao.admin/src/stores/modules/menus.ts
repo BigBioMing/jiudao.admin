@@ -5,14 +5,18 @@ export const useMenuStore = defineStore("menu", {
   state: () => {
     return <
       {
-        menus: any[];
+        allMenuMap: Map<string, any>; //所有菜单
+        allMenus: any[]; //所有菜单
+        topLevelMenus: any[]; //顶级菜单
         actions: any[];
         addRouters: any[];
         routers: any[];
         isAddRouter: boolean;
       }
     >{
-      menus: [],
+      allMenuMap: new Map(),
+      allMenus: [],
+      topLevelMenus: [],
       actions: [],
       addRouters: [],
       routers: constantRouterMap,
@@ -21,11 +25,24 @@ export const useMenuStore = defineStore("menu", {
     };
   },
   actions: {
-    setMenus(_menus: any[]) {
-      this.menus = _menus;
+    setMenus(_topLevelMenus: any[], _allMenus: any[]) {
+      this.topLevelMenus = _topLevelMenus;
+      this.allMenus = _allMenus;
+
+      let allMenuMap = new Map();
+      for (let i = 0; i < this.allMenus.length; i++) {
+        let menu = this.allMenus[i];
+        allMenuMap.set(menu.key, menu);
+      }
+
+      this.allMenuMap = allMenuMap;
     },
     getMenus() {
-      return this.menus;
+      return {
+        topLevelMenus: this.topLevelMenus,
+        allMenus: this.allMenus,
+        allMenuMap: this.allMenuMap,
+      };
     },
     setRouters(routers: any[]) {
       this.addRouters = routers;
@@ -45,7 +62,8 @@ export const useMenuStore = defineStore("menu", {
      * 将路由和菜单重置成初始状态
      */
     reset() {
-      this.menus = [];
+      this.topLevelMenus = [];
+      this.allMenus = [];
       this.actions = [];
       this.addRouters = [];
       this.routers = constantRouterMap;

@@ -5,6 +5,12 @@ import {
   watch,
   type SetupContext,
 } from "vue";
+import {
+  useRouter,
+  useRoute,
+  type RouteLocationNormalizedLoaded,
+} from "vue-router";
+import { useMenuStore } from "@/stores";
 
 type JdaMenuPropsType = {
   menus: any[];
@@ -17,11 +23,20 @@ type JdaMenuPropsType = {
 //     )
 // }
 
+type SelectedMenuKey = string | number;
 /** 写法二 */
 export default defineComponent({
   props: {
     menus: {
       type: Array<any>,
+      default: () => [],
+    },
+    selectedKeys: {
+      type: Array<SelectedMenuKey>,
+      default: () => [],
+    },
+    openKeys: {
+      type: Array<SelectedMenuKey>,
       default: () => [],
     },
     collapsed: {
@@ -37,13 +52,23 @@ export default defineComponent({
       default: "dark",
     },
   },
-  emits: ["on-menu-item-click"],
+  emits: ["on-menu-item-click", "update:selectedKeys", "update:openKeys"],
   setup(props, context) {
-    const state = reactive({
+    const curRoute = useRoute();
+    const menuStore = useMenuStore();
+    const { topLevelMenus, allMenuMap } = menuStore.getMenus();
+    const state = reactive<{
+      menus: any[];
+      collapsed: boolean;
+      selectedKeys: SelectedMenuKey[];
+      openKeys: SelectedMenuKey[];
+      preOpenKeys: SelectedMenuKey[];
+      mode: string;
+    }>({
       menus: toRaw(props.menus),
       collapsed: props.collapsed,
-      selectedKeys: [],
-      openKeys: [],
+      selectedKeys: toRaw(props.selectedKeys),
+      openKeys: toRaw(props.openKeys),
       preOpenKeys: [],
       mode: props.mode,
     });
@@ -54,7 +79,15 @@ export default defineComponent({
     watch(
       () => state.openKeys,
       (_val, oldVal) => {
+        state.openKeys = _val;
         state.preOpenKeys = oldVal;
+      }
+    );
+    watch(
+      () => props.selectedKeys,
+      (_val, oldVal) => {
+        console.log("jda-menu state.selectedKeys", _val);
+        state.selectedKeys = _val;
       }
     );
     watch(
@@ -76,6 +109,49 @@ export default defineComponent({
         state.menus = toRaw(_val);
       }
     );
+
+    //页面加载后定位菜单，展开菜单
+    const positionMenu = (croute: RouteLocationNormalizedLoaded) => {
+      let currentRouteCode: string = croute.name as string; //当前路由code
+
+      let openKeys: SelectedMenuKey[] = [];
+      const expandSubMenu = (cmenu?: any) => {
+        if (cmenu) {
+          if (cmenu.children && cmenu.children.length) {
+            openKeys.push(cmenu.key);
+          }
+          expandSubMenu(cmenu.parent);
+        }
+      };
+
+      const selectLeafMenu = (cmenu?: any) => {
+        if (cmenu) {
+          if (cmenu.showInMenu) {
+            state.selectedKeys = [cmenu.key];
+            context.emit("update:selectedKeys", state.selectedKeys);
+          } else {
+            if (cmenu) {
+              selectLeafMenu(cmenu.parent);
+            }
+          }
+        }
+      };
+
+      //匹配左侧菜单
+      const currentMenu = allMenuMap.get(currentRouteCode);
+      selectLeafMenu(currentMenu);
+      expandSubMenu(currentMenu);
+      state.openKeys = openKeys;
+      context.emit("update:openKeys", openKeys);
+    };
+    positionMenu(curRoute);
+    // watch(
+    //   () => curRoute,
+    //   (newVal, oldVal) => {
+    //     positionMenu(newVal);
+    //   },
+    //   { deep: true, immediate: true }
+    // );
 
     /**
      * 菜单点击事件

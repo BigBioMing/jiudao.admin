@@ -132,7 +132,7 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("Export")]
-        public virtual async Task<IActionResult> Export([FromQuery] NoPageViewModel filterParams)
+        public virtual async Task<IActionResult> Export([FromQuery] SysUserGetListVO? filterParams)
         {
             Expression<Func<SysUser, bool>>? predicate = null;
             string? name = filterParams?.Params?.Name;

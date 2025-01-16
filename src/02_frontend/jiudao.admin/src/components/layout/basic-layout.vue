@@ -90,24 +90,30 @@ const onCrumbClick = (crumb: any) => {
   router.push({ path: crumb.path })
 }
 
-const selectedKeys = ref<string[]>(['1']);
-
 const state = reactive({
   collapsed: false,
-  selectedKeys: ['1'],
-  openKeys: ['sub1'],
-  preOpenKeys: ['sub1'],
+  selectedKeys: [],
+  openKeys: [],
+  preOpenKeys: [],
 });
+console.log('bl-selectedKeys', state.selectedKeys)
 const onCollapse = (collapsed: boolean, type: string) => {
   console.log(collapsed, type);
 };
+watch(
+  () => state.selectedKeys,
+  (_val, oldVal) => {
+    console.log("bl state.selectedKeys", _val);
+  }
+);
 
 const onBreakpoint = (broken: boolean) => {
   console.log(broken);
 };
 let vn1 = createVNode('PieChartOutlined');
 
-const menus = menuStore.getMenus();
+const { topLevelMenus, allMenuMap } = menuStore.getMenus();
+const menus = topLevelMenus;
 // const menus = ref(noRefMenus);
 // const subMenus = ref([]);
 watch(
@@ -348,7 +354,7 @@ let settingsConfig = ref({
 });
 
 // onMounted(() => {
-  let scstr = localStorage.getItem('settings-config');
+let scstr = localStorage.getItem('settings-config');
 if (scstr) {
   let sc = JSON.parse(scstr);
   settingsConfig.value = sc;
@@ -484,6 +490,7 @@ const addTab = (tab: { title: string; key: string; path: string; closable?: bool
   }
 }
 const removeTab = (targetKey: string) => {
+  if (multipleTag.tabs.length <= 1) return;
   let lastIndex = 0;
   multipleTag.tabs.forEach((tab, i) => {
     if (tab.key === targetKey) {
@@ -514,8 +521,17 @@ const onTabClick = (key: string) => {
   }
 }
 watch(() => curRoute, (newVal, oldVal) => {
+  let currentRouteCode: string = newVal.name as string;//当前路由code
   if (settingsConfig.value.isMultipleTags) {
-    addTab({ key: newVal.name, title: newVal.meta.title, path: newVal.path, query: newVal.query, params: newVal.params });
+    addTab({ key: currentRouteCode, title: newVal.meta.title, path: newVal.path, query: newVal.query, params: newVal.params });
+  }
+}, { deep: true, immediate: true });
+watch(() => settingsConfig.value.isMultipleTags, (newVal, oldVal) => {
+  if (newVal) {
+    let currentRouteCode: string = curRoute.name as string;//当前路由code
+    if (settingsConfig.value.isMultipleTags) {
+      addTab({ key: currentRouteCode, title: curRoute.meta.title, path: curRoute.path, query: curRoute.query, params: curRoute.params });
+    }
   }
 }, { deep: true, immediate: true });
 
@@ -740,6 +756,9 @@ const onLogout = () => {
   router.push('/login')
 }
 
+const onReload = () => {
+  router.replace({ path: curRoute.path, query: curRoute.query, force: true, replace: true })
+}
 </script>
 
 <template>
@@ -766,7 +785,8 @@ const onLogout = () => {
         :items="items"></a-menu> -->
           <jda-menu :menus="siderMenus" :collapsed="state.collapsed"
             :theme="(settingsConfig.currentNavigationMode.mode === 'mixed' || settingsConfig.currentThemeSkin === 'light') ? 'light' : 'dark'"
-            @on-menu-item-click="(menu: any, isLeaf: boolean) => onMenuItemClick('side-menu', menu, isLeaf)"></jda-menu>
+            @on-menu-item-click="(menu: any, isLeaf: boolean) => onMenuItemClick('side-menu', menu, isLeaf)"
+            v-model:selectedKeys="state.selectedKeys" v-model:openKeys="state.openKeys"></jda-menu>
         </a-layout-sider>
         <a-layout :style="layoutFixedLeftMenuRightRegionStyle">
           <a-layout-header v-if="settingsConfig.currentNavigationMode.isFixedHeader.value" class="header"
@@ -794,7 +814,7 @@ const onLogout = () => {
                     :style="headerMenuControlStyle" />
                   <div style="display: inline-block;" :style="headerMenuControlStyle" class="heaer-menu">
                     <a-tooltip title="刷新页面">
-                      <ReloadOutlined />
+                      <ReloadOutlined @click="onReload" />
                     </a-tooltip>
                   </div>
                 </div>
@@ -802,7 +822,8 @@ const onLogout = () => {
                   v-if="settingsConfig.currentNavigationMode.mode === 'top-menu' || settingsConfig.currentNavigationMode.isAutoSplitMenu.value"
                   :menus="headerMenus" :collapsed="state.collapsed"
                   @on-menu-item-click="(menu: any, isLeaf: boolean) => onMenuItemClick('top-menu', menu, isLeaf)"
-                  mode="horizontal" :theme="settingsConfig.currentThemeSkin === 'light' ? 'light' : 'dark'"></jda-menu>
+                  mode="horizontal" :theme="settingsConfig.currentThemeSkin === 'light' ? 'light' : 'dark'"
+                  v-model:selectedKeys="state.selectedKeys" v-model:openKeys="state.openKeys"></jda-menu>
               </div>
               <div class="header-right">
                 <div class="header-menu-top-menu" style="display: inline-block;float:right;margin-right: 20px;">
@@ -877,7 +898,7 @@ const onLogout = () => {
               @click="onChangeMobileSiderMenu" />
             <div style="display: inline-block;" class="heaer-menu">
               <a-tooltip title="刷新页面">
-                <ReloadOutlined />
+                <ReloadOutlined @click="onReload" />
               </a-tooltip>
             </div>
             <div style="display: inline-block;float:right;margin-right: 20px;">
@@ -938,7 +959,8 @@ const onLogout = () => {
               collapsible width="160" :theme="'light'">
               <div class="logo" />
               <jda-menu :menus="subSiderMenus" :collapsed="state.collapsed" :theme="'light'"
-                @on-menu-item-click="(menu: any, isLeaf: boolean) => onMenuItemClick('sub-side-menu', menu, isLeaf)"></jda-menu>
+                @on-menu-item-click="(menu: any, isLeaf: boolean) => onMenuItemClick('sub-side-menu', menu, isLeaf)"
+                v-model:selectedKeys="state.selectedKeys" v-model:openKeys="state.openKeys"></jda-menu>
             </a-layout-sider>
             <a-layout :style="{ 'overflow-y': 'auto' }">
               <!-- 多标签 -->
@@ -1126,7 +1148,8 @@ const onLogout = () => {
           <!-- <a-menu v-model:openKeys="state.openKeys" v-model:selectedKeys="state.selectedKeys" mode="inline" theme="dark"
         :items="items"></a-menu> -->
           <jda-menu :menus="siderMenus" :theme="(settingsConfig.currentThemeSkin === 'light') ? 'light' : 'dark'"
-            @on-menu-item-click="(menu: any, isLeaf: boolean) => onMenuItemClick('side-menu', menu, isLeaf)"></jda-menu>
+            @on-menu-item-click="(menu: any, isLeaf: boolean) => onMenuItemClick('side-menu', menu, isLeaf)"
+            v-model:selectedKeys="state.selectedKeys" v-model:openKeys="state.openKeys"></jda-menu>
         </a-layout-sider>
       </a-drawer>
     </a-watermark>

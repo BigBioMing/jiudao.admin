@@ -7,12 +7,12 @@ import { useSysDic } from '@/hooks'
 import Edit from './edit.vue'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { getPageEntitiesApi, delUserApi } from '@/apis/sys/userinfo';
+import { getPageEntitiesApi, delUserApi, exportApi } from '@/apis/sys/userinfo';
 import type { PaginationChangeEvent } from '@/types/global';
 
 
 defineOptions({
-    name: 'sysuserinfoindex'
+  name: 'sysuserinfoindex'
 })
 
 
@@ -65,22 +65,48 @@ const columns = reactive([
 let tableDataSource = ref<any[]>([]);
 //获取表格数据源
 const onGetTableDataSource = async (opts?: PaginationChangeEvent) => {
-  console.log(opts)
   let pageIndex: number = opts?.page?.pageIndex || 1;
   let pageSize: number = opts?.page?.pageSize || 10;
-  var res = await getPageEntitiesApi({ pageIndex: pageIndex, pageSize: pageSize });
+  let searchParams = Object.assign({ pageIndex: pageIndex, pageSize: pageSize }, searchForm.value);
+  var res = await getPageEntitiesApi(searchParams);
   tableDataSource.value = res?.items || [];
 }
-const onGetTableDataSource2=async()=>{
-try{
-  await onGetTableDataSource();
-}catch(err){
-  console.log('ccccccccccccc',err)
-}
+const onGetTableDataSource2 = async () => {
+  try {
+    await onGetTableDataSource();
+  } catch (err) {
+    console.log('ccccccccccccc', err)
+  }
 }
 //导出
-const onTableImportClick = (columns: any[]) => {
-  console.log('onTableImportClick', columns)
+const onTableImportClick = async (columns: any[]) => {
+  let pageIndex: number = 1;
+  let pageSize: number = 10;
+  let searchParams = Object.assign({ pageIndex: pageIndex, pageSize: pageSize }, searchForm.value);
+  const res = await exportApi(searchParams);
+  const { data, headers } = res
+  // // 切割出文件名
+  // const fileNameEncode = res.headers['content-disposition'].split('filename=')[1]
+  // // 解码
+  // const fileName = decodeURIComponent(fileNameEncode)
+  // console.log('fileName', fileName)
+  let fileName
+  if (headers['content-disposition']) {
+    fileName = headers['content-disposition'].replace(/\w+;filename=(.*)/, '$1')
+  } else {
+    fileName = data.fileName
+  }
+  // 此处当返回json文件时需要先对data进行JSON.stringify处理，其他类型文件不用做处理
+  const blob = new Blob([data], { type: headers['content-type'] })
+  const dom = document.createElement('a')
+  const downUrl = window.URL.createObjectURL(blob)
+  dom.href = downUrl
+  dom.download = decodeURIComponent(fileName)
+  dom.style.display = 'none'
+  document.body.appendChild(dom)
+  dom.click()
+  dom.parentNode.removeChild(dom)
+  // window.URL.revokeObjectURL(url)
 }
 //表格选中事件
 let selectedRowKeys = ref<any[]>([]);
@@ -88,7 +114,7 @@ const onSelectChange = (selectedKeys: (string | number)[], selectedRows: any[]) 
   selectedRowKeys.value = selectedRows.map(n => n.id);
 };
 
-onMounted(async() => {
+onMounted(async () => {
   onGetTableDataSource2()
   // messageApi.error("网络暂时不可用，请检查下哦~11");
 })
@@ -119,36 +145,37 @@ const onDelete = (row: any) => {
     }
   });
 }
+
 </script>
 <template>
   <div class="page-wrap page-wrap-master">
-  <jda-table-search :model="searchForm" @search="onGetTableDataSource">
-    <template v-slot="{ advanced }">
-      <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-        <a-form-item label="用户名">
-          <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" />
-        </a-form-item>
-      </a-col>
-      <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-        <a-form-item label="账号">
-          <a-input v-model:value="searchForm.account" placeholder="请输入账号" />
-        </a-form-item>
-      </a-col>
-      <template v-if="advanced">
+    <jda-table-search :model="searchForm" @search="onGetTableDataSource">
+      <template v-slot="{ advanced }">
         <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-          <a-form-item label="手机号码">
-            <a-input v-model:value="searchForm.mobile" placeholder="请输入手机号码" />
+          <a-form-item label="用户名">
+            <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" />
           </a-form-item>
         </a-col>
         <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-          <a-form-item label="邮箱">
-            <a-input v-model:value="searchForm.email" placeholder="请输入邮箱" />
+          <a-form-item label="账号">
+            <a-input v-model:value="searchForm.account" placeholder="请输入账号" />
           </a-form-item>
         </a-col>
+        <template v-if="advanced">
+          <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
+            <a-form-item label="手机号码">
+              <a-input v-model:value="searchForm.mobile" placeholder="请输入手机号码" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
+            <a-form-item label="邮箱">
+              <a-input v-model:value="searchForm.email" placeholder="请输入邮箱" />
+            </a-form-item>
+          </a-col>
+        </template>
       </template>
-    </template>
-  </jda-table-search>
-  <!-- <div class="jda-search-container">
+    </jda-table-search>
+    <!-- <div class="jda-search-container">
     <a-form :model="searchForm" layout="horizontal" labelAlign="left" :label-col="{ style: { width: '70px' } }">
       <a-row :gutter="48">
         <a-col :md="12" :sm="24" :xs="24" :lg="8">
@@ -186,54 +213,54 @@ const onDelete = (row: any) => {
       </a-row>
     </a-form>
   </div> -->
-  <a-card class="j-card-table-wrapper">
-    <jda-table class="ant-table-striped" rowKey="id" :columns="columns" :data-source="tableDataSource"
-      :scroll="{ x: true }" bordered :total="100" :pagination="{
-    showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'],
-    'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
-  }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
-      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-      @get-table-data-source="onGetTableDataSource" @create="onEdit" @import="onTableImportClick">
+    <a-card class="j-card-table-wrapper">
+      <jda-table class="ant-table-striped" rowKey="id" :columns="columns" :data-source="tableDataSource"
+        :scroll="{ x: true }" bordered :total="100" :pagination="{
+      showSizeChanger: true, pageSizeOptions: ['10', '20', '30', '50'],
+      'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
+    }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
+        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+        @get-table-data-source="onGetTableDataSource" @create="onEdit" @import="onTableImportClick">
 
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'account'">
-          <a>
-            {{ record.account }}
-          </a>
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'account'">
+            <a>
+              {{ record.account }}
+            </a>
+          </template>
+          <template v-else-if="column.key === 'gender'">
+            <span>
+              <a-tag :key="0" v-if="record.gender === 'Sex_Man'" color="green">
+                {{ dicItemName('Sex', record.gender) }}
+              </a-tag>
+              <a-tag :key="1" v-if="record.gender === 'Sex_Woman'" color="geekblue">
+                {{ dicItemName('Sex', record.gender) }}
+              </a-tag>
+            </span>
+          </template>
+          <template v-else-if="column.key === 'action'">
+            <span>
+              <a-button type="link" @click="onEdit(record)">
+                <span class="jda-table-action-btn-text">修改</span>
+                <template #icon>
+                  <font-awesome-icon icon="fas fa-edit" />
+                </template>
+              </a-button>
+              <a-divider type="vertical" />
+              <a-button danger type="link" @click="onDelete(record)">
+                <span class="jda-table-action-btn-text">删除</span>
+                <template #icon>
+                  <font-awesome-icon icon="fas fa-trash-alt" />
+                </template>
+              </a-button>
+            </span>
+          </template>
         </template>
-        <template v-else-if="column.key === 'gender'">
-          <span>
-            <a-tag :key="0" v-if="record.gender === 'Sex_Man'" color="green">
-              {{ dicItemName('Sex', record.gender) }}
-            </a-tag>
-            <a-tag :key="1" v-if="record.gender === 'Sex_Woman'" color="geekblue">
-              {{ dicItemName('Sex', record.gender) }}
-            </a-tag>
-          </span>
-        </template>
-        <template v-else-if="column.key === 'action'">
-          <span>
-            <a-button type="link" @click="onEdit(record)">
-              <span class="jda-table-action-btn-text">修改</span>
-              <template #icon>
-                <font-awesome-icon icon="fas fa-edit" />
-              </template>
-            </a-button>
-            <a-divider type="vertical" />
-            <a-button danger type="link" @click="onDelete(record)">
-              <span class="jda-table-action-btn-text">删除</span>
-              <template #icon>
-                <font-awesome-icon icon="fas fa-trash-alt" />
-              </template>
-            </a-button>
-          </span>
-        </template>
-      </template>
-    </jda-table>
-  </a-card>
-  <jda-modal :width="800" v-model:open="openCreateModal.isOpen" title="新建" v-if="openCreateModal.isOpen">
-    <Edit v-model:openCreateModal="openCreateModal.isOpen" :id="openCreateModal.id"></Edit>
-  </jda-modal>
+      </jda-table>
+    </a-card>
+    <jda-modal :width="800" v-model:open="openCreateModal.isOpen" title="新建" v-if="openCreateModal.isOpen">
+      <Edit v-model:openCreateModal="openCreateModal.isOpen" :id="openCreateModal.id"></Edit>
+    </jda-modal>
   </div>
 </template>
 <style lang="scss" scoped></style>

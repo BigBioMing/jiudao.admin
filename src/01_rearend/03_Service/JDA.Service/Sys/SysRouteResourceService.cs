@@ -115,8 +115,6 @@ namespace JDA.Service.Sys
         /// </summary>
         /// <param name="allMenus">所有菜单</param>
         /// <param name="allActions">所有按钮</param>
-        /// <param name="roleRouteIds">该角色拥有的菜单权限</param>
-        /// <param name="roleActionIds">该角色拥有的按钮权限</param>
         /// <param name="parentMenu">父级菜单（为null时表示从1级菜单开始获取</param>
         /// <returns></returns>
         private List<MenuTreeDto> LoopMenus(List<SysRouteResource> allMenus, List<SysActionResource> allActions, SysRouteResource? parentMenu)

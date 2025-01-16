@@ -109,6 +109,10 @@ namespace JDA.Core.WebApi.MiddleWares
                         //Log.Error(e, $"保存日志失败[1] {JsonConvert.SerializeObject(logInfo)}");
                     }
                 }
+                catch (Exception e)
+                {
+                    throw;
+                }
                 finally
                 {
                     // Body重新赋值为原始Body缓存

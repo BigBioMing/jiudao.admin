@@ -1,5 +1,5 @@
 import router, { resetRouter } from "./index";
-import { useGlobalStore, useMenuStore,useLoadingStore } from "@/stores";
+import { useGlobalStore, useMenuStore, useLoadingStore } from "@/stores";
 import { getUserRouteAndOptionsApi } from "@/apis/resource/route";
 import BlankLayout from "@/components/layout/blank-layout.vue";
 import BasicLayout from "@/components/layout/basic-layout.vue";
@@ -34,7 +34,9 @@ router.beforeEach((to, from, next) => {
             let addRouters: RouteRecordRaw[] = loopAddRouters(
               res.menuTreeNodes
             );
-            let addMenus = loopAddMenus(res.menuTreeNodes);
+            let allMenus: any[] = [];
+            let addMenus = loopAddMenus(res.menuTreeNodes, null, allMenus);
+            console.log("addmenus:", addMenus);
 
             addRouters.push({
               path: "/:catchAll(.*)",
@@ -42,11 +44,15 @@ router.beforeEach((to, from, next) => {
             });
 
             menuStore.setRouters(addRouters);
-            menuStore.setMenus(addMenus);
+            menuStore.setMenus(addMenus, allMenus);
             menuStore.setActions(res.actions);
             resetRouter(); // 重置路由 防止退出重新登录或者 token 过期后页面未刷新，导致的路由重复添加
             addRouters.forEach((r) => {
-              router.addRoute(r);
+              try {
+                router.addRoute(r);
+              } catch (e) {
+                console.error(e);
+              }
             });
             // 请求带有 redirect 重定向时，登录自动重定向到该地址
             const redirect = decodeURIComponent(from.query.redirect || to.path);
@@ -116,7 +122,11 @@ const loopAddRouters = function (menuTreeNodes: any[]): RouteRecordRaw[] {
  * @param menuTreeNode 后端传过来的路由树
  * @returns 返回菜单
  */
-const loopAddMenus = function (menuTreeNodes: any[]): any[] {
+const loopAddMenus = function (
+  menuTreeNodes: any[],
+  parentMenu: any,
+  allMenus: any[]
+): any[] {
   let addMenus = [];
   for (let i = 0; i < menuTreeNodes.length; i++) {
     let menu = menuTreeNodes[i];
@@ -126,12 +136,16 @@ const loopAddMenus = function (menuTreeNodes: any[]): any[] {
       title: menu.title,
       icon: menu.icon,
       path: menu.url,
+      showInMenu: menu.showInMenu,
+      parent: parentMenu,
+      children: <any[] | null>null,
     };
+    allMenus.push(addMenu);
     if (menu.showInMenu) {
       addMenus.push(addMenu);
     }
     if (menu.childrens && menu.childrens.length > 0) {
-      addMenu.children = loopAddMenus(menu.childrens);
+      addMenu.children = loopAddMenus(menu.childrens, addMenu, allMenus);
     }
   }
 
