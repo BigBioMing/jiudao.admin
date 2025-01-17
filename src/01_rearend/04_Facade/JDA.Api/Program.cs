@@ -141,7 +141,8 @@ try
                        //.WithOrigins("http://example.com")
                        .AllowAnyOrigin()
                        .AllowAnyHeader()
-                       .AllowAnyMethod();
+                       .AllowAnyMethod()
+                       .WithExposedHeaders("content-disposition");
             });
     });
 

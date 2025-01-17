@@ -96,10 +96,11 @@ export const exportApi = async (
     url: URL_PREFIX + "Export",
     method: "get",
     // params: params,
+    responseType:'blob',
     params: params,
     paramsSerializer: (params) => {
       // return qs.stringify(params, { indices: false,allowDots: true })
       return qs.stringify(params, { allowDots: true });
-    },
+    }
   });
 };

@@ -1,11 +1,19 @@
 import axios, { type AxiosRequestConfig } from "axios";
 import { message } from "ant-design-vue";
 import { useGlobalStore, useLoadingStore } from "@/stores";
+import common from "@/utils/common";
 
 const instance = axios.create({
   baseURL: "https://localhost:7256",
   // timeout: 20000,
   headers: { "X-Custom-Header": "foobar" },
+  // transformResponse: [
+  //   function (data, headers,a,b) {
+  //     debugger;
+  //     // 处理返回数据
+  //     return data;
+  //   },
+  // ],
 });
 
 instance.interceptors.request.use(
@@ -63,17 +71,37 @@ instance.interceptors.response.use(
       // console.log(config)
       // return Promise.resolve(config);
 
-      let contentType=config.headers?.getContentType();
-      if (contentType == "application/ms-excel") {
-        return Promise.resolve(config);
-      } else {
+      let contentType = config.headers?.getContentType();
+      if (
+        contentType &&
+        (contentType.indexOf("application/json") > -1 ||
+          contentType.indexOf("text/plain") > -1)
+      ) {
         const res = config.data;
-        if (res?.code === "0") {
-          return Promise.resolve(config.data.data);
-        } else {
-          messageError(res?.message || "请求错误");
-          return Promise.reject(config);
+        if (!common.isBlob(res)) {
+          if (res?.code === "0") {
+            return Promise.resolve(config.data.data);
+          } else {
+            messageError(res?.message || "请求错误");
+            return Promise.reject(config);
+          }
+        } else {//如果下载文件报错，后端可能会返回blob类型的报错信息
+          const textBlob = common.readBlobAsJson(res);
+          textBlob
+            .then((r) => {
+              if (r?.code === "0") {
+                return Promise.resolve(r.data);
+              } else {
+                messageError(r?.message || "请求错误");
+                return Promise.reject(config);
+              }
+            })
+            .catch((err2) => {
+              return Promise.reject(err2);
+            });
         }
+      } else {
+        return Promise.resolve(config);
       }
     } else {
       messageError("非正常响应==>" + config.status);

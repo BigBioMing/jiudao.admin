@@ -35,31 +35,31 @@ namespace JDA.Core.WebApi.MiddleWares
             else
             {
                 var originalBody = context.Response.Body;
-                using (var ms = new MemoryStream())
+                using (MemoryStream memoryStream = new MemoryStream())
                 {
                     try
                     {
                         // Body赋值为新Body缓存
-                        context.Response.Body = ms;
+                        context.Response.Body = memoryStream;
                         // 向下执行（等待返回）
                         await next(context);
 
-                        ms.Seek(0, SeekOrigin.Begin);
-                        using var reader = new StreamReader(ms);
-                        var str = await reader.ReadToEndAsync();
-                        var buffer = Encoding.UTF8.GetBytes(str);
-
-                        var ms2 = new MemoryStream();
-                        await ms2.WriteAsync(buffer, 0, buffer.Length);
-                        ms2.Seek(0, SeekOrigin.Begin);
+                        memoryStream.Seek(0, SeekOrigin.Begin);
 
                         // 写入到原有的流中
-                        await ms2.CopyToAsync(originalBody);
+                        await memoryStream.CopyToAsync(originalBody);
+                        //using (StreamReader streamReader = new(memoryStream))
+                        //{
+                        //    // 读取Body数据
+                        //    memoryStream.Position = 0;
+                        //    string body = await streamReader.ReadToEndAsync();
+                        //    logInfo.ResponseParams = body;
+                        //}
                     }
                     catch (Exception ex)
                     {
                         LoggerHelper.Default.Error(ex, "[2]");
-                        ms.Seek(0, SeekOrigin.Begin);
+                        memoryStream.Seek(0, SeekOrigin.Begin);
                         //using string responseBody = await new StreamReader(ms).ReadToEndAsync();
                         //var a = JsonConvert.DeserializeObject<UnifyResponse>(responseBody,new JsonSerializerSettings()
                         //{

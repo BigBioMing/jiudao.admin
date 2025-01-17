@@ -9,6 +9,7 @@ import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { getPageEntitiesApi, delUserApi, exportApi } from '@/apis/sys/userinfo';
 import type { PaginationChangeEvent } from '@/types/global';
+import common from '@/utils/common';
 
 
 defineOptions({
@@ -85,28 +86,8 @@ const onTableImportClick = async (columns: any[]) => {
   let searchParams = Object.assign({ pageIndex: pageIndex, pageSize: pageSize }, searchForm.value);
   const res = await exportApi(searchParams);
   const { data, headers } = res
-  // // 切割出文件名
-  // const fileNameEncode = res.headers['content-disposition'].split('filename=')[1]
-  // // 解码
-  // const fileName = decodeURIComponent(fileNameEncode)
-  // console.log('fileName', fileName)
-  let fileName
-  if (headers['content-disposition']) {
-    fileName = headers['content-disposition'].replace(/\w+;filename=(.*)/, '$1')
-  } else {
-    fileName = data.fileName
-  }
-  // 此处当返回json文件时需要先对data进行JSON.stringify处理，其他类型文件不用做处理
-  const blob = new Blob([data], { type: headers['content-type'] })
-  const dom = document.createElement('a')
-  const downUrl = window.URL.createObjectURL(blob)
-  dom.href = downUrl
-  dom.download = decodeURIComponent(fileName)
-  dom.style.display = 'none'
-  document.body.appendChild(dom)
-  dom.click()
-  dom.parentNode.removeChild(dom)
-  // window.URL.revokeObjectURL(url)
+  let filename = common.parseContentDisposition(headers);
+  common.downloadFile(data,filename);
 }
 //表格选中事件
 let selectedRowKeys = ref<any[]>([]);
