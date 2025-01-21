@@ -11,7 +11,7 @@ const URL_PREFIX = "/api/Sys/SysOrganization/";
  * @returns
  */
 export const getPageEntitiesApi = async (
-  params: Paging<SysOrganizationGetPageEntitiesInputParams>
+  params: SysOrganizationGetPageEntitiesInputParams
 ): Promise<TablePageResult<any>> => {
   return await request({
     url: URL_PREFIX + "GetPageEntities",
@@ -24,6 +24,26 @@ export const getPageEntitiesApi = async (
     },
   });
 };
+
+/**
+ * 导出
+ * @param params
+ * @returns
+ */
+export const exportApi = async (params: SysOrganizationGetPageEntitiesInputParams) => {
+  return await request({
+    url: URL_PREFIX + "Export",
+    method: "get",
+    // params: params,
+    responseType: "blob",
+    params: params,
+    paramsSerializer: (params) => {
+      // return qs.stringify(params, { indices: false,allowDots: true })
+      return qs.stringify(params, { allowDots: true });
+    },
+  });
+};
+
 /**
  * 获取组织机构信息
  * @param params

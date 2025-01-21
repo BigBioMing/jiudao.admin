@@ -8,18 +8,19 @@ import Edit from './edit.vue'
 import EditAction from './editAction.vue'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { getPageEntitiesApi, delRouteResourceApi, getRouteAndActionsApi } from '@/apis/sys/routeResource';
-import type { PaginationChangeEvent } from '@/types/global';
+import { getPageEntitiesApi, delRouteResourceApi, getRouteAndActionsApi, exportApi } from '@/apis/sys/routeResource';
+import type { ImportDataFieldInputParams, PaginationChangeEvent } from '@/types/global';
+import type { SysRouteResourceGetPageEntitiesInputParams } from '@/types/sys/routeResource';
+import common from '@/utils/common';
 
 
 const [messageApi, contextHolder] = message.useMessage();
 const { dicItemName } = useSysDic();
 
-const searchForm = ref({
-  userName: null,
-  account: null,
-  mobile: null,
-  email: null
+const searchForm = ref<SysRouteResourceGetPageEntitiesInputParams>({
+  code: null,
+  name: null,
+  title: null
 });
 
 
@@ -112,8 +113,12 @@ const rowSelection: Ref<any> = ref({
 });
 
 //导出
-const onTableImportClick = (columns: any[]) => {
-  console.log('onTableImportClick', columns)
+const onTableImportClick = async (columns: ImportDataFieldInputParams[], checkedColumns: ImportDataFieldInputParams[]) => {
+  let searchParams = Object.assign({}, searchForm.value);
+  const res = await exportApi(searchParams);
+  const { data, headers } = res
+  let filename = common.parseContentDisposition(headers);
+  common.downloadFile(data, filename);
 }
 //表格选中事件
 let selectedRowKeys = ref<any[]>([]);

@@ -10,6 +10,7 @@ export default {
 <script setup lang="ts">
 import { computed, reactive, ref, useSlots, useAttrs, watch } from 'vue'
 import common from '@/utils/common'
+import type { ImportDataFieldInputParams } from '@/types/global'
 
 //vue3中访问$attrs
 // import { useAttrs } from 'vue'
@@ -20,13 +21,16 @@ defineOptions({
 
 let props = defineProps<{
     columns: any[],
-    pagination: any
+    pagination: any,
+    permission?: { create: string; export: string }
 }>()
+
+console.log(props)
 
 //'get-table-data-source'-获取表格数据源
 //'create'-点击新建按钮
 //'get-table-data-source'-点击导出按钮
-const emit = defineEmits(['get-table-data-source', 'create', 'import'])
+const emit = defineEmits(['get-table-data-source', 'create', 'export'])
 
 //分页配置
 let pagination = {
@@ -65,7 +69,9 @@ const onCreate = () => {
     emit('create')
 }
 const onImport = () => {
-    emit('import', innerColumns.value)
+    let checkedColumns: ImportDataFieldInputParams[] = innerColumns.value.filter(n => n.key != 'action').filter(n => n.checked).map(n => <ImportDataFieldInputParams>{ key: n.key, title: n.title });
+    let allColumns: ImportDataFieldInputParams[] = innerColumns.value.filter(n => n.key != 'action').map(n => <ImportDataFieldInputParams>{ key: n.key, title: n.title });
+    emit('export', allColumns, checkedColumns)
 }
 
 //初始化innerColumns
@@ -269,12 +275,22 @@ const onMove = (/**Event*/evt: any) => {
                 <div class="jda-table-toolbar-list">
                     <div class="jda-table-toolbar-btns">
                         <a-space>
-                            <a-button type="primary" @click="onCreate">
+                            <a-button type="primary" @click="onCreate" v-if="props?.permission?.create" v-permission="props?.permission?.create">
                                 <template #icon>
                                     <font-awesome-icon icon="fas fa-plus" />
                                 </template>
                                 新建</a-button>
-                            <a-button type="primary" @click="onImport">
+                            <a-button type="primary" @click="onCreate" v-else>
+                                <template #icon>
+                                    <font-awesome-icon icon="fas fa-plus" />
+                                </template>
+                                新建</a-button>
+                            <a-button type="primary" @click="onImport" v-if="props?.permission?.export" v-permission="props?.permission?.export">
+                                <template #icon>
+                                    <font-awesome-icon icon="fas fa-arrow-circle-down" />
+                                </template>
+                                导出</a-button>
+                            <a-button type="primary" @click="onImport" v-else>
                                 <template #icon>
                                     <font-awesome-icon icon="fas fa-arrow-circle-down" />
                                 </template>

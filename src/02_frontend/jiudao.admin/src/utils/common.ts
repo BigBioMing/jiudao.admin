@@ -25,15 +25,34 @@ export default class common {
 
     if (!headers) return null;
 
+    let filename = "";
+
     if (typeof headers === "string") {
       contentDisposition = headers;
     } else {
       contentDisposition = headers["content-disposition"];
     }
 
-    let str = contentDisposition.replace(/\w+;filename=(.*)/, "$1");
+    let map = new Map();
+    let strs = contentDisposition.split(";");
+    for (let i = 0; i < strs.length; i++) {
+      let str = strs[i];
+      if (str) {
+        str = str.trim();
+        let fns = str.split("=");
+        map.set(fns[0], fns[1]);
+      }
+    }
 
-    return str;
+    if (map.has("filename*")) {
+      let s = map.get("filename*");
+      if (s) s = s.replace("UTF-8''", "");
+      if (s) filename = decodeURIComponent(s);
+    } else if (map.has("filename")) {
+      filename = map.get("filename");
+    }
+
+    return filename;
   }
   /**
    * 下载文件
@@ -45,9 +64,11 @@ export default class common {
   static downloadFile(
     data: any,
     filename: string,
-    ext = "xlsx",
+    ext = ".xlsx",
     type = "application/vnd.ms-excel"
   ) {
+    if (filename && !filename.endsWith(ext)) filename = filename + ext;
+
     let blob = new Blob([data], { type });
     if (window.navigator.msSaveBlob) {
       try {
@@ -58,7 +79,7 @@ export default class common {
       }
     } else {
       let elink = document.createElement("a");
-      elink.download = filename + "." + ext;
+      elink.download = filename;
       elink.style.display = "none";
       let href = window.URL.createObjectURL(blob);
       elink.href = href;
@@ -77,7 +98,7 @@ export default class common {
   /**
    * 读取blob
    * @param blob 文本类型的blob
-   * @returns 
+   * @returns
    */
   static readBlobAsText(blob: Blob) {
     return new Promise((resolve, reject) => {
@@ -104,20 +125,23 @@ export default class common {
   /**
    * 读取blob并转换成json
    * @param blob 文本类型的blob
-   * @returns 
+   * @returns
    */
-  static readBlobAsJson(blob: Blob){
-    return new Promise((resolve,reject)=>{
-      common.readBlobAsText(blob).then(res=>{
-        try{
-          const json = JSON.parse(res);
-        resolve(json);
-        }catch(err){
-          reject(err);
-        }
-      }).catch(err2=>{
-        reject(err2);
-      });
-    })
+  static readBlobAsJson(blob: Blob) {
+    return new Promise((resolve, reject) => {
+      common
+        .readBlobAsText(blob)
+        .then((res) => {
+          try {
+            const json = JSON.parse(res);
+            resolve(json);
+          } catch (err) {
+            reject(err);
+          }
+        })
+        .catch((err2) => {
+          reject(err2);
+        });
+    });
   }
 }

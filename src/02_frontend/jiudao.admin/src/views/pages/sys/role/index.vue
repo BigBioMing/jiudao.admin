@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Key } from 'ant-design-vue/es/table/interface';
 import { computed, createVNode, h, onMounted, reactive, ref } from 'vue';
 import request from '@/utils/http'
 import { message } from 'ant-design-vue';
@@ -8,14 +7,17 @@ import Edit from './edit.vue'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { getPageEntitiesApi, delRoleApi } from '@/apis/sys/role';
-import type { PaginationChangeEvent } from '@/types/global';
+import type { ImportDataFieldInputParams, PaginationChangeEvent } from '@/types/global';
 import router from '@/router'
+import common from '@/utils/common';
+import { exportApi } from '@/apis/sys/role';
+import type { SysRoleGetPageEntitiesInputParams } from '@/types/sys/role';
 
 
 const [messageApi, contextHolder] = message.useMessage();
 const { dicItemName } = useSysDic();
 
-const searchForm = ref({
+const searchForm = ref<SysRoleGetPageEntitiesInputParams>({
   name: null,
   code: null
 });
@@ -62,8 +64,12 @@ const onGetTableDataSource2 = async () => {
   }
 }
 //导出
-const onTableImportClick = (columns: any[]) => {
-  console.log('onTableImportClick', columns)
+const onTableImportClick = async (columns: ImportDataFieldInputParams[], checkedColumns: ImportDataFieldInputParams[]) => {
+  let searchParams = Object.assign({}, searchForm.value);
+  const res = await exportApi(searchParams);
+  const { data, headers } = res
+  let filename = common.parseContentDisposition(headers);
+  common.downloadFile(data, filename);
 }
 //表格选中事件
 let selectedRowKeys = ref<any[]>([]);
@@ -133,7 +139,7 @@ const onOpenAuth = (row: any): void => {
       'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
     }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-        @get-table-data-source="onGetTableDataSource" @create="onEdit" @import="onTableImportClick">
+        @get-table-data-source="onGetTableDataSource" @create="onEdit" @export="onTableImportClick">
 
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'account'">

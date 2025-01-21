@@ -54,14 +54,19 @@ namespace JDA.Api.Controllers.Sys
         //[ApiExplorerSettings(GroupName = "V2")]
         public virtual async Task<IActionResult> GetPageEntities([FromQuery] SysUserGetListVO? filterParams)
         {
-            Thread.Sleep(2000);
             Expression<Func<SysUser, bool>>? predicate = null;
-            string? name = filterParams?.Params?.Name;
+            string? name = filterParams?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
-            string? account = filterParams?.Params?.Account;
+            string? account = filterParams?.Account;
             if (!string.IsNullOrWhiteSpace(account))
                 predicate = n => n.Account == account;
+            string? mobile = filterParams?.Mobile;
+            if (!string.IsNullOrWhiteSpace(mobile))
+                predicate = n => n.Mobile == mobile;
+            string? email = filterParams?.Email;
+            if (!string.IsNullOrWhiteSpace(email))
+                predicate = n => n.Account == email;
 
             var pageResult = await base.GetPageEntitiesAsync(filterParams, predicate);
 
@@ -78,7 +83,6 @@ namespace JDA.Api.Controllers.Sys
         //[ApiExplorerSettings(GroupName = "V2")]
         public virtual async Task<IActionResult> GetEntityById([FromQuery] long id)
         {
-            Thread.Sleep(6000);
             var entity = await base.GetEntityByIdAsync(id);
 
             return new JsonResult(entity);
@@ -132,18 +136,24 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("Export")]
-        public virtual async Task<IActionResult> Export([FromQuery] SysUserGetListVO? filterParams)
+        public virtual async Task<IActionResult> Export([FromQuery] SysUserImportDataVO? filterParams)
         {
             Expression<Func<SysUser, bool>>? predicate = null;
-            string? name = filterParams?.Params?.Name;
+            string? name = filterParams?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
-            string? account = filterParams?.Params?.Account;
+            string? account = filterParams?.Account;
             if (!string.IsNullOrWhiteSpace(account))
                 predicate = n => n.Account == account;
+            string? mobile = filterParams?.Mobile;
+            if (!string.IsNullOrWhiteSpace(mobile))
+                predicate = n => n.Mobile == mobile;
+            string? email = filterParams?.Email;
+            if (!string.IsNullOrWhiteSpace(email))
+                predicate = n => n.Account == email;
 
             var list = await this._currentService.GetEntitiesAsync(predicate);
-            string fileName = $"用户_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
+            string fileName = $"用户_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}";
             return await base.ExportAsync(fileName, list);
         }
 

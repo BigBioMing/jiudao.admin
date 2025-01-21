@@ -1,10 +1,9 @@
 /**
  * 分页参数
  */
-export interface Paging<T> {
+export interface Paging {
   pageIndex?: number;
   pageSize?: number;
-  params?: T;
 }
 
 /**
@@ -46,4 +45,13 @@ export interface TablePageResult<T> {
 export interface SelectedOptions {
   value: string | number;
   label: string;
+}
+
+
+/**
+ * 数据导出字段类
+ */
+export interface ImportDataFieldInputParams {
+  key: string;
+  title: string;
 }

@@ -8,8 +8,9 @@ import Edit from './edit.vue'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { getPageEntitiesApi, delUserApi, exportApi } from '@/apis/sys/userinfo';
-import type { PaginationChangeEvent } from '@/types/global';
+import type { ImportDataFieldInputParams, PaginationChangeEvent } from '@/types/global';
 import common from '@/utils/common';
+import type { SysUserInfoGetPageEntitiesInputParams } from '@/types/sys/userinfo';
 
 
 defineOptions({
@@ -20,8 +21,8 @@ defineOptions({
 const [messageApi, contextHolder] = message.useMessage();
 const { dicItemName } = useSysDic();
 
-const searchForm = ref({
-  userName: null,
+const searchForm = ref<SysUserInfoGetPageEntitiesInputParams>({
+  name: null,
   account: null,
   mobile: null,
   email: null
@@ -35,7 +36,7 @@ const columns = reactive([
     key: 'account',
   },
   {
-    title: '名称',
+    title: '姓名',
     dataIndex: 'name',
     key: 'name',
   },
@@ -80,14 +81,12 @@ const onGetTableDataSource2 = async () => {
   }
 }
 //导出
-const onTableImportClick = async (columns: any[]) => {
-  let pageIndex: number = 1;
-  let pageSize: number = 10;
-  let searchParams = Object.assign({ pageIndex: pageIndex, pageSize: pageSize }, searchForm.value);
+const onTableImportClick = async (columns: ImportDataFieldInputParams[], checkedColumns: ImportDataFieldInputParams[]) => {
+  let searchParams = Object.assign({}, searchForm.value);
   const res = await exportApi(searchParams);
   const { data, headers } = res
   let filename = common.parseContentDisposition(headers);
-  common.downloadFile(data,filename);
+  common.downloadFile(data, filename);
 }
 //表格选中事件
 let selectedRowKeys = ref<any[]>([]);
@@ -133,13 +132,13 @@ const onDelete = (row: any) => {
     <jda-table-search :model="searchForm" @search="onGetTableDataSource">
       <template v-slot="{ advanced }">
         <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-          <a-form-item label="用户名">
-            <a-input v-model:value="searchForm.userName" placeholder="请输入用户名" />
+          <a-form-item label="账号">
+            <a-input v-model:value="searchForm.account" placeholder="请输入账号" />
           </a-form-item>
         </a-col>
         <a-col :md="12" :sm="24" :xs="24" :lg="8" :xl="6">
-          <a-form-item label="账号">
-            <a-input v-model:value="searchForm.account" placeholder="请输入账号" />
+          <a-form-item label="姓名">
+            <a-input v-model:value="searchForm.name" placeholder="请输入姓名" />
           </a-form-item>
         </a-col>
         <template v-if="advanced">
@@ -201,7 +200,8 @@ const onDelete = (row: any) => {
       'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
     }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-        @get-table-data-source="onGetTableDataSource" @create="onEdit" @import="onTableImportClick">
+        @get-table-data-source="onGetTableDataSource" @create="onEdit" @export="onTableImportClick"
+        :permission="{ create: 'sys.userinfo.index.add', export: 'sys.userinfo.index.export' }">
 
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'account'">

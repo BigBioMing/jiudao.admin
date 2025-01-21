@@ -5,6 +5,7 @@ using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
 using JDA.IService.Sys;
+using JDA.Model.Sys.SysOrganizations;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -34,13 +35,13 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("GetPageEntities")]
-        public virtual async Task<IActionResult> GetPageEntities([FromQuery] PageViewModel filterParams)
+        public virtual async Task<IActionResult> GetPageEntities([FromQuery] SysOrganizationGetListVO filterParams)
         {
             Expression<Func<SysOrganization, bool>>? predicate = null;
-            string? name = filterParams?.Params?.Name;
+            string? name = filterParams?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
-            string? code = filterParams?.Params?.Code;
+            string? code = filterParams?.Code;
             if (!string.IsNullOrWhiteSpace(code))
                 predicate = n => n.Code == code;
 
@@ -129,13 +130,13 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("Export")]
-        public virtual async Task<IActionResult> Export([FromQuery] NoPageViewModel filterParams)
+        public virtual async Task<IActionResult> Export([FromQuery] SysOrganizationImportDataVO filterParams)
         {
             Expression<Func<SysOrganization, bool>>? predicate = null;
-            string? name = filterParams?.Params?.Name;
+            string? name = filterParams?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
-            string? code = filterParams?.Params?.Code;
+            string? code = filterParams?.Code;
             if (!string.IsNullOrWhiteSpace(code))
                 predicate = n => n.Code == code;
 

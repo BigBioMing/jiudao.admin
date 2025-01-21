@@ -7,14 +7,16 @@ import { useSysDic } from '@/hooks'
 import Edit from './edit.vue'
 import { Modal } from 'ant-design-vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import { getPageEntitiesApi, delApi } from '@/apis/sys/organization';
-import type { PaginationChangeEvent } from '@/types/global';
+import { getPageEntitiesApi, delApi, exportApi } from '@/apis/sys/organization';
+import type { ImportDataFieldInputParams, PaginationChangeEvent } from '@/types/global';
+import common from '@/utils/common';
+import type { SysOrganizationGetPageEntitiesInputParams } from '@/types/sys/organization';
 
 
 const [messageApi, contextHolder] = message.useMessage();
 const { dicItemName } = useSysDic();
 
-const searchForm = ref({
+const searchForm = ref<SysOrganizationGetPageEntitiesInputParams>({
   code: null,
   name: null,
 });
@@ -72,8 +74,12 @@ try{
 }
 }
 //导出
-const onTableImportClick = (columns: any[]) => {
-  console.log('onTableImportClick', columns)
+const onTableImportClick = async (columns: ImportDataFieldInputParams[], checkedColumns: ImportDataFieldInputParams[]) => {
+  let searchParams = Object.assign({}, searchForm.value);
+  const res = await exportApi(searchParams);
+  const { data, headers } = res
+  let filename = common.parseContentDisposition(headers);
+  common.downloadFile(data, filename);
 }
 //表格选中事件
 let selectedRowKeys = ref<any[]>([]);
@@ -148,7 +154,7 @@ const onDelete = (row: any) => {
     'show-total': (total: number) => `总共 ${total} 条数据`, buildOptionText: ({ value }: any) => `${value} 条/页`
   }" :rowClassName="(record: any, index: any) => (index % 2 === 1 ? 'table-striped' : null)"
       :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-      @get-table-data-source="onGetTableDataSource" @create="onEdit" @import="onTableImportClick">
+      @get-table-data-source="onGetTableDataSource" @create="onEdit" @export="onTableImportClick">
 
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'account'">

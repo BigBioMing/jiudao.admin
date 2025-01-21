@@ -42,15 +42,18 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("GetPageEntities")]
-        public virtual async Task<IActionResult> GetPageEntities([FromQuery] PageViewModel filterParams)
+        public virtual async Task<IActionResult> GetPageEntities([FromQuery] SysRouteResourceGetListVO filterParams)
         {
             Expression<Func<SysRouteResource, bool>>? predicate = null;
-            string? name = filterParams?.Params?.Name;
+            string? name = filterParams?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
-            string? code = filterParams?.Params?.Code;
+            string? code = filterParams?.Code;
             if (!string.IsNullOrWhiteSpace(code))
                 predicate = n => n.Code == code;
+            string? title = filterParams?.Title;
+            if (!string.IsNullOrWhiteSpace(title))
+                predicate = n => n.Title == title;
 
             var pageResult = await base.GetPageEntitiesAsync(filterParams, predicate);
 
@@ -144,15 +147,18 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("Export")]
-        public virtual async Task<IActionResult> Export([FromQuery] NoPageViewModel filterParams)
+        public virtual async Task<IActionResult> Export([FromQuery] SysRouteResourceImportDataVO filterParams)
         {
             Expression<Func<SysRouteResource, bool>>? predicate = null;
-            string? name = filterParams?.Params?.Name;
+            string? name = filterParams?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
-            string? code = filterParams?.Params?.Code;
+            string? code = filterParams?.Code;
             if (!string.IsNullOrWhiteSpace(code))
                 predicate = n => n.Code == code;
+            string? title = filterParams?.Title;
+            if (!string.IsNullOrWhiteSpace(title))
+                predicate = n => n.Title == title;
 
             var list = await this._currentService.GetEntitiesAsync(predicate);
             string fileName = $"路由资源_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";

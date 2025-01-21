@@ -5,6 +5,7 @@ using JDA.Core.Users.Abstractions;
 using JDA.Core.Views.ViewModels;
 using JDA.Core.WebApi.ControllerBases;
 using JDA.Entity.Entities.Sys;
+using JDA.Model.Sys.SysDictionaryDatas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using System;
@@ -33,19 +34,19 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("GetPageEntities")]
-        public virtual async Task<IActionResult> GetPageEntities([FromQuery] PageViewModel filterParams)
+        public virtual async Task<IActionResult> GetPageEntities([FromQuery] SysDictionaryDataGetListVO filterParams)
         {
             Expression<Func<SysDictionaryData, bool>>? predicate = null;
-            string? name = filterParams?.Params?.Name;
+            string? name = filterParams?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
-            string? code = filterParams?.Params?.Code;
+            string? code = filterParams?.Code;
             if (!string.IsNullOrWhiteSpace(code))
                 predicate = n => n.Code == code;
-            long? dictionaryDefineId = filterParams?.Params?.DictionaryDefineId;
+            long? dictionaryDefineId = filterParams?.DictionaryDefineId;
             if (dictionaryDefineId > 0)
                 predicate = n => n.DictionaryDefineId == dictionaryDefineId;
-            long? parentId = filterParams?.Params?.ParentId;
+            long? parentId = filterParams?.ParentId;
             if (parentId > 0)
                 predicate = n => n.ParentId == parentId;
 
@@ -120,24 +121,24 @@ namespace JDA.Api.Controllers.Sys
         /// <returns></returns>
         [HttpGet]
         [Route("Export")]
-        public virtual async Task<IActionResult> Export([FromQuery] NoPageViewModel filterParams)
+        public virtual async Task<IActionResult> Export([FromQuery] SysDictionaryDataImportDataVO filterParams)
         {
             Expression<Func<SysDictionaryData, bool>>? predicate = null;
-            string? name = filterParams?.Params?.Name;
+            string? name = filterParams?.Name;
             if (!string.IsNullOrWhiteSpace(name))
                 predicate = n => n.Name.Contains(name);
-            string? code = filterParams?.Params?.Code;
+            string? code = filterParams?.Code;
             if (!string.IsNullOrWhiteSpace(code))
                 predicate = n => n.Code == code;
-            long? dictionaryDefineId = filterParams?.Params?.DictionaryDefineId;
+            long? dictionaryDefineId = filterParams?.DictionaryDefineId;
             if (dictionaryDefineId > 0)
                 predicate = n => n.DictionaryDefineId == dictionaryDefineId;
-            long? parentId = filterParams?.Params?.ParentId;
+            long? parentId = filterParams?.ParentId;
             if (parentId > 0)
                 predicate = n => n.ParentId == parentId;
 
             var list = await this._currentService.GetEntitiesAsync(predicate);
-            string fileName = $"字典选项_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
+            string fileName = $"字典项_{DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")}.xlsx";
             return await base.ExportAsync(fileName, list);
         }
     }

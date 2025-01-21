@@ -1,5 +1,7 @@
 import type { Paging, TablePageResult } from "@/types/global";
-import type { SysUserInfoGetPageEntitiesInputParams } from "@/types/sys/userinfo";
+import type {
+  SysUserInfoGetPageEntitiesInputParams,
+} from "@/types/sys/userinfo";
 import request from "@/utils/http";
 import qs from "qs";
 
@@ -11,7 +13,7 @@ const URL_PREFIX = "/api/Sys/SysUser/";
  * @returns
  */
 export const getPageEntitiesApi = async (
-  params: Paging<SysUserInfoGetPageEntitiesInputParams>
+  params: SysUserInfoGetPageEntitiesInputParams
 ): Promise<TablePageResult<any>> => {
   return await request({
     isLoading: true,
@@ -89,18 +91,16 @@ export const enableUserApi = async (id: number, value: boolean) => {
  * @param params
  * @returns
  */
-export const exportApi = async (
-  params: Paging<SysUserInfoGetPageEntitiesInputParams>
-): Promise<TablePageResult<any>> => {
+export const exportApi = async (params: SysUserInfoGetPageEntitiesInputParams) => {
   return await request({
     url: URL_PREFIX + "Export",
     method: "get",
     // params: params,
-    responseType:'blob',
+    responseType: "blob",
     params: params,
     paramsSerializer: (params) => {
       // return qs.stringify(params, { indices: false,allowDots: true })
       return qs.stringify(params, { allowDots: true });
-    }
+    },
   });
 };

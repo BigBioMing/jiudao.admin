@@ -6,6 +6,7 @@ const permissionDirective = (el: any, binding: DirectiveBinding) => {
 
   const { value, modifiers } = binding;
   const actions = menuStore.getActions();
+  console.log('pp:',value)
 
   let hasPermission = Array.isArray(value)
     ? value.some((action) => actions.includes(action))

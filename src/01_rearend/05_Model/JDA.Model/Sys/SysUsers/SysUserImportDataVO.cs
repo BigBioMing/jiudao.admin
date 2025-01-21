@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace JDA.Model.Sys.SysUsers
 {
     /// <summary>
-    /// 查询用户列表模型
+    /// 用户数据导出模型
     /// </summary>
-    public class SysUserGetListVO : PageViewModel
+    public class SysUserImportDataVO : ImportDataViewModel
     {
         /// <summary>
         /// 账号
